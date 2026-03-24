@@ -38,7 +38,7 @@ public class PropietarioRepository {
 
     // --- MÉTODOS DE ESCRITURA CON VALIDACIÓN ---
 
-    public void insertarPropietarioSeguro(Propietario propietario) {
+    public void insertarPropietario(Propietario propietario) {
         executorService.execute(() -> {
             // 1. Validar que el usuario existe
             Usuario usuarioAsociado = usuarioDao.buscarPorIdSync(propietario.idPropietario);

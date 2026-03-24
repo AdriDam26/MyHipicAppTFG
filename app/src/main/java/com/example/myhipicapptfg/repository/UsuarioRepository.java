@@ -32,27 +32,25 @@ public class UsuarioRepository {
     }
 
 
-    public void insertarUsuarioSeguro(Usuario nuevoUsuario) {
+    public void insertarUsuario(Usuario nuevoUsuario) {
         executorService.execute(() -> {
-
-            // 1. Validar Email único
+            // 1. Validaciones
             if (usuarioDao.buscarPorEmailSync(nuevoUsuario.email) != null) {
                 errorProgreso.postValue("Error: El email ya está registrado.");
-                return; // Cortamos la ejecución
+                return;
             }
-
-            // 2. Validar DNI único
             if (usuarioDao.buscarPorDNISync(nuevoUsuario.dni) != null) {
                 errorProgreso.postValue("Error: El DNI ya pertenece a otro usuario.");
                 return;
             }
 
-            // 3. Si pasa las validaciones, insertamos
             try {
+                // 2. Inserción real
                 usuarioDao.insertarUsuario(nuevoUsuario);
-                errorProgreso.postValue(null); // Limpiamos errores si hubo éxito
+                // 3. ¡IMPORTANTE! Notificamos el éxito aquí mismo
+                errorProgreso.postValue("EXITO_BASE_DATOS");
             } catch (Exception e) {
-                errorProgreso.postValue("Error crítico en la base de datos.");
+                errorProgreso.postValue("Error: Fallo al guardar en la base de datos.");
             }
         });
     }

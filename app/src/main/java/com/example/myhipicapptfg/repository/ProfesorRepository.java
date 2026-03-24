@@ -39,7 +39,7 @@ public class ProfesorRepository {
 
     // --- OPERACIÓN CON REGLA DE NEGOCIO ---
 
-    public void insertarProfesorSeguro(Profesor profesor) {
+    public void insertarProfesor(Profesor profesor) {
         executorService.execute(() -> {
             // 1. REGLA: ¿Existe el usuario base?
             Usuario usuarioBase = usuarioDao.buscarPorIdSync(profesor.idProfesor);
