@@ -37,4 +37,15 @@ public interface EquinoDao {
     // Verificación 3: ¿El microchip ya está registrado? (Para evitar crashes por el Index UNIQUE)
     @Query("SELECT EXISTS(SELECT 1 FROM Equino WHERE Numero_Microchip = :microchip)")
     boolean existeMicrochip(String microchip);
+
+    // MÉTODO SÍNCRONO: Devuelve el objeto directamente.
+    // Lo llamaremos dentro de un hilo para no bloquear la app.
+    @Query("SELECT * FROM Equino WHERE ID_Equino = :id LIMIT 1")
+    Equino getEquinoById(int id);
+
+
+    @Query("SELECT * FROM Equino WHERE Numero_Microchip = :microchip")
+    Equino buscarPorMicrochip(String microchip);
+
+
 }

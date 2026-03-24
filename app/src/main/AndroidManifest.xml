@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera.ar" android:required="true"/>
+    <uses-feature android:name="android.hardware.camera" android:required="false"/>
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -11,15 +15,30 @@
         android:roundIcon="@mipmap/ic_logo_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyHipicAppTFG">
+
+        <!-- ✅ meta-data DENTRO de application, no fuera -->
+        <meta-data
+            android:name="com.google.ar.core"
+            android:value="required"/>
+
         <activity
-            android:name=".DatabaseTestActivity"
+            android:name=".ui.MenuActivity"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <!-- ✅ Activities que faltaban declaradas -->
+        <activity
+            android:name=".ui.QRScannerActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".ui.ARActivity"
+            android:exported="false"/>
+
     </application>
 
 </manifest>

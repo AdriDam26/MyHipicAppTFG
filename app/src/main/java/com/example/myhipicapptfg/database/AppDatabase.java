@@ -2,7 +2,10 @@ package com.example.myhipicapptfg.database;
 
 
 
+import android.content.Context;
+
 import androidx.room.Database;
+import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 import com.example.myhipicapptfg.dao.AlumnoDao;
@@ -102,4 +105,24 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract ConvocatoriaDao convocatoriaDao();
     public abstract ParticipacionDao participacionDao();
     public abstract CalificacionDao calificacionDao();
+
+
+    private static AppDatabase INSTANCE;
+
+    public static AppDatabase getInstance(final Context context) {
+        if (INSTANCE == null) {
+            synchronized (AppDatabase.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = Room.databaseBuilder(
+                                    context.getApplicationContext(),
+                                    AppDatabase.class,
+                                    "hipica_database" // Nombre del archivo .db
+                            )
+                            .fallbackToDestructiveMigration() // Opcional: borra la DB si cambias la versión y no hay migración
+                            .build();
+                }
+            }
+        }
+        return INSTANCE;
+    }
 }

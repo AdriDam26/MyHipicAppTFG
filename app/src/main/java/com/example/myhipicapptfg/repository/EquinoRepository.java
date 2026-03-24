@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.myhipicapptfg.dao.EquinoDao;
+import com.example.myhipicapptfg.database.AppDatabase;
 import com.example.myhipicapptfg.database.TestDatabase;
 import com.example.myhipicapptfg.entities.Equino;
 
@@ -20,7 +21,7 @@ public class EquinoRepository {
     private final MutableLiveData<String> mensajeStatus = new MutableLiveData<>();
 
     public EquinoRepository(Application application) {
-        TestDatabase db = TestDatabase.getInstance(application);
+        AppDatabase db = AppDatabase.getInstance(application);
         dao = db.equinoDao();
         executor = Executors.newSingleThreadExecutor();
     }
@@ -57,4 +58,13 @@ public class EquinoRepository {
             }
         });
     }
+
+    public Equino buscarPorIdSync(int id) {
+        return dao.getEquinoById(id);
+    }
+
+    public Equino buscarPorMicrochipSync(String microchip) {
+        return dao.buscarPorMicrochip(microchip);
+    }
+
 }
