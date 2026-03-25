@@ -2,6 +2,7 @@ package com.example.myhipicapptfg.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.myhipicapptfg.R;
 import com.google.android.material.card.MaterialCardView;
@@ -11,28 +12,44 @@ public class AdminMenuActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_admin_menu); // Asegúrate de que este nombre coincide con tu XML
+        setContentView(R.layout.activity_admin_menu);
 
-        // 1. Vincular las tarjetas del XML
+        // 1. Vincular las tarjetas
         MaterialCardView cardUsuarios = findViewById(R.id.cardUsuarios);
-        MaterialCardView cardCaballos = findViewById(R.id.cardCaballos);
+        MaterialCardView cardEquinos = findViewById(R.id.cardEquinos);
+        MaterialCardView cardInstalaciones = findViewById(R.id.cardInstalaciones);
+        MaterialCardView cardClases = findViewById(R.id.cardClases);
 
+        // 2. Configurar Clics
 
+        // USUARIOS (Ya funcional)
         cardUsuarios.setOnClickListener(v -> {
-            // Abrimos la pantalla de registro de usuarios que ya tenemos hecha
             Intent intent = new Intent(AdminMenuActivity.this, AltaUsuarioActivity.class);
             startActivity(intent);
         });
 
-        // 3. Configurar el clic para Caballos
-        cardCaballos.setOnClickListener(v -> {
-            // Por ahora, como no hemos hecho la de caballos, podemos mostrar un mensaje
-            // o dejarlo listo para cuando crees "AltaCaballoActivity"
-            /*
-            Intent intent = new Intent(AdminMenuActivity.this, AltaCaballoActivity.class);
-            startActivity(intent);
-            */
-            android.widget.Toast.makeText(this, "Gestión de caballos próximamente", android.widget.Toast.LENGTH_SHORT).show();
+        // EQUINOS
+        cardEquinos.setOnClickListener(v -> {
+            // Intent intent = new Intent(this, GestionEquinosActivity.class);
+            // startActivity(intent);
+            showComingSoon("Gestión de Equinos");
         });
+
+        // INSTALACIONES
+        cardInstalaciones.setOnClickListener(v -> {
+            Intent intent = new Intent(this, SeleccionInstalacionActivity.class);
+            startActivity(intent);
+        });
+
+        // CLASES
+        cardClases.setOnClickListener(v -> {
+            // Intent intent = new Intent(this, GestionClasesActivity.class);
+            // startActivity(intent);
+            showComingSoon("Calendario de Clases");
+        });
+    }
+
+    private void showComingSoon(String seccion) {
+        Toast.makeText(this, seccion + " próximamente", Toast.LENGTH_SHORT).show();
     }
 }

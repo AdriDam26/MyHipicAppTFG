@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyHipicAppTFG">
         <activity
-            android:name=".ui.AdminMenuActivity"
+            android:name=".DatabaseTestActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,6 +24,13 @@
         <activity
             android:name=".ui.AltaUsuarioActivity"
             android:exported="false" />
+        <activity android:name=".ui.SeleccionInstalacionActivity"
+            android:exported="false" />
+        <activity android:name=".ui.AltaCuadraActivity"
+            android:exported="false" />
+        <activity android:name=".ui.AltaPistaActivity"
+            android:exported="false" />
+
     </application>
 
 

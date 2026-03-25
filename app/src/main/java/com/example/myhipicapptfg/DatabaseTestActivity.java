@@ -11,7 +11,7 @@ import java.util.List;
 public class DatabaseTestActivity extends AppCompatActivity {
 
     private TestDatabase db;
-    // TAG CONCRETO PARA FILTRAR EN LOGCAT
+    // Etiqueta para filtrar en el Logcat (Escribe PRUEBA_FINAL_DB en el buscador de Logcat)
     private static final String TAG = "PRUEBA_FINAL_DB";
 
     @Override
@@ -22,7 +22,7 @@ public class DatabaseTestActivity extends AppCompatActivity {
         db = TestDatabase.getInstance(this);
 
         Log.d(TAG, "************************************************");
-        Log.d(TAG, "   INICIANDO REPORTE DE BASE DE DATOS");
+        Log.d(TAG, "   INICIANDO REPORTE COMPLETO DE BASE DE DATOS");
         Log.d(TAG, "************************************************");
 
         configurarObservadores();
@@ -70,15 +70,13 @@ public class DatabaseTestActivity extends AppCompatActivity {
             }
         });
 
-        // 5. TABLA ALUMNO_DISCIPLINA
+        // 5. TABLA ALUMNO_DISCIPLINA (Relación Nivel/Disciplina)
         db.alumnoDisciplinaDao().obtenerTodas().observe(this, listaAD -> {
             Log.d(TAG, "--- TABLA ALUMNO_DISCIPLINA [" + (listaAD != null ? listaAD.size() : 0) + "] ---");
             if (listaAD != null && !listaAD.isEmpty()) {
                 for (AlumnoDisciplina ad : listaAD) {
-                    Log.i(TAG, "   [Rel_Alu] ID: " + ad.idAlumno + " | Disc: " + ad.idDisciplina + " | Nivel: " + ad.nivel);
+                    Log.i(TAG, "   [Rel_Alu] ID_Alu: " + ad.idAlumno + " | Disc: " + ad.idDisciplina + " | Nivel: " + ad.nivel);
                 }
-            } else {
-                Log.w(TAG, "   [Rel_Alu] Sin registros.");
             }
         });
 
@@ -87,10 +85,35 @@ public class DatabaseTestActivity extends AppCompatActivity {
             Log.d(TAG, "--- TABLA PROFESOR_DISCIPLINA [" + (listaPD != null ? listaPD.size() : 0) + "] ---");
             if (listaPD != null && !listaPD.isEmpty()) {
                 for (ProfesorDisciplina pd : listaPD) {
-                    Log.i(TAG, "   [Rel_Prof] ID: " + pd.idProfesor + " | Disc: " + pd.idDisciplina);
+                    Log.i(TAG, "   [Rel_Prof] ID_Prof: " + pd.idProfesor + " | Disc: " + pd.idDisciplina);
+                }
+            }
+        });
+
+        // 7. TABLA CUADRAS (Nueva Gestión)
+        db.cuadraDao().obtenerTodas().observe(this, listaCuadras -> {
+            Log.d(TAG, "--- TABLA CUADRAS [" + (listaCuadras != null ? listaCuadras.size() : 0) + "] ---");
+            if (listaCuadras != null && !listaCuadras.isEmpty()) {
+                for (Cuadra c : listaCuadras) {
+                    Log.i(TAG, "   [Cuadra] ID: " + c.idCuadra + " | Número: " + c.numeroCuadra);
                 }
             } else {
-                Log.w(TAG, "   [Rel_Prof] Sin registros.");
+                Log.w(TAG, "   [Cuadra] Sin registros.");
+            }
+        });
+
+        // 8. TABLA PISTAS (Nueva Gestión)
+        db.pistaDao().obtenerTodasPistas().observe(this, listaPistas -> {
+            Log.d(TAG, "--- TABLA PISTAS [" + (listaPistas != null ? listaPistas.size() : 0) + "] ---");
+            if (listaPistas != null && !listaPistas.isEmpty()) {
+                for (Pista p : listaPistas) {
+                    Log.i(TAG, "   [Pista] ID: " + p.idPista +
+                            " | Nombre: " + p.nombre +
+                            " | Medidas: " + p.ancho + "x" + p.largo + "m" +
+                            " | Estado: " + p.estado);
+                }
+            } else {
+                Log.w(TAG, "   [Pista] Sin registros.");
             }
         });
     }
