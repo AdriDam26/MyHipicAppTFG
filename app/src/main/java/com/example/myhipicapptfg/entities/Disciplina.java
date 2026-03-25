@@ -11,7 +11,7 @@ import androidx.room.PrimaryKey;
 )
 public class Disciplina {
 
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     @ColumnInfo(name = "ID_Disciplina")
     public int idDisciplina;
 

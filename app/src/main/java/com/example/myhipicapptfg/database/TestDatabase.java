@@ -4,9 +4,11 @@ package com.example.myhipicapptfg.database;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.example.myhipicapptfg.dao.AlumnoDao;
 import com.example.myhipicapptfg.dao.AlumnoDisciplinaDao;
@@ -78,7 +80,7 @@ import com.example.myhipicapptfg.entities.Usuario;
                 Participacion.class,
                 Calificacion.class
         },
-        version = 1
+        version = 3
 )
 public abstract class TestDatabase extends RoomDatabase {
 
@@ -109,12 +111,39 @@ public abstract class TestDatabase extends RoomDatabase {
 
     public static TestDatabase getInstance(Context context) {
         if (INSTANCE == null) {
-            INSTANCE = Room.databaseBuilder(
-                            context.getApplicationContext(),
-                            TestDatabase.class,
-                            "myhipicapp_test.db" // nombre de la base de datos
-                    ).fallbackToDestructiveMigration()
-                    .build();
+            synchronized (TestDatabase.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = Room.databaseBuilder(
+                                    context.getApplicationContext(),
+                                    TestDatabase.class,
+                                    "myhipicapp_test.db"
+                            )
+                            .fallbackToDestructiveMigration()
+                            .addCallback(new RoomDatabase.Callback() {
+                                @Override
+                                public void onCreate(@NonNull SupportSQLiteDatabase db) {
+                                    super.onCreate(db);
+                                    // Se ejecuta solo la PRIMERA vez que se crea la base de datos
+                                    insertarDisciplinasIniciales(db);
+                                }
+
+                                @Override
+                                public void onOpen(@NonNull SupportSQLiteDatabase db) {
+                                    super.onOpen(db);
+                                    // Se ejecuta CADA VEZ que se abre la base de datos
+                                    // Usamos INSERT OR IGNORE por si ya existen las IDs
+                                    insertarDisciplinasIniciales(db);
+                                }
+
+                                private void insertarDisciplinasIniciales(SupportSQLiteDatabase db) {
+                                    db.execSQL("INSERT OR IGNORE INTO Disciplina (ID_Disciplina, Nombre) VALUES (1, 'Doma Clásica')");
+                                    db.execSQL("INSERT OR IGNORE INTO Disciplina (ID_Disciplina, Nombre) VALUES (2, 'Salto')");
+                                    db.execSQL("INSERT OR IGNORE INTO Disciplina (ID_Disciplina, Nombre) VALUES (3, 'Doma Vaquera')");
+                                }
+                            })
+                            .build();
+                }
+            }
         }
         return INSTANCE;
     }

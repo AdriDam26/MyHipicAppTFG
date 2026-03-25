@@ -87,4 +87,21 @@ public class AlumnoRepository {
     public Alumno buscarPorIdSync(int id) {
         return alumnoDao.buscarPorIdSync(id);
     }
+
+    public void insertarAlumnoSync(Alumno alumno) {
+        try {
+            // 1. Verificación rápida de seguridad (Síncrona)
+            Usuario usuarioExistente = usuarioDao.buscarPorIdSync(alumno.idAlumno);
+
+            if (usuarioExistente != null) {
+                // 2. Inserción directa en la tabla Alumno
+                alumnoDao.insertarAlumno(alumno);
+            } else {
+                // Si llegamos aquí, hay un problema grave de integridad
+                errorLiveData.postValue("Error crítico: El ID de Usuario no existe en la base de datos.");
+            }
+        } catch (Exception e) {
+            errorLiveData.postValue("Error al insertar en la tabla Alumno: " + e.getMessage());
+        }
+    }
 }

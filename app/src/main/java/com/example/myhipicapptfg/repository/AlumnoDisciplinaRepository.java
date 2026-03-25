@@ -1,6 +1,8 @@
 package com.example.myhipicapptfg.repository;
 
 import android.app.Application;
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -45,5 +47,25 @@ public class AlumnoDisciplinaRepository {
                 else mensajeStatus.postValue("Error: La Disciplina no existe.");
             }
         });
+    }
+
+    public void insertarSync(AlumnoDisciplina ad) {
+        try {
+            boolean alumnoOk = dao.esAlumnoValido(ad.idAlumno);
+            boolean disciplinaOk = dao.existeDisciplina(ad.idDisciplina);
+
+            // LOGS DE CONTROL (Míralos en el Logcat)
+            Log.d("DEBUG_AD", "Validando: AlumnoID=" + ad.idAlumno + " [" + alumnoOk + "] | DiscID=" + ad.idDisciplina + " [" + disciplinaOk + "]");
+
+            if (alumnoOk && disciplinaOk) {
+                dao.insertar(ad);
+                Log.d("DEBUG_AD", "¡Inserción exitosa en AlumnoDisciplina!");
+            } else {
+                if (!alumnoOk) Log.e("DEBUG_AD", "FALLO: El Alumno " + ad.idAlumno + " no existe en la tabla Alumno");
+                if (!disciplinaOk) Log.e("DEBUG_AD", "FALLO: La Disciplina " + ad.idDisciplina + " no existe en la tabla Disciplina");
+            }
+        } catch (Exception e) {
+            Log.e("DEBUG_AD", "ERROR SQL: " + e.getMessage());
+        }
     }
 }

@@ -20,4 +20,13 @@ public class Propietario {
     @ColumnInfo(name = "ID_Propietario")
     public int idPropietario;
 
+    // Constructor vacío
+    public Propietario() {}
+
+    // Constructor con ID
+    public Propietario(int idPropietario) {
+        this.idPropietario = idPropietario;
+    }
+
+
 }

@@ -21,4 +21,13 @@ public class Alumno {
     @ColumnInfo(name = "ID_Alumno")  // nombre exacto de la columna en la tabla
     public int idAlumno;
 
+    //Necesario para Room
+    public Alumno() {}
+
+
+    public Alumno(int idAlumno) {
+        this.idAlumno = idAlumno;
+    }
+
 }
+

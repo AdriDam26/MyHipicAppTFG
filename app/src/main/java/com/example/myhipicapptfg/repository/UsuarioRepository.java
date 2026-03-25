@@ -92,4 +92,23 @@ public class UsuarioRepository {
     public Usuario buscarPorDNISync(String dni) {
         return usuarioDao.buscarPorDNISync(dni);
     }
+
+    public long insertarUsuarioSync(Usuario usuario) {
+        // 1. Validaciones previas (Síncronas)
+        if (usuarioDao.buscarPorEmailSync(usuario.email) != null) {
+            return -1; // Código de error: Email duplicado
+        }
+        if (usuarioDao.buscarPorDNISync(usuario.dni) != null) {
+            return -2; // Código de error: DNI duplicado
+        }
+
+        try {
+            // 2. Inserción real: Room devuelve el ID generado por SQLite
+            return usuarioDao.insertarUsuario(usuario);
+        } catch (Exception e) {
+            return -3; // Código de error: Fallo general
+        }
+    }
+
+
 }

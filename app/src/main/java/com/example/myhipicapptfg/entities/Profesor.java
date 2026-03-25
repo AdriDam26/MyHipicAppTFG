@@ -20,4 +20,12 @@ public class Profesor {
     @ColumnInfo(name = "ID_Profesor")
     public int idProfesor;
 
+    // Constructor vacío
+    public Profesor() {}
+
+    // Constructor con ID
+    public Profesor(int idProfesor) {
+        this.idProfesor = idProfesor;
+    }
+
 }

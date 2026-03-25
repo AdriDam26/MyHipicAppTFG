@@ -16,139 +16,84 @@
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="VOLVER AL MENÚ"
-            app:icon="@android:drawable/ic_menu_revert"
-            android:textColor="#42474E"/>
+            android:text="VOLVER"
+            app:icon="@android:drawable/ic_menu_revert" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nuevo Miembro"
-            android:textSize="28sp"
+            android:text="Nuevo Registro"
+            android:textSize="24sp"
             android:textStyle="bold"
-            android:textColor="#1A1C1E"
-            android:layout_marginTop="8dp"/>
+            android:layout_marginBottom="16dp"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Ingrese los datos del usuario"
-            android:layout_marginBottom="24dp"/>
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:hint="Nombre"
-            app:boxCornerRadiusTopStart="12dp" app:boxCornerRadiusTopEnd="12dp"
-            app:boxCornerRadiusBottomStart="12dp" app:boxCornerRadiusBottomEnd="12dp">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etNombre"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+        <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:hint="Nombre">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/etNombre" android:layout_width="match_parent" android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginEnd="4dp"
-                android:hint="1º Apellido"
-                app:boxCornerRadiusTopStart="12dp" app:boxCornerRadiusTopEnd="12dp"
-                app:boxCornerRadiusBottomStart="12dp" app:boxCornerRadiusBottomEnd="12dp">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etApellido1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+            <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:layout_marginEnd="4dp" android:hint="1º Apellido">
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etApellido1" android:layout_width="match_parent" android:layout_height="wrap_content" />
             </com.google.android.material.textfield.TextInputLayout>
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="4dp"
-                android:hint="2º Apellido"
-                app:boxCornerRadiusTopStart="12dp" app:boxCornerRadiusTopEnd="12dp"
-                app:boxCornerRadiusBottomStart="12dp" app:boxCornerRadiusBottomEnd="12dp">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etApellido2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+            <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:layout_marginStart="4dp" android:hint="2º Apellido">
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etApellido2" android:layout_width="match_parent" android:layout_height="wrap_content" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:hint="DNI / NIE"
-            app:boxCornerRadiusTopStart="12dp" app:boxCornerRadiusTopEnd="12dp"
-            app:boxCornerRadiusBottomStart="12dp" app:boxCornerRadiusBottomEnd="12dp">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etDni"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+        <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:hint="DNI">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/etDni" android:layout_width="match_parent" android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:hint="Correo Electrónico"
-            app:boxCornerRadiusTopStart="12dp" app:boxCornerRadiusTopEnd="12dp"
-            app:boxCornerRadiusBottomStart="12dp" app:boxCornerRadiusBottomEnd="12dp">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textEmailAddress" />
+        <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:hint="Email">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/etEmail" android:layout_width="match_parent" android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:hint="Sexo"
-            app:boxCornerRadiusTopStart="12dp" app:boxCornerRadiusTopEnd="12dp"
-            app:boxCornerRadiusBottomStart="12dp" app:boxCornerRadiusBottomEnd="12dp">
-            <AutoCompleteTextView
-                android:id="@+id/spinnerSexo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="none" />
+        <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:hint="Sexo">
+            <AutoCompleteTextView android:id="@+id/spinnerSexo" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="none" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:hint="Tipo de Usuario">
+            <AutoCompleteTextView android:id="@+id/spinnerTipo" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutSeccionDisciplinas"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:hint="Tipo de Usuario"
-            app:boxCornerRadiusTopStart="12dp" app:boxCornerRadiusTopEnd="12dp"
-            app:boxCornerRadiusBottomStart="12dp" app:boxCornerRadiusBottomEnd="12dp">
-            <AutoCompleteTextView
-                android:id="@+id/spinnerTipo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="none" />
-        </com.google.android.material.textfield.TextInputLayout>
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:layout_marginTop="16dp">
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Disciplinas y Niveles" android:textStyle="bold" android:layout_marginBottom="8dp" android:textColor="?attr/colorPrimary"/>
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical">
+                <CheckBox android:id="@+id/cbDomaClasica" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="Doma Clásica" />
+                <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:hint="Nivel">
+                    <AutoCompleteTextView android:id="@+id/spinnerNivelDoma" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="none" android:enabled="false" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical">
+                <CheckBox android:id="@+id/cbSalto" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="Salto" />
+                <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:hint="Nivel">
+                    <AutoCompleteTextView android:id="@+id/spinnerNivelSalto" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="none" android:enabled="false" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical">
+                <CheckBox android:id="@+id/cbDomaVaquera" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="Doma Vaquera" />
+                <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:hint="Nivel">
+                    <AutoCompleteTextView android:id="@+id/spinnerNivelVaquera" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="none" android:enabled="false" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+        </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnGuardar"
             android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:layout_marginTop="32dp"
-            android:text="REGISTRAR USUARIO"
-            app:cornerRadius="12dp" />
+            android:layout_height="60dp"
+            android:layout_marginTop="24dp"
+            android:text="REGISTRAR" />
 
     </LinearLayout>
 </ScrollView>

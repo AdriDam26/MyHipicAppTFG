@@ -1,51 +1,51 @@
 package com.example.myhipicapptfg.ui;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.myhipicapptfg.R;
+import com.example.myhipicapptfg.entities.AlumnoDisciplina;
 import com.example.myhipicapptfg.entities.Usuario;
+import com.example.myhipicapptfg.util.SeleccionDisciplina;
 import com.example.myhipicapptfg.viewmodel.AdminViewModel;
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AltaUsuarioActivity extends AppCompatActivity {
 
     private AdminViewModel viewModel;
 
-    // Referencias a los componentes de la UI
+    // UI Components
     private TextInputEditText etNombre, etApellido1, etApellido2, etDni, etEmail;
-    private AutoCompleteTextView spinnerSexo, spinnerTipo; // Cambiado a AutoCompleteTextView para Material 3
-    private MaterialButton btnGuardar, btnVolver;
+    private AutoCompleteTextView spinnerSexo, spinnerTipo;
+    private AutoCompleteTextView spinnerNivelDoma, spinnerNivelSalto, spinnerNivelVaquera;
+    private CheckBox cbDoma, cbSalto, cbVaquera;
+    private LinearLayout layoutSeccionDisciplinas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.admin_activity_alta_usuario);
 
-        // 1. Inicializar el ViewModel
         viewModel = new ViewModelProvider(this).get(AdminViewModel.class);
 
-        // 2. Vincular vistas
-        inicializarVistas();
-
-        // 3. Configurar los desplegables modernos
+        vincularVistas();
         configurarSpinners();
-
-        // 4. Observar el estado de la operación
-        observarViewModel();
-
-        // 5. Eventos de botones
-        btnGuardar.setOnClickListener(v -> realizarRegistro());
-        btnVolver.setOnClickListener(v -> finish());
+        configurarListeners();
+        observarEstadoRegistro();
     }
 
-    private void inicializarVistas() {
+    private void vincularVistas() {
         etNombre = findViewById(R.id.etNombre);
         etApellido1 = findViewById(R.id.etApellido1);
         etApellido2 = findViewById(R.id.etApellido2);
@@ -53,97 +53,130 @@ public class AltaUsuarioActivity extends AppCompatActivity {
         etEmail = findViewById(R.id.etEmail);
         spinnerSexo = findViewById(R.id.spinnerSexo);
         spinnerTipo = findViewById(R.id.spinnerTipo);
-        btnGuardar = findViewById(R.id.btnGuardar);
-        btnVolver = findViewById(R.id.btnVolver);
+        layoutSeccionDisciplinas = findViewById(R.id.layoutSeccionDisciplinas);
+
+        cbDoma = findViewById(R.id.cbDomaClasica);
+        cbSalto = findViewById(R.id.cbSalto);
+        cbVaquera = findViewById(R.id.cbDomaVaquera);
+
+        spinnerNivelDoma = findViewById(R.id.spinnerNivelDoma);
+        spinnerNivelSalto = findViewById(R.id.spinnerNivelSalto);
+        spinnerNivelVaquera = findViewById(R.id.spinnerNivelVaquera);
+
+        findViewById(R.id.btnGuardar).setOnClickListener(v -> decidirTipoDeRegistro());
+        findViewById(R.id.btnVolver).setOnClickListener(v -> finish());
     }
 
     private void configurarSpinners() {
-        // Adaptador para Sexo
-        String[] opcionesSexo = {"Masculino", "Femenino"};
-        ArrayAdapter<String> adapterSexo = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, opcionesSexo);
-        spinnerSexo.setAdapter(adapterSexo);
+        // Opciones de Sexo
+        spinnerSexo.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new String[]{"Masculino", "Femenino"}));
 
-        // Adaptador para Tipo
-        String[] opcionesTipo = {"Alumno", "Profesor", "Propietario"};
-        ArrayAdapter<String> adapterTipo = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, opcionesTipo);
-        spinnerTipo.setAdapter(adapterTipo);
+        // Opciones de Tipo de Usuario
+        spinnerTipo.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new String[]{"Alumno", "Profesor", "Propietario"}));
+
+        // Opciones de Niveles
+        String[] niveles = {AlumnoDisciplina.PRINCIPIANTE, AlumnoDisciplina.INTERMEDIO, AlumnoDisciplina.AVANZADO};
+        ArrayAdapter<String> adapterNiveles = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, niveles);
+        spinnerNivelDoma.setAdapter(adapterNiveles);
+        spinnerNivelSalto.setAdapter(adapterNiveles);
+        spinnerNivelVaquera.setAdapter(adapterNiveles);
     }
 
-    private void observarViewModel() {
+    private void configurarListeners() {
+        // Mostrar disciplinas solo si es Alumno
+        spinnerTipo.setOnItemClickListener((parent, view, position, id) -> {
+            String seleccion = (String) parent.getItemAtPosition(position);
+            layoutSeccionDisciplinas.setVisibility(seleccion.equals("Alumno") ? View.VISIBLE : View.GONE);
+        });
+
+        // Habilitar niveles solo si la disciplina está marcada
+        cbDoma.setOnCheckedChangeListener((v, isChecked) -> spinnerNivelDoma.setEnabled(isChecked));
+        cbSalto.setOnCheckedChangeListener((v, isChecked) -> spinnerNivelSalto.setEnabled(isChecked));
+        cbVaquera.setOnCheckedChangeListener((v, isChecked) -> spinnerNivelVaquera.setEnabled(isChecked));
+    }
+
+    /**
+     * AQUÍ ESTÁ TU LÓGICA: Decide qué método del ViewModel llamar
+     */
+    private void decidirTipoDeRegistro() {
+        if (!validarCampos()) return;
+
+        // Crear objeto usuario con los datos comunes
+        Usuario u = new Usuario();
+        u.nombre = etNombre.getText().toString().trim();
+        u.apellido1 = etApellido1.getText().toString().trim();
+        u.apellido2 = etApellido2.getText().toString().trim();
+        u.dni = etDni.getText().toString().trim().toUpperCase();
+        u.email = etEmail.getText().toString().trim();
+        u.sexo = spinnerSexo.getText().toString().equals("Masculino") ? "M" : "F";
+        u.tipo = spinnerTipo.getText().toString();
+
+        // Ejecutar el método correspondiente según lo que el usuario pulsó/eligió
+        switch (u.tipo) {
+            case "Alumno":
+                List<SeleccionDisciplina> disciplinas = obtenerDisciplinasSeleccionadas();
+                if (disciplinas.isEmpty()) {
+                    Toast.makeText(this, "Selecciona al menos una disciplina para el alumno", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                viewModel.registrarAlumno(u, disciplinas);
+                break;
+
+            case "Profesor":
+                viewModel.registrarProfesor(u);
+                break;
+
+            case "Propietario":
+                viewModel.registrarPropietario(u);
+                break;
+        }
+    }
+
+    private List<SeleccionDisciplina> obtenerDisciplinasSeleccionadas() {
+        List<SeleccionDisciplina> lista = new ArrayList<>();
+        // IDs: 1: Doma, 2: Salto, 3: Vaquera (ajustar según tu BD)
+        if (cbDoma.isChecked()) lista.add(new SeleccionDisciplina(1, spinnerNivelDoma.getText().toString()));
+        if (cbSalto.isChecked()) lista.add(new SeleccionDisciplina(2, spinnerNivelSalto.getText().toString()));
+        if (cbVaquera.isChecked()) lista.add(new SeleccionDisciplina(3, spinnerNivelVaquera.getText().toString()));
+        return lista;
+    }
+
+    private boolean validarCampos() {
+        String nombre = etNombre.getText().toString().trim();
+        String dni = etDni.getText().toString().trim();
+        String email = etEmail.getText().toString().trim();
+        String tipo = spinnerTipo.getText().toString();
+
+        // 1. Verificar campos vacíos obligatorios
+        if (nombre.isEmpty() || dni.isEmpty() || tipo.isEmpty()) {
+            Toast.makeText(this, "Nombre, DNI y Tipo son obligatorios", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        // 2. Validar formato DNI (8 números y 1 letra)
+        // El RegEx ^[0-9]{8}[A-Z]$ significa: 8 dígitos y una letra al final
+        if (!dni.matches("^[0-9]{8}[A-Z]$")) {
+            etDni.setError("Formato de DNI incorrecto (Ej: 12345678Z)");
+            return false;
+        }
+
+        // 3. Validar formato Email
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            etEmail.setError("Correo electrónico no válido");
+            return false;
+        }
+
+        return true;
+    }
+
+    private void observarEstadoRegistro() {
         viewModel.getEstadoFormulario().observe(this, mensaje -> {
             if (mensaje != null) {
-                // Caso A: Todo ha ido perfecto
+                Toast.makeText(this, mensaje, Toast.LENGTH_LONG).show();
                 if (mensaje.startsWith("Éxito")) {
-                    Toast.makeText(this, mensaje, Toast.LENGTH_LONG).show();
-                    limpiarFormulario(); // <--- Ahora sí se ejecutará
-                }
-                // Caso B: Algo ha fallado (DNI, Email, etc.)
-                else if (mensaje.startsWith("Error")) {
-                    Toast.makeText(this, mensaje, Toast.LENGTH_LONG).show();
-
-                    // No limpiamos, solo marcamos el error donde toque
-                    if (mensaje.contains("DNI")) etDni.setError("Ya existe");
-                    if (mensaje.contains("email")) etEmail.setError("Ya existe");
+                    finish(); // Cerramos la actividad al terminar con éxito
                 }
             }
         });
-    }
-
-    private void realizarRegistro() {
-        String nombre = etNombre.getText().toString().trim();
-        String dni = etDni.getText().toString().trim().toUpperCase();
-        String email = etEmail.getText().toString().trim();
-        String sSexo = spinnerSexo.getText().toString();
-        String sTipo = spinnerTipo.getText().toString();
-
-        // 1. Validaciones básicas
-        if (nombre.isEmpty() || dni.isEmpty() || email.isEmpty() || sSexo.isEmpty() || sTipo.isEmpty()) {
-            Toast.makeText(this, "Por favor, rellene todos los campos obligatorios", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (!validarDNI(dni)) {
-            etDni.setError("Formato de DNI/NIE no válido");
-            return;
-        }
-
-        // 2. Crear objeto Usuario y mapear valores
-        Usuario u = new Usuario();
-        u.nombre = nombre;
-        u.apellido1 = etApellido1.getText().toString().trim();
-        u.apellido2 = etApellido2.getText().toString().trim();
-        u.dni = dni;
-        u.email = email;
-
-        // Mapeo de Sexo a constantes de la Entidad ("M"/"F")
-        u.sexo = sSexo.equals("Masculino") ? Usuario.SEXO_MASCULINO : Usuario.SEXO_FEMENINO;
-
-        // Mapeo de Tipo a constantes de la Entidad
-        switch (sTipo) {
-            case "Alumno": u.tipo = Usuario.TIPO_ALUMNO; break;
-            case "Profesor": u.tipo = Usuario.TIPO_PROFESOR; break;
-            case "Propietario": u.tipo = Usuario.TIPO_PROPIETARIO; break;
-        }
-
-        // 3. Enviar al ViewModel
-        viewModel.registrarUsuarioCompleto(u);
-    }
-
-    private void limpiarFormulario() {
-        etNombre.setText("");
-        etApellido1.setText("");
-        etApellido2.setText("");
-        etDni.setText("");
-        etEmail.setText("");
-        spinnerSexo.setText("", false);
-        spinnerTipo.setText("", false);
-        etNombre.requestFocus();
-    }
-
-    private boolean validarDNI(String dni) {
-        String regexDNI = "^([0-9]{8}[A-Z])|[XYZ][0-9]{7}[A-Z]$";
-        return dni.matches(regexDNI);
     }
 }
