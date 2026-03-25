@@ -21,6 +21,7 @@ public class AdminViewModel extends AndroidViewModel {
     private final ProfesorRepository profesorRepo;
     private final PropietarioRepository propietarioRepo;
     private final AlumnoDisciplinaRepository aluDiscRepo;
+    private final ProfesorDisciplinaRepository profDiscRepo; // Añadido
 
     private final ExecutorService executorService;
     private final MediatorLiveData<String> estadoFormulario = new MediatorLiveData<>();
@@ -32,9 +33,11 @@ public class AdminViewModel extends AndroidViewModel {
         profesorRepo = new ProfesorRepository(application);
         propietarioRepo = new PropietarioRepository(application);
         aluDiscRepo = new AlumnoDisciplinaRepository(application);
+        profDiscRepo = new ProfesorDisciplinaRepository(application); // Inicializado
 
         executorService = Executors.newSingleThreadExecutor();
 
+        // Escuchamos posibles errores del repositorio de usuarios
         estadoFormulario.addSource(usuarioRepo.getErrorProgreso(), error -> {
             estadoFormulario.setValue(error);
         });
@@ -44,49 +47,58 @@ public class AdminViewModel extends AndroidViewModel {
         return estadoFormulario;
     }
 
-    // --- MÉTODOS DE REGISTRO ---
+    // --- MÉTODOS DE REGISTRO SEGUROS (SÍNCRONOS DENTRO DEL EXECUTOR) ---
 
     public void registrarAlumno(Usuario usuario, List<SeleccionDisciplina> selecciones) {
         prepararRegistro();
-
         executorService.execute(() -> {
-            // PASO 1: Insertar usuario y obtener ID (BLOQUEANTE)
+            // PASO 1: Insertar usuario y obtener ID
             long idGenerado = usuarioRepo.insertarUsuarioSync(usuario);
 
             if (idGenerado > 0) {
-                // PASO 2: El usuario ya existe en la DB. Ahora creamos el Alumno.
+                // PASO 2: Insertar en la tabla Alumno
                 Alumno alu = new Alumno();
                 alu.idAlumno = (int) idGenerado;
-                alumnoRepo.insertarAlumnoSync(alu); // Crea este método sync en AlumnoRepo
+                alumnoRepo.insertarAlumnoSync(alu);
 
-                // PASO 3: Insertar las disciplinas
+                // PASO 3: Insertar las disciplinas del alumno
                 for (SeleccionDisciplina sel : selecciones) {
                     AlumnoDisciplina ad = new AlumnoDisciplina();
                     ad.idAlumno = (int) idGenerado;
                     ad.idDisciplina = sel.id;
                     ad.nivel = sel.nivel;
-                    aluDiscRepo.insertarSync(ad); // Crea este método sync en AluDiscRepo
+                    aluDiscRepo.insertarSync(ad);
                 }
-
                 notificarExito("Alumno");
             } else {
-                // Manejo de errores según el código devuelto (-1, -2, -3)
-                if (idGenerado == -1) estadoFormulario.postValue("Error: Email duplicado");
-                else if (idGenerado == -2) estadoFormulario.postValue("Error: DNI duplicado");
-                else estadoFormulario.postValue("Error al guardar el usuario");
+                manejarErrorInsercion(idGenerado);
             }
         });
     }
 
-    public void registrarProfesor(Usuario usuario) {
+    public void registrarProfesor(Usuario usuario, List<SeleccionDisciplina> selecciones) {
         prepararRegistro();
         executorService.execute(() -> {
-            if (insertarUsuarioBase(usuario)) {
-                Usuario uCreado = usuarioRepo.buscarPorDNISync(usuario.dni);
-                if (uCreado != null) {
-                    profesorRepo.insertarProfesor(new Profesor(uCreado.idUsuario));
-                    notificarExito("Profesor");
+            // PASO 1: Insertar usuario y obtener ID
+            long idGenerado = usuarioRepo.insertarUsuarioSync(usuario);
+
+            if (idGenerado > 0) {
+                // PASO 2: Insertar en la tabla Profesor
+                // Nota: Asegúrate de tener insertarProfesorSync en tu ProfesorRepository
+                Profesor prof = new Profesor();
+                prof.idProfesor = (int) idGenerado;
+                profesorRepo.insertarProfesorSync(prof);
+
+                // PASO 3: Insertar las disciplinas que enseña
+                for (SeleccionDisciplina sel : selecciones) {
+                    ProfesorDisciplina pd = new ProfesorDisciplina();
+                    pd.idProfesor = (int) idGenerado;
+                    pd.idDisciplina = sel.id;
+                    profDiscRepo.insertarSync(pd);
                 }
+                notificarExito("Profesor");
+            } else {
+                manejarErrorInsercion(idGenerado);
             }
         });
     }
@@ -94,51 +106,35 @@ public class AdminViewModel extends AndroidViewModel {
     public void registrarPropietario(Usuario usuario) {
         prepararRegistro();
         executorService.execute(() -> {
-            if (insertarUsuarioBase(usuario)) {
-                Usuario uCreado = usuarioRepo.buscarPorDNISync(usuario.dni);
-                if (uCreado != null) {
-                    propietarioRepo.insertarPropietario(new Propietario(uCreado.idUsuario));
-                    notificarExito("Propietario");
-                }
+            // PASO 1: Insertar usuario y obtener ID
+            long idGenerado = usuarioRepo.insertarUsuarioSync(usuario);
+
+            if (idGenerado > 0) {
+                // PASO 2: Insertar en la tabla Propietario
+                Propietario prop = new Propietario();
+                prop.idPropietario = (int) idGenerado;
+                propietarioRepo.insertarPropietarioSync(prop);
+
+                notificarExito("Propietario");
+            } else {
+                manejarErrorInsercion(idGenerado);
             }
         });
     }
 
-    // --- LÓGICA DE VALIDACIÓN Y APOYO ---
+    // --- UTILIDADES ---
 
     private void prepararRegistro() {
         estadoFormulario.postValue(null);
     }
 
-    private boolean insertarUsuarioBase(Usuario usuario) {
-        // 1. VALIDACIÓN DNI: Comprobar si ya existe
-        Usuario porDni = usuarioRepo.buscarPorDNISync(usuario.dni);
-        if (porDni != null) {
-            estadoFormulario.postValue("Error: El DNI ya está registrado");
-            return false;
-        }
-
-        // 2. VALIDACIÓN EMAIL: Comprobar si ya existe
-        // Asegúrate de tener el método buscarPorEmailSync en tu UsuarioRepository
-        Usuario porEmail = usuarioRepo.buscarPorEmailSync(usuario.email);
-        if (porEmail != null) {
-            estadoFormulario.postValue("Error: El correo electrónico ya está registrado");
-            return false;
-        }
-
-        // 3. INSERCIÓN: Si llegamos aquí, los datos son únicos
-        usuarioRepo.insertarUsuario(usuario);
-        esperar(500);
-
-        String error = estadoFormulario.getValue();
-        return (error == null || !error.startsWith("Error"));
+    private void manejarErrorInsercion(long codigo) {
+        if (codigo == -1) estadoFormulario.postValue("Error: El email ya existe");
+        else if (codigo == -2) estadoFormulario.postValue("Error: El DNI ya existe");
+        else estadoFormulario.postValue("Error al guardar en la base de datos");
     }
 
     private void notificarExito(String tipo) {
         estadoFormulario.postValue("Éxito: " + tipo + " registrado correctamente.");
-    }
-
-    private void esperar(int ms) {
-        try { Thread.sleep(ms); } catch (InterruptedException e) { e.printStackTrace(); }
     }
 }

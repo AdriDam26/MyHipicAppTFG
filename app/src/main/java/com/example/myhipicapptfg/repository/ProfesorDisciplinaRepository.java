@@ -43,4 +43,21 @@ public class ProfesorDisciplinaRepository {
             }
         });
     }
+
+    public void insertarSync(ProfesorDisciplina pd) {
+        try {
+            // Validaciones síncronas usando los métodos que ya tienes en el DAO
+            boolean profeOk = dao.esProfesorValido(pd.idProfesor);
+            boolean discOk = dao.existeDisciplina(pd.idDisciplina);
+
+            if (profeOk && discOk) {
+                dao.insertar(pd);
+            } else {
+                if (!profeOk) mensajeStatus.postValue("Error: El ID " + pd.idProfesor + " no es un Profesor válido.");
+                else mensajeStatus.postValue("Error: La Disciplina " + pd.idDisciplina + " no existe.");
+            }
+        } catch (Exception e) {
+            mensajeStatus.postValue("Error al vincular disciplina al profesor: " + e.getMessage());
+        }
+    }
 }

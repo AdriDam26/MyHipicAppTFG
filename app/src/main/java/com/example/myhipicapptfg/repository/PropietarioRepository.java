@@ -85,4 +85,20 @@ public class PropietarioRepository {
     public LiveData<Integer> contarPropietarios() {
         return propietarioDao.contarPropietarios();
     }
+
+    // --- MÉTODO SÍNCRONO PARA EL VIEWMODEL ---
+    public void insertarPropietarioSync(Propietario propietario) {
+        try {
+            // Verificación de integridad: ¿Existe el usuario?
+            Usuario usuarioExistente = usuarioDao.buscarPorIdSync(propietario.idPropietario);
+
+            if (usuarioExistente != null) {
+                propietarioDao.insertarPropietario(propietario);
+            } else {
+                errorLiveData.postValue("Error: El ID de Usuario para el propietario no existe.");
+            }
+        } catch (Exception e) {
+            errorLiveData.postValue("Error al insertar en la tabla Propietario: " + e.getMessage());
+        }
+    }
 }

@@ -87,4 +87,19 @@ public class ProfesorRepository {
     public LiveData<Integer> contarProfesores() {
         return profesorDao.contarProfesores();
     }
+
+    public void insertarProfesorSync(Profesor profesor) {
+        try {
+            // Verificación de integridad: ¿Existe el usuario?
+            Usuario usuarioExistente = usuarioDao.buscarPorIdSync(profesor.idProfesor);
+
+            if (usuarioExistente != null) {
+                profesorDao.insertarProfesor(profesor);
+            } else {
+                errorLiveData.postValue("Error: El ID de Usuario para el profesor no existe.");
+            }
+        } catch (Exception e) {
+            errorLiveData.postValue("Error al insertar en la tabla Profesor: " + e.getMessage());
+        }
+    }
 }
