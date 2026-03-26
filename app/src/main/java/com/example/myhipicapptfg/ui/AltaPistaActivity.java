@@ -1,74 +1,103 @@
 package com.example.myhipicapptfg.ui;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.example.myhipicapptfg.R;
 import com.example.myhipicapptfg.entities.Pista;
-import com.example.myhipicapptfg.repository.PistaRepository;
+import com.example.myhipicapptfg.viewmodel.AltaPistaViewModel;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 public class AltaPistaActivity extends AppCompatActivity {
 
-    private PistaRepository repository;
+    private AltaPistaViewModel viewModel;
     private TextInputEditText etNombre, etAncho, etLargo;
+    private TextInputLayout layNombre, layAncho, layLargo;
     private AutoCompleteTextView spinnerEstado;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alta_pista);
 
-        repository = new PistaRepository(getApplication());
+        viewModel = new ViewModelProvider(this).get(AltaPistaViewModel.class);
 
-        // Referencias
+        vincularVistas();
+        configurarSpinner();
+        observarViewModel();
+    }
+
+    private void vincularVistas() {
         etNombre = findViewById(R.id.etNombrePista);
         etAncho = findViewById(R.id.etAnchoPista);
         etLargo = findViewById(R.id.etLargoPista);
         spinnerEstado = findViewById(R.id.spinnerEstadoPista);
-        MaterialButton btnGuardar = findViewById(R.id.btnGuardarPista);
-        MaterialButton btnVolver = findViewById(R.id.btnVolverAltaPista);
+        progressBar = findViewById(R.id.progressBarPista);
 
-        // Configurar Desplegable de Estados (Usando las constantes de tu Entidad)
+        // Referencias a los layouts para errores en rojo
+        layNombre = (TextInputLayout) etNombre.getParent().getParent();
+        layAncho = (TextInputLayout) etAncho.getParent().getParent();
+        layLargo = (TextInputLayout) etLargo.getParent().getParent();
+
+        findViewById(R.id.btnVolverAltaPista).setOnClickListener(v -> finish());
+        findViewById(R.id.btnGuardarPista).setOnClickListener(v -> validarYEnviar());
+    }
+
+    private void configurarSpinner() {
         String[] estados = {Pista.DISPONIBLE, Pista.MANTENIMIENTO, Pista.CERRADA};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, estados);
         spinnerEstado.setAdapter(adapter);
-        spinnerEstado.setText(Pista.DISPONIBLE, false); // Valor por defecto
+    }
 
-        btnVolver.setOnClickListener(v -> finish());
-        btnGuardar.setOnClickListener(v -> guardarPista());
-
-        // Observar errores del Repositorio (Nombre duplicado, etc.)
-        repository.getErrorLiveData().observe(this, error -> {
-            if (error != null) {
-                Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+    private void observarViewModel() {
+        viewModel.getMensajeEstado().observe(this, mensaje -> {
+            viewModel.finalizarOperacion();
+            if (mensaje != null) {
+                if (mensaje.contains("existe")) {
+                    layNombre.setError(mensaje); // Error de nombre duplicado en rojo
+                } else {
+                    Toast.makeText(this, mensaje, Toast.LENGTH_LONG).show();
+                }
             } else {
                 Toast.makeText(this, "Pista guardada con éxito", Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
+
+        viewModel.getCargando().observe(this, estaCargando -> {
+            if (progressBar != null) progressBar.setVisibility(estaCargando ? View.VISIBLE : View.GONE);
+            findViewById(R.id.btnGuardarPista).setEnabled(!estaCargando);
+        });
     }
 
-    private void guardarPista() {
+    private void validarYEnviar() {
+        // Limpiar errores
+        layNombre.setError(null);
+        layAncho.setError(null);
+        layLargo.setError(null);
+
         String nombre = etNombre.getText().toString().trim();
-        String anchoStr = etAncho.getText().toString().trim();
-        String largoStr = etLargo.getText().toString().trim();
+        String ancho = etAncho.getText().toString().trim();
+        String largo = etLargo.getText().toString().trim();
         String estado = spinnerEstado.getText().toString();
 
-        if (nombre.isEmpty() || anchoStr.isEmpty() || largoStr.isEmpty()) {
-            Toast.makeText(this, "Por favor, rellena todos los campos", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        boolean error = false;
 
-        Pista nuevaPista = new Pista();
-        nuevaPista.nombre = nombre;
-        nuevaPista.ancho = Double.parseDouble(anchoStr);
-        nuevaPista.largo = Double.parseDouble(largoStr);
-        nuevaPista.estado = estado;
+        if (nombre.isEmpty()) { layNombre.setError("Campo obligatorio"); error = true; }
+        if (ancho.isEmpty()) { layAncho.setError("Campo obligatorio"); error = true; }
+        if (largo.isEmpty()) { layLargo.setError("Campo obligatorio"); error = true; }
 
-        repository.insertarPista(nuevaPista);
+        if (error) return;
+
+        viewModel.registrarPista(nombre, ancho, largo, estado);
     }
 }

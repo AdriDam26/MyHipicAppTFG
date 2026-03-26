@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyHipicAppTFG">
         <activity
-            android:name=".DatabaseTestActivity"
+            android:name=".ui.AdminMenuActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
