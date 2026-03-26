@@ -30,9 +30,8 @@ public class AdminMenuActivity extends AppCompatActivity {
 
         // EQUINOS
         cardEquinos.setOnClickListener(v -> {
-            // Intent intent = new Intent(this, GestionEquinosActivity.class);
-            // startActivity(intent);
-            showComingSoon("Gestión de Equinos");
+            Intent intent = new Intent(this, AltaEquinoActivity.class);
+            startActivity(intent);
         });
 
         // INSTALACIONES

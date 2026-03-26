@@ -110,5 +110,9 @@ public class UsuarioRepository {
         }
     }
 
+    public LiveData<List<Usuario>> obtenerUsuariosPorTipo(String tipo) {
+        return usuarioDao.obtenerUsuariosPorTipo(tipo);
+    }
+
 
 }

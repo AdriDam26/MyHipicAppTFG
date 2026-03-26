@@ -49,4 +49,7 @@ public interface UsuarioDao {
 
     @Query("SELECT * FROM Usuario WHERE ID_Usuario = :id LIMIT 1")
     Usuario buscarPorIdSync(int id);
+
+    @Query("SELECT * FROM Usuario WHERE Tipo = :tipo ORDER BY Nombre ASC")
+    LiveData<List<Usuario>> obtenerUsuariosPorTipo(String tipo);
 }

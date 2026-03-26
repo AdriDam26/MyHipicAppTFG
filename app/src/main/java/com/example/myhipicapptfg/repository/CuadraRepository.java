@@ -54,4 +54,8 @@ public class CuadraRepository {
     public void eliminar(Cuadra cuadra) {
         executor.execute(() -> dao.eliminarCuadra(cuadra));
     }
+
+    public LiveData<List<Cuadra>> getCuadrasLibres() {
+        return dao.obtenerCuadrasLibres();
+    }
 }

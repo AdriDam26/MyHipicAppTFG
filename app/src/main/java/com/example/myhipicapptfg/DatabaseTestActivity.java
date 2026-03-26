@@ -116,5 +116,27 @@ public class DatabaseTestActivity extends AppCompatActivity {
                 Log.w(TAG, "   [Pista] Sin registros.");
             }
         });
+
+        //9. Equino
+        db.equinoDao().obtenerTodos().observe(this, listaEquinos -> {
+            Log.d(TAG, "--- TABLA EQUINOS [" + (listaEquinos != null ? listaEquinos.size() : 0) + "] ---");
+            if (listaEquinos != null && !listaEquinos.isEmpty()) {
+                for (Equino e : listaEquinos) {
+                    // Lógica para mostrar "Hípica" si no hay propietario
+                    String dueño = (e.idPropietario == null) ? "Hípica (Propio)" : "ID Propietario: " + e.idPropietario;
+
+                    Log.i(TAG, "   >> [EQUINO] ID: " + e.idEquino + " | Nombre: " + e.nombre);
+                    Log.i(TAG, "      Chip: " + e.numeroMicrochip + " | Raza: " + e.raza);
+                    Log.i(TAG, "      Sexo: " + e.sexo + " | Nacimiento: " + e.fechaNacimiento);
+                    Log.i(TAG, "      Físico: " + e.altura + "m / " + e.peso + "kg");
+                    Log.i(TAG, "      Salud: " + e.estadoSalud + " | Carácter: " + e.temperamento);
+                    Log.i(TAG, "      Ubicación: Cuadra ID " + e.idCuadra + " | Dueño: " + dueño);
+                    Log.d(TAG, "      --------------------------------------------------");
+                }
+            } else {
+                Log.w(TAG, "   [Equino] No hay caballos registrados en la base de datos.");
+            }
+        });
+
     }
 }

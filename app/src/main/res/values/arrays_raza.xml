@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="razas_equinos">
+        <item>Pura Raza Española (PRE)</item>
+        <item>Pura Sangre Inglés</item>
+        <item>Árabe</item>
+        <item>Cuarto de Milla (Quarter Horse)</item>
+        <item>Appaloosa</item>
+        <item>Lusitano</item>
+        <item>Frisón</item>
+        <item>Pinto</item>
+        <item>Percherón</item>
+        <item>Anglo-Árabe</item>
+        <item>Hispano-Árabe</item>
+        <item>Caballo de Deporte Español (CDE)</item>
+        <item>Silla Francés</item>
+        <item>Hanoveriano</item>
+        <item>Mustang</item>
+        <item>Clydesdale</item>
+        <item>Poni Shetland</item>
+        <item>Poni Galés</item>
+        <item>Mestizo / Cruce</item>
+        <item>Otro</item>
+    </string-array>
+</resources>

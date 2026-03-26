@@ -38,4 +38,7 @@ public interface CuadraDao {
     // Esta la usaremos en el Repositorio para evitar duplicados del número único
     @Query("SELECT EXISTS(SELECT 1 FROM Cuadra WHERE Numero_Cuadra = :numero)")
     boolean existeNumero(int numero);
+
+    @Query("SELECT * FROM Cuadra WHERE ID_Cuadra NOT IN (SELECT ID_Cuadra FROM Equino) ORDER BY Numero_Cuadra ASC")
+    LiveData<List<Cuadra>> obtenerCuadrasLibres();
 }
