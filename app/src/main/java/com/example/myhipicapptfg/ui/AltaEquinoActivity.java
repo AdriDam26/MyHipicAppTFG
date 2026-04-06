@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -35,6 +36,10 @@ public class AltaEquinoActivity extends AppCompatActivity {
     private AutoCompleteTextView spinnerSexo, spinnerTemperamento, spinnerSalud, spinnerCuadra, spinnerPropietario;
     private CheckBox cbTienePropietario;
     private ProgressBar progressBar;
+
+    private CheckBox cbTieneEspecialidades;
+    private LinearLayout layoutEspecialidades;
+    private CheckBox cbDomaClasica, cbSalto, cbDomaVaquera;
 
     private List<Usuario> listaPropietariosObj = new ArrayList<>();
     private List<Cuadra> listaCuadrasObj = new ArrayList<>();
@@ -74,6 +79,12 @@ public class AltaEquinoActivity extends AppCompatActivity {
         cbTienePropietario = findViewById(R.id.cbTienePropietario);
         progressBar = findViewById(R.id.progressBarEquino);
 
+        cbTieneEspecialidades = findViewById(R.id.cbTieneEspecialidadesEquino);
+        layoutEspecialidades = findViewById(R.id.layoutEspecialidadesEquino);
+        cbDomaClasica = findViewById(R.id.cbDomaClasicaEquino);
+        cbSalto = findViewById(R.id.cbSaltoEquino);
+        cbDomaVaquera = findViewById(R.id.cbDomaVaqueraEquino);
+
         findViewById(R.id.btnVolverAltaEquino).setOnClickListener(v -> finish());
         findViewById(R.id.btnGuardarEquino).setOnClickListener(v -> validarYGuardar());
     }
@@ -111,6 +122,18 @@ public class AltaEquinoActivity extends AppCompatActivity {
         // 3. Usar la variable de la clase directamente (etRaza)
         etRaza.setAdapter(adapterRazas);
         etRaza.setThreshold(1);
+
+        cbTieneEspecialidades.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            // Mostrar/Ocultar el panel
+            layoutEspecialidades.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+
+            // Si se desmarca, limpiamos los checks internos para evitar errores
+            if (!isChecked) {
+                cbDomaClasica.setChecked(false);
+                cbSalto.setChecked(false);
+                cbDomaVaquera.setChecked(false);
+            }
+        });
     }
 
     private void observarViewModel() {
@@ -171,7 +194,10 @@ public class AltaEquinoActivity extends AppCompatActivity {
         String peso = etPeso.getText().toString().trim();
 
         // Validaciones mínimas de UI
-        if (nombre.isEmpty()) { layNombre.setError("Obligatorio"); return; }
+        if (nombre.isEmpty()) {
+            layNombre.setError("Obligatorio");
+            return;
+        }
         if (microchip.isEmpty()) {
             layMicrochip.setError("El microchip es obligatorio");
             return;
@@ -185,19 +211,26 @@ public class AltaEquinoActivity extends AppCompatActivity {
             return;
         }
 
-        // Se lo pasamos al ViewModel como parámetros sueltos (Igual que en AltaUsuario)
+        List<Integer> disciplinasSeleccionadas = new ArrayList<>();
+
+        if (cbTieneEspecialidades.isChecked()) {
+            // IDs fijos de tu tabla Disciplina
+            if (cbDomaClasica.isChecked()) disciplinasSeleccionadas.add(1);
+            if (cbSalto.isChecked()) disciplinasSeleccionadas.add(2);
+            if (cbDomaVaquera.isChecked()) disciplinasSeleccionadas.add(3);
+
+            // Validación: Si dice que tiene, debe marcar al menos una
+            if (disciplinasSeleccionadas.isEmpty()) {
+                Toast.makeText(this, "Selecciona al menos una disciplina", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+
+        // Enviamos la lista al ViewModel
         viewModel.registrarEquino(
-                nombre,
-                raza,
-                microchip,
-                fecha,
-                sexo,
-                temp,
-                salud,
-                altura,
-                peso,
-                idCuadraSeleccionada,
-                idPropietarioSeleccionado
+                nombre, raza, microchip, fecha, sexo, temp, salud,
+                altura, peso, idCuadraSeleccionada, idPropietarioSeleccionado,
+                disciplinasSeleccionadas
         );
     }
 }

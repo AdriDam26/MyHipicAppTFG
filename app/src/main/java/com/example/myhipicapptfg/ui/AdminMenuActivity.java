@@ -22,7 +22,7 @@ public class AdminMenuActivity extends AppCompatActivity {
 
         // 2. Configurar Clics
 
-        // USUARIOS (Ya funcional)
+        // USUARIOS
         cardUsuarios.setOnClickListener(v -> {
             Intent intent = new Intent(AdminMenuActivity.this, AltaUsuarioActivity.class);
             startActivity(intent);
@@ -42,8 +42,8 @@ public class AdminMenuActivity extends AppCompatActivity {
 
         // CLASES
         cardClases.setOnClickListener(v -> {
-            // Intent intent = new Intent(this, GestionClasesActivity.class);
-            // startActivity(intent);
+            Intent intent = new Intent(this, AltaClaseActivity.class);
+            startActivity(intent);
             showComingSoon("Calendario de Clases");
         });
     }

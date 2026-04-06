@@ -46,4 +46,24 @@ public class DisciplinaEquinoRepository {
             }
         });
     }
+
+    public void insertarSync(DisciplinaEquino de) {
+        try {
+            // 1. Verificación de integridad (¿Existen los IDs?)
+            boolean equinoOk = dao.existeEquino(de.idEquino);
+            boolean disciplinaOk = dao.existeDisciplina(de.idDisciplina);
+
+            if (equinoOk && disciplinaOk) {
+                dao.insertar(de);
+                // No posteamos null aquí para no borrar mensajes de éxito del Equino
+            } else {
+                if (!equinoOk) mensajeStatus.postValue("Error integridad: El Equino no existe.");
+                else mensajeStatus.postValue("Error integridad: La Disciplina no existe.");
+            }
+        } catch (Exception e) {
+            mensajeStatus.postValue("Error al insertar relación Disciplina-Equino: " + e.getMessage());
+        }
+    }
+
+
 }

@@ -36,4 +36,11 @@ public interface PistaDao {
 
     @Query("SELECT COUNT(*) FROM Pista")
     LiveData<Integer> contarPistas();
+
+    @Query("SELECT * FROM Pista WHERE Estado = 'Disponible' AND ID_Pista NOT IN (" +
+            "    SELECT ID_Pista FROM Clase " +
+            "    WHERE Fecha = :fecha " +
+            "    AND (time(Hora_Inicio) < time(:hFin) AND time(Hora_Fin) > time(:hIni))" +
+            ")")
+    List<Pista> obtenerPistasLibresSync(String fecha, String hIni, String hFin);
 }

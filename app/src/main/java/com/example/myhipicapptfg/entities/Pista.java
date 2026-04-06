@@ -32,4 +32,11 @@ public class Pista {
     public static final String DISPONIBLE = "Disponible";
     public static final String MANTENIMIENTO = "Mantenimiento";
     public static final String CERRADA = "Cerrada";
+
+    @Override
+    public String toString() {
+        // Si tu columna se llama nombrePista, pon eso.
+        // Es lo que verá el usuario en el desplegable.
+        return nombre;
+    }
 }

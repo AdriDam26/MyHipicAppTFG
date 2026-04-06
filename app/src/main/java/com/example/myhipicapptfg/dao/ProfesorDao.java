@@ -10,6 +10,7 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.example.myhipicapptfg.entities.Profesor;
+import com.example.myhipicapptfg.entities.Usuario;
 
 import java.util.List;
 
@@ -43,4 +44,15 @@ public interface ProfesorDao {
             "INNER JOIN Usuario u ON p.ID_Profesor = u.ID_Usuario " +
             "WHERE u.Nombre = :nombre LIMIT 1")
     int obtenerIdProfesorPorNombreSync(String nombre);
+
+    @Query("SELECT Usuario.nombre, Usuario.apellido1, Usuario.apellido2, Usuario.ID_Usuario FROM Usuario " +
+            "INNER JOIN Profesor ON Usuario.ID_Usuario = Profesor.ID_Profesor " +
+            "WHERE Profesor.ID_Profesor NOT IN (" +
+            "    SELECT ID_Profesor FROM Clase " +
+            "    WHERE Fecha = :fecha " +
+            "    AND (time(Hora_Inicio) < time(:hFin) AND time(Hora_Fin) > time(:hIni))" +
+            ")")
+    List<Usuario> obtenerProfesoresLibresSync(String fecha, String hIni, String hFin);
+
+
 }

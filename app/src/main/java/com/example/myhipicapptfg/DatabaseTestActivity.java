@@ -138,5 +138,21 @@ public class DatabaseTestActivity extends AppCompatActivity {
             }
         });
 
+        //10. EquinoDisciplina
+        db.disciplinaEquinoDao().obtenerTodas().observe(this, listaDE -> {
+            Log.d(TAG, "--- TABLA DISCIPLINA_EQUINO [" + (listaDE != null ? listaDE.size() : 0) + "] ---");
+            if (listaDE != null && !listaDE.isEmpty()) {
+                for (DisciplinaEquino de : listaDE) {
+                    // Muestra qué caballo (ID) practica qué disciplina (ID)
+                    Log.i(TAG, "   [Rel_Equi] ID_Equino: " + de.idEquino + " | ID_Disciplina: " + de.idDisciplina);
+                }
+            } else {
+                Log.w(TAG, "   [DisciplinaEquino] No hay especialidades asignadas a caballos.");
+            }
+            Log.d(TAG, "************************************************");
+            Log.d(TAG, "      FIN DEL REPORTE DE BASE DE DATOS");
+            Log.d(TAG, "************************************************");
+        });
+
     }
 }

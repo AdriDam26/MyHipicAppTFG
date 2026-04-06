@@ -14,7 +14,7 @@ import java.util.List;
 @Dao
 public interface ClaseDao {
 
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert
     long insertarClase(Clase clase);
 
     @Update
@@ -42,4 +42,6 @@ public interface ClaseDao {
 
     @Query("SELECT COUNT(*) FROM Clase")
     LiveData<Integer> contarClases();
+
+
 }

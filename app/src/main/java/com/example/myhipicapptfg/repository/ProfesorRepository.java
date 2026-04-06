@@ -102,4 +102,13 @@ public class ProfesorRepository {
             errorLiveData.postValue("Error al insertar en la tabla Profesor: " + e.getMessage());
         }
     }
+
+    public List<Usuario> obtenerProfesoresLibresSync(String fecha, String hIni, String hFin) {
+        try {
+            return profesorDao.obtenerProfesoresLibresSync(fecha, hIni, hFin);
+        } catch (Exception e) {
+            errorLiveData.postValue("Error al consultar disponibilidad de profesores.");
+            return null;
+        }
+    }
 }

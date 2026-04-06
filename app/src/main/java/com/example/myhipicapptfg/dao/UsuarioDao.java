@@ -52,4 +52,6 @@ public interface UsuarioDao {
 
     @Query("SELECT * FROM Usuario WHERE Tipo = :tipo ORDER BY Nombre ASC")
     LiveData<List<Usuario>> obtenerUsuariosPorTipo(String tipo);
+
+
 }

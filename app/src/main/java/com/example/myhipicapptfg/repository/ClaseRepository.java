@@ -63,6 +63,8 @@ public class ClaseRepository {
                 return;
             }
 
+
+
             // Si todo es correcto, procedemos a insertar
             try {
                 claseDao.insertarClase(clase);

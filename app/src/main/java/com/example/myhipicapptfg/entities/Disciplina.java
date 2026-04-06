@@ -18,4 +18,9 @@ public class Disciplina {
     @ColumnInfo(name = "Nombre")
     public String nombre;
 
+    @Override
+    public String toString() {
+        return nombre;
+    }
+
 }

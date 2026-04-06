@@ -55,4 +55,10 @@ public class Usuario {
     public static final String TIPO_PROFESOR = "profesor";
     public static final String TIPO_PROPIETARIO = "propietario";
 
+    @Override
+    public String toString() {
+        return nombre + " " + apellido1 + " " + apellido2;
+    }
+
+
 }

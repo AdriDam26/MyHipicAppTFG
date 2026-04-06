@@ -73,4 +73,9 @@ public class PistaRepository {
     public LiveData<List<Pista>> obtenerPistasPorEstado(String estado) {
         return pistaDao.obtenerPistasPorEstado(estado);
     }
+
+    // Este método debe devolver List (Sincrónico) porque el ViewModel ya usa un hilo
+    public List<Pista> obtenerPistasLibresSync(String fecha, String hIni, String hFin) {
+        return pistaDao.obtenerPistasLibresSync(fecha, hIni, hFin);
+    }
 }
