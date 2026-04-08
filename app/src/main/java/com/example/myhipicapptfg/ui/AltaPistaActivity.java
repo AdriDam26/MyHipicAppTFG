@@ -96,7 +96,9 @@ public class AltaPistaActivity extends AppCompatActivity {
         if (ancho.isEmpty()) { layAncho.setError("Campo obligatorio"); error = true; }
         if (largo.isEmpty()) { layLargo.setError("Campo obligatorio"); error = true; }
 
-        if (error) return;
+        if (error) {
+            return;
+        }
 
         viewModel.registrarPista(nombre, ancho, largo, estado);
     }

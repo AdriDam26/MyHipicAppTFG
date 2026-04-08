@@ -149,6 +149,23 @@ public class DatabaseTestActivity extends AppCompatActivity {
             } else {
                 Log.w(TAG, "   [DisciplinaEquino] No hay especialidades asignadas a caballos.");
             }
+        });
+
+        db.claseDao().obtenerTodasClases().observe(this, listaClases -> {
+            Log.d(TAG, "--- TABLA CLASES [" + (listaClases != null ? listaClases.size() : 0) + "] ---");
+            if (listaClases != null && !listaClases.isEmpty()) {
+                for (Clase c : listaClases) {
+                    Log.i(TAG, "   >> [CLASE] ID: " + c.idClase + " | Fecha: " + c.fecha);
+                    Log.i(TAG, "      Horario: " + c.horaInicio + " - " + c.horaFin);
+                    Log.i(TAG, "      Nivel: " + c.nivelRecomendado);
+                    Log.i(TAG, "      FKs: Prof: " + c.idProfesor + " | Pista: " + c.idPista + " | Disc: " + c.idDisciplina);
+                    Log.d(TAG, "      --------------------------------------------------");
+                }
+            } else {
+                Log.w(TAG, "   [Clase] No hay clases programadas en la base de datos.");
+            }
+
+            // Cierre visual del reporte en el último observador
             Log.d(TAG, "************************************************");
             Log.d(TAG, "      FIN DEL REPORTE DE BASE DE DATOS");
             Log.d(TAG, "************************************************");

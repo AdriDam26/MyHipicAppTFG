@@ -87,7 +87,6 @@ public class AltaUsuarioActivity extends AppCompatActivity {
                 } else if (mensaje.contains("email ya está registrado")) {
                     layEmail.setError(mensaje);
                 } else {
-                    // Para otros mensajes (éxito o errores de lógica) usamos Toast
                     Toast.makeText(this, mensaje, Toast.LENGTH_LONG).show();
                     if (mensaje.startsWith("Éxito")) {
                         finish();
@@ -142,7 +141,9 @@ public class AltaUsuarioActivity extends AppCompatActivity {
             hayError = true;
         }
 
-        if (hayError) return;
+        if (hayError) {
+            return;
+        }
 
         // 4. Obtener disciplinas
         List<SeleccionDisciplina> selecciones = new ArrayList<>();
