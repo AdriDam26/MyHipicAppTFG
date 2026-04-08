@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.myhipicapptfg.R;
 import com.example.myhipicapptfg.entities.Equino;
-import com.example.myhipicapptfg.viewmodel.EquinoViewModel;
+import com.example.myhipicapptfg.viewmodel.AREquinoViewModel;
 import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.rendering.ViewRenderable;
@@ -25,7 +25,7 @@ public class ARActivity extends AppCompatActivity {
     private static final String TAG = "ARActivity";
 
     private ArFragment arFragment;
-    private EquinoViewModel viewModel;
+    private AREquinoViewModel viewModel;
     private Node nodoTarjeta;
     private boolean tarjetaCreada = false;
 
@@ -46,7 +46,7 @@ public class ARActivity extends AppCompatActivity {
         }
 
         // Iniciar ViewModel y pedir el caballo
-        viewModel = new ViewModelProvider(this).get(EquinoViewModel.class);
+        viewModel = new ViewModelProvider(this).get(AREquinoViewModel.class);
         viewModel.cargarPorMicrochip(microchip);
 
         // Fragmento AR
