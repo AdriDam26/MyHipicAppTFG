@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="?attr/colorSurface">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:title="Mis Rutas"/>
+
+    <TextView
+        android:id="@+id/tvSinRutas"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="No tienes rutas guardadas"
+        android:gravity="center"
+        android:textAppearance="?attr/textAppearanceTitleMedium"
+        android:alpha="0.5"
+        android:visibility="gone"/>
+
+    <ListView
+        android:id="@+id/listViewRutas"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@null"
+        android:padding="8dp" />
+
+</LinearLayout>

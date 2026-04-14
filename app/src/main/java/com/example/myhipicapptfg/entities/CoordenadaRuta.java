@@ -30,6 +30,12 @@ public class CoordenadaRuta {
     @ColumnInfo(name = "Longitud")
     public double longitud;
 
+    @ColumnInfo(name = "Altitud")
+    public double altitud;
+
+    @ColumnInfo(name = "Marca_Tiempo")
+    public long marcaTiempo;
+
     @ColumnInfo(name = "ID_Ruta_Personal")
     public int idRutaPersonal;
 }

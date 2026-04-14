@@ -1,21 +1,18 @@
-package com.example.myhipicapptfg; // Pon tu paquete aquí
+package com.example.myhipicapptfg;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Button;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myhipicapptfg.database.AppDatabase;
-import com.example.myhipicapptfg.database.TestDatabase;
-import com.example.myhipicapptfg.entities.Alumno;
-import com.example.myhipicapptfg.entities.Cuadra;
-import com.example.myhipicapptfg.entities.Equino;
 import com.example.myhipicapptfg.entities.Propietario;
 import com.example.myhipicapptfg.entities.Usuario;
 
 public class DatabaseTestActivity extends AppCompatActivity {
 
     private AppDatabase db;
+    private static final String TAG = "HIPICA_TEST";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,60 +22,69 @@ public class DatabaseTestActivity extends AppCompatActivity {
         db = AppDatabase.getInstance(this);
 
         findViewById(R.id.btnTestUser).setOnClickListener(v -> {
+
+            Log.i(TAG, "Creando nuevo propietario de prueba...");
+
             new Thread(() -> {
+
                 try {
-                    // 1. CREAR USUARIO (Base para el Propietario)
-                    Usuario u = new Usuario();
-                    u.nombre = "Juan";
-                    u.apellido1 = "García";
-                    u.apellido2 = "Pérez";
-                    u.dni = "12345678Z";
-                    u.email = "juan.propietario@email.com";
-                    u.telefono = "600112233";
-                    u.fechaNacimiento = "1985-05-20";
-                    u.sexo = Usuario.SEXO_MASCULINO;
-                    u.tipo = Usuario.TIPO_PROPIETARIO;
+                    // ==========================
+                    // 1️⃣ CREAR USUARIO
+                    // ==========================
 
-                    long idUsuario = db.usuarioDao().insertarUsuario(u);
-                    Log.d("HIPICA", "1. Usuario Propietario creado con ID: " + idUsuario);
+                    Usuario usuario = new Usuario();
+                    usuario.nombre = "Carlos";
+                    usuario.apellido1 = "García";
+                    usuario.apellido2 = "López";
 
-                    // 2. VINCULAR COMO PROPIETARIO
-                    Propietario p = new Propietario();
-                    p.idPropietario = (int) idUsuario;
-                    db.propietarioDao().insertarPropietario(p);
-                    Log.d("HIPICA", "2. Rol de Propietario asignado al ID: " + idUsuario);
+                    // Para evitar duplicados
+                    long timestamp = System.currentTimeMillis();
 
-                    // 3. CREAR CUADRA
-                    Cuadra c = new Cuadra();
-                    c.numeroCuadra = 105; // Número único según tu índice
-                    long idCuadra = db.cuadraDao().insertarCuadra(c);
-                    Log.d("HIPICA", "3. Cuadra creada con ID: " + idCuadra);
+                    usuario.dni = "DNI" + timestamp;
+                    usuario.email = "carlos" + timestamp + "@test.com";
+                    usuario.telefono = "600123456";
+                    usuario.fechaNacimiento = "1990-01-01";
+                    usuario.sexo = Usuario.SEXO_MASCULINO;
+                    usuario.tipo = Usuario.TIPO_PROPIETARIO;
 
-                    // 4. CREAR EQUINO CON TODOS LOS DATOS
-                    Equino e = new Equino();
-                    e.nombre = "Relámpago";
-                    e.raza = "Pura Raza Española";
-                    e.fechaNacimiento = "2018-03-15";
-                    e.sexo = Equino.SEXO_MACHO;
-                    e.altura = 1.65;
-                    e.peso = 520.0;
-                    e.temperamento = Equino.MANEJABLE;
-                    e.estadoSalud = Equino.BUENO;
-                    e.numeroMicrochip = "900123456789012"; // Único
+                    long idGenerado = db.usuarioDao().insertarUsuario(usuario);
 
-                    // Foreign Keys
-                    e.idPropietario = (int) idUsuario;
-                    e.idCuadra = (int) idCuadra;
+                    Log.i(TAG, "Usuario creado con ID: " + idGenerado);
 
-                    long idEquino = db.equinoDao().insertar(e);
-                    Log.d("HIPICA", "4. Equino '" + e.nombre + "' creado con ID: " + idEquino);
-                    Log.d("HIPICA", "--- PRUEBA COMPLETADA CON ÉXITO ---");
+                    // ==========================
+                    // 2️⃣ CREAR PROPIETARIO
+                    // ==========================
+
+                    Propietario propietario = new Propietario();
+                    propietario.idPropietario = (int) idGenerado;
+
+                    db.propietarioDao().insertarPropietario(propietario);
+
+                    Log.i(TAG, "Propietario creado correctamente.");
 
                 } catch (Exception e) {
-                    Log.e("HIPICA", "ERROR EN LA PRUEBA: " + e.getMessage());
-                    e.printStackTrace();
+                    Log.e(TAG, "Error creando propietario: " + e.getMessage());
                 }
+
             }).start();
+
+            // ==========================
+            // 3️⃣ OBSERVAR PROPIETARIOS
+            // ==========================
+
+            db.propietarioDao().obtenerTodosPropietarios().observe(this, propietarios -> {
+
+                if (propietarios == null || propietarios.isEmpty()) {
+                    Log.w(TAG, "No hay propietarios registrados.");
+                    return;
+                }
+
+                Log.i(TAG, "==== PROPIETARIOS REGISTRADOS: " + propietarios.size() + " ====");
+
+                for (Propietario p : propietarios) {
+                    Log.i(TAG, "Propietario ID: " + p.idPropietario);
+                }
+            });
         });
     }
 }

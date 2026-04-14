@@ -1,11 +1,11 @@
 package com.example.myhipicapptfg.repository;
 
-
 import android.app.Application;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import com.example.myhipicapptfg.dao.RutaPersonalDao;
 import com.example.myhipicapptfg.database.TestDatabase;
+import com.example.myhipicapptfg.entities.CoordenadaRuta;
 import com.example.myhipicapptfg.entities.RutaPersonal;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -16,8 +16,8 @@ public class RutaPersonalRepository {
     private final RutaPersonalDao dao;
     private final ExecutorService executor;
 
-    // Para comunicar errores o éxito a la Activity
     private final MutableLiveData<String> mensajeStatus = new MutableLiveData<>();
+    private final MutableLiveData<Long> idInsertado = new MutableLiveData<>();
     private final LiveData<List<RutaPersonal>> listaRutas;
 
     public RutaPersonalRepository(Application application) {
@@ -27,38 +27,40 @@ public class RutaPersonalRepository {
         listaRutas = dao.obtenerTodas();
     }
 
-    public LiveData<List<RutaPersonal>> getListaRutas() {
-        return listaRutas;
-    }
-
-    public LiveData<String> getMensajeStatus() {
-        return mensajeStatus;
-    }
-
     /**
-     * Inserta una ruta tras verificar que el ID del propietario es válido y tiene el rol correcto.
+     * Método unificado para guardar todo de una vez.
+     * Si el usuario cancela en el diálogo, este método nunca se llama.
      */
-    public void insertar(RutaPersonal ruta) {
+    public void guardarRutaCompleta(RutaPersonal ruta, List<CoordenadaRuta> puntos) {
         executor.execute(() -> {
-            // 1. Verificación de seguridad en el DAO
-            boolean esValido = dao.esPropietarioValido(ruta.idPropietario);
 
-            if (esValido) {
-                try {
-                    dao.insertar(ruta);
-                    // null significa que todo salió bien
-                    mensajeStatus.postValue(null);
-                } catch (Exception e) {
-                    mensajeStatus.postValue("Error técnico al guardar en la base de datos.");
-                }
-            } else {
-                // Si el ID es de un Profesor, Alumno o no existe
+            // Verificación de seguridad
+            if (!dao.esPropietarioValido(ruta.idPropietario)) {
                 mensajeStatus.postValue("Denegado: El usuario con ID " + ruta.idPropietario + " no es un Propietario.");
+                return;
+            }
+
+            try {
+                // Ejecutamos la transacción atómica
+                long id = dao.guardarRutaConPuntos(ruta, puntos);
+
+                // Notificamos a la UI que ya terminó (ahora es seguro hacer finish())
+                idInsertado.postValue(id);
+                mensajeStatus.postValue(null);
+            } catch (Exception e) {
+                mensajeStatus.postValue("Error al guardar la ruta: " + e.getMessage());
             }
         });
     }
 
+    public LiveData<List<RutaPersonal>> getListaRutas() { return listaRutas; }
+    public LiveData<String> getMensajeStatus() { return mensajeStatus; }
+    public LiveData<Long> getIdInsertado() { return idInsertado; }
+
     public void eliminar(RutaPersonal ruta) {
         executor.execute(() -> dao.eliminar(ruta));
+    }
+    public LiveData<List<RutaPersonal>> obtenerPorPropietario(int idPropietario) {
+        return dao.obtenerPorPropietario(idPropietario);
     }
 }
