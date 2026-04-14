@@ -1,6 +1,5 @@
 package com.example.myhipicapptfg.ui;
 
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,16 +13,17 @@ import androidx.core.content.ContextCompat;
 
 import com.example.myhipicapptfg.R;
 
-public class MenuActivity extends AppCompatActivity {
+public class ARMenuActivity extends AppCompatActivity {
 
     private static final int PERMISO_CAMARA = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_menu);
+        setContentView(R.layout.activity_ar_menu); // puedes cambiarlo a activity_ar_menu si quieres
 
         Button btnEscanear = findViewById(R.id.btnEscanear);
+
         btnEscanear.setOnClickListener(v -> verificarPermiso());
     }
 
@@ -32,22 +32,30 @@ public class MenuActivity extends AppCompatActivity {
                 == PackageManager.PERMISSION_GRANTED) {
             irAlEscaner();
         } else {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.CAMERA}, PERMISO_CAMARA);
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{Manifest.permission.CAMERA},
+                    PERMISO_CAMARA
+            );
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           String[] permissions, int[] grantResults) {
+                                           String[] permissions,
+                                           int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
         if (requestCode == PERMISO_CAMARA &&
                 grantResults.length > 0 &&
                 grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
             irAlEscaner();
+
         } else {
             Toast.makeText(this,
-                    "Necesitas dar permiso de cámara", Toast.LENGTH_SHORT).show();
+                    "Necesitas dar permiso de cámara",
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
