@@ -23,6 +23,9 @@ public interface AlumnoDisciplinaDao {
     @Delete
     void eliminar(AlumnoDisciplina ad);
 
+    @Query("DELETE FROM AlumnoDisciplina WHERE ID_Alumno = :idAlumno")
+    void eliminarDisciplinasPorAlumno(int idAlumno);
+
     @Query("SELECT * FROM AlumnoDisciplina")
     LiveData<List<AlumnoDisciplina>> obtenerTodas();
 

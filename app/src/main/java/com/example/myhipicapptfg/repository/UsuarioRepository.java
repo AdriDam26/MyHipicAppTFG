@@ -114,6 +114,17 @@ public class UsuarioRepository {
         return usuarioDao.obtenerUsuariosPorTipo(tipo);
     }
 
+    public int actualizarUsuarioSync(Usuario u) {
+        try {
+            return usuarioDao.actualizarUsuarioSync(u);
+        } catch (Exception e) {
+            // Aquí manejamos los códigos de error que ya usas en tu ViewModel
+            if (e.getMessage().contains("dni")) return -2;
+            if (e.getMessage().contains("email")) return -1;
+            return -3; // Error genérico
+        }
+    }
+
 
 
 

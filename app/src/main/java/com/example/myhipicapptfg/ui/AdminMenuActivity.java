@@ -24,7 +24,7 @@ public class AdminMenuActivity extends AppCompatActivity {
 
         // USUARIOS
         cardUsuarios.setOnClickListener(v -> {
-            Intent intent = new Intent(AdminMenuActivity.this, AltaUsuarioActivity.class);
+            Intent intent = new Intent(AdminMenuActivity.this, GestionAlumnosActivity.class);
             startActivity(intent);
         });
 

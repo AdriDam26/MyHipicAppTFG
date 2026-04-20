@@ -60,4 +60,8 @@ public class ProfesorDisciplinaRepository {
             mensajeStatus.postValue("Error al vincular disciplina al profesor: " + e.getMessage());
         }
     }
+
+    public void eliminarDisciplinasPorProfesorSync(int idProfesor) {
+        dao.eliminarDisciplinasPorProfesor(idProfesor);
+    }
 }

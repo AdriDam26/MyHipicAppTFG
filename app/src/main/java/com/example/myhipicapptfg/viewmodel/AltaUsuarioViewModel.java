@@ -41,21 +41,19 @@ public class AltaUsuarioViewModel extends AndroidViewModel {
     public LiveData<String> getMensajeEstado() { return mensajeEstado; }
     public LiveData<Boolean> getCargando() { return cargando; }
 
-    public void registrarNuevoUsuario(String nombre, String ap1, String ap2, String dni,
-                                      String email, String sexo, String tipo,
-                                      List<SeleccionDisciplina> selecciones) {
+    /**
+     * MÉTODO PARA ACTUALIZAR USUARIO EXISTENTE
+     */
+    public void actualizarUsuario(int idUsuario, String nombre, String ap1, String ap2, String dni,
+                                  String email, String sexo, String tipo,
+                                  List<SeleccionDisciplina> selecciones) {
 
-        // 1. VALIDACIÓN DE LÓGICA DE NEGOCIO
-        // (Las validaciones de formato de texto ya se hicieron en la Activity)
-
+        // 1. Validaciones de negocio (Reutilizadas)
         if (!tipo.equals("Propietario")) {
-            // Un Alumno o Profesor DEBE tener al menos una disciplina seleccionada
             if (selecciones == null || selecciones.isEmpty()) {
                 mensajeEstado.setValue("Error: Selecciona al menos una disciplina");
                 return;
             }
-
-            // Si es Alumno, cada disciplina marcada debe tener un nivel asignado
             if (tipo.equals("Alumno")) {
                 for (SeleccionDisciplina s : selecciones) {
                     if (s.nivel == null || s.nivel.isEmpty() || s.nivel.equalsIgnoreCase("Seleccionar nivel")) {
@@ -66,7 +64,96 @@ public class AltaUsuarioViewModel extends AndroidViewModel {
             }
         }
 
-        // --- PREPARACIÓN DEL OBJETO ---
+        // 2. Preparar objeto con el ID original
+        Usuario u = new Usuario();
+        u.idUsuario = idUsuario;
+        u.nombre = nombre;
+        u.apellido1 = ap1;
+        u.apellido2 = ap2;
+        u.dni = dni.toUpperCase();
+        u.email = email;
+        u.sexo = sexo.equals("Masculino") ? "M" : "F";
+        u.tipo = tipo;
+
+        cargando.setValue(true);
+        mensajeEstado.setValue(null);
+
+        // 3. Proceso asíncrono
+        executorService.execute(() -> {
+            // Actualizamos el usuario base
+            int resultado = usuarioRepo.actualizarUsuarioSync(u);
+
+            if (resultado >= 0) {
+                // Si el usuario se actualizó, refrescamos sus disciplinas según el tipo
+                switch (tipo) {
+                    case "Alumno":
+                        procesarActualizacionAlumno(idUsuario, selecciones);
+                        break;
+                    case "Profesor":
+                        procesarActualizacionProfesor(idUsuario, selecciones);
+                        break;
+                    case "Propietario":
+                        finalizarExitoActualizacion("Propietario");
+                        break;
+                }
+            } else {
+                cargando.postValue(false);
+                manejarErrorBaseDatos(resultado);
+            }
+        });
+    }
+
+    private void procesarActualizacionAlumno(int id, List<SeleccionDisciplina> selecciones) {
+        // Borramos las disciplinas viejas e insertamos las nuevas (Limpieza total)
+        aluDiscRepo.eliminarDisciplinasPorAlumnoSync(id);
+        for (SeleccionDisciplina sel : selecciones) {
+            AlumnoDisciplina ad = new AlumnoDisciplina();
+            ad.idAlumno = id;
+            ad.idDisciplina = sel.id;
+            ad.nivel = sel.nivel;
+            aluDiscRepo.insertarSync(ad);
+        }
+        finalizarExitoActualizacion("Alumno");
+    }
+
+    private void procesarActualizacionProfesor(int id, List<SeleccionDisciplina> selecciones) {
+        // Borramos las disciplinas viejas e insertamos las nuevas
+        profDiscRepo.eliminarDisciplinasPorProfesorSync(id);
+        for (SeleccionDisciplina sel : selecciones) {
+            ProfesorDisciplina pd = new ProfesorDisciplina();
+            pd.idProfesor = id;
+            pd.idDisciplina = sel.id;
+            profDiscRepo.insertarSync(pd);
+        }
+        finalizarExitoActualizacion("Profesor");
+    }
+
+    private void finalizarExitoActualizacion(String tipo) {
+        cargando.postValue(false);
+        mensajeEstado.postValue("Éxito: " + tipo + " actualizado correctamente");
+    }
+
+    // --- MÉTODOS DE REGISTRO (EXISTENTES) ---
+
+    public void registrarNuevoUsuario(String nombre, String ap1, String ap2, String dni,
+                                      String email, String sexo, String tipo,
+                                      List<SeleccionDisciplina> selecciones) {
+
+        if (!tipo.equals("Propietario")) {
+            if (selecciones == null || selecciones.isEmpty()) {
+                mensajeEstado.setValue("Error: Selecciona al menos una disciplina");
+                return;
+            }
+            if (tipo.equals("Alumno")) {
+                for (SeleccionDisciplina s : selecciones) {
+                    if (s.nivel == null || s.nivel.isEmpty() || s.nivel.equalsIgnoreCase("Seleccionar nivel")) {
+                        mensajeEstado.setValue("Error: Indica el nivel para las disciplinas seleccionadas");
+                        return;
+                    }
+                }
+            }
+        }
+
         Usuario u = new Usuario();
         u.nombre = nombre;
         u.apellido1 = ap1;
@@ -79,26 +166,15 @@ public class AltaUsuarioViewModel extends AndroidViewModel {
         cargando.setValue(true);
         mensajeEstado.setValue(null);
 
-        // --- PROCESO ASÍNCRONO ---
         executorService.execute(() -> {
-            // Intentar insertar el usuario base
             long idGenerado = usuarioRepo.insertarUsuarioSync(u);
-
             if (idGenerado > 0) {
-                // Si el usuario se insertó, procedemos con su rol específico
                 switch (tipo) {
-                    case "Alumno":
-                        procesarRegistroAlumno(idGenerado, selecciones);
-                        break;
-                    case "Profesor":
-                        procesarRegistroProfesor(idGenerado, selecciones);
-                        break;
-                    case "Propietario":
-                        procesarRegistroPropietario(idGenerado);
-                        break;
+                    case "Alumno": procesarRegistroAlumno(idGenerado, selecciones); break;
+                    case "Profesor": procesarRegistroProfesor(idGenerado, selecciones); break;
+                    case "Propietario": procesarRegistroPropietario(idGenerado); break;
                 }
             } else {
-                // Si idGenerado es -1 o -2, es un error de duplicados en la BD
                 cargando.postValue(false);
                 manejarErrorBaseDatos(idGenerado);
             }
@@ -119,7 +195,6 @@ public class AltaUsuarioViewModel extends AndroidViewModel {
         Alumno alu = new Alumno();
         alu.idAlumno = (int) id;
         alumnoRepo.insertarAlumnoSync(alu);
-
         for (SeleccionDisciplina sel : selecciones) {
             AlumnoDisciplina ad = new AlumnoDisciplina();
             ad.idAlumno = (int) id;
@@ -134,7 +209,6 @@ public class AltaUsuarioViewModel extends AndroidViewModel {
         Profesor prof = new Profesor();
         prof.idProfesor = (int) id;
         profesorRepo.insertarProfesorSync(prof);
-
         for (SeleccionDisciplina sel : selecciones) {
             ProfesorDisciplina pd = new ProfesorDisciplina();
             pd.idProfesor = (int) id;
@@ -159,6 +233,6 @@ public class AltaUsuarioViewModel extends AndroidViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        executorService.shutdown(); // Limpiamos el hilo al destruir el ViewModel
+        executorService.shutdown();
     }
 }

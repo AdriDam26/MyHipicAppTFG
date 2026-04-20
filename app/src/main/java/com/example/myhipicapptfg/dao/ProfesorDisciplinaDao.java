@@ -31,4 +31,7 @@ public interface ProfesorDisciplinaDao {
 
     @Query("SELECT * FROM ProfesorDisciplina WHERE ID_Profesor = :idProfesor")
     List<ProfesorDisciplina> obtenerDisciplinasPorProfesor(int idProfesor);
+
+    @Query("DELETE FROM ProfesorDisciplina WHERE ID_Profesor = :idProfesor")
+    void eliminarDisciplinasPorProfesor(int idProfesor);
 }

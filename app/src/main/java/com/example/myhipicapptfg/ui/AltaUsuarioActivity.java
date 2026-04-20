@@ -29,8 +29,12 @@ public class AltaUsuarioActivity extends AppCompatActivity {
     private AutoCompleteTextView spinnerNivelDoma, spinnerNivelSalto, spinnerNivelVaquera;
     private TextInputLayout layoutNivelDoma, layoutNivelSalto, layoutNivelVaquera;
     private LinearLayout layoutSeccionDisciplinas;
-    private TextView tvTituloDisciplinas;
+    private TextView tvTituloDisciplinas, tvTituloPrincipal;
     private ProgressBar progressBar;
+    private Button btnGuardar;
+
+    // Control de estado
+    private int usuarioIdEdicion = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +46,32 @@ public class AltaUsuarioActivity extends AppCompatActivity {
         vincularVistas();
         configurarComponentes();
         observarViewModel();
+
+        // 1. COMPROBAR SI ES UNA EDICIÓN (Viene de pulsar el lápiz)
+        usuarioIdEdicion = getIntent().getIntExtra("USUARIO_ID", -1);
+        if (usuarioIdEdicion != -1) {
+            prepararModoEdicion(usuarioIdEdicion);
+        }
+
+        // 2. COMPROBAR SI EL TIPO VIENE FORZADO (Viene de una lista específica)
+        String tipoForzado = getIntent().getStringExtra("TIPO_USUARIO");
+        if (tipoForzado != null) {
+            // Ocultamos el campo para que quede más limpio (UX)
+            layTipo.setVisibility(View.GONE);
+
+            // Asignamos el valor internamente para que la lógica funcione
+            spinnerTipo.setText(tipoForzado, false);
+            actualizarInterfazSegunTipo(tipoForzado);
+
+            // Actualizamos el título de la pantalla
+            if (tvTituloPrincipal != null) {
+                tvTituloPrincipal.setText(usuarioIdEdicion != -1 ? "Editar " + tipoForzado : "Nuevo " + tipoForzado);
+            }
+        }
     }
 
     private void vincularVistas() {
+        tvTituloPrincipal = findViewById(R.id.tvTituloPrincipal);
         etNombre = findViewById(R.id.etNombre);
         etApellido1 = findViewById(R.id.etApellido1);
         etApellido2 = findViewById(R.id.etApellido2);
@@ -55,12 +82,12 @@ public class AltaUsuarioActivity extends AppCompatActivity {
         layoutSeccionDisciplinas = findViewById(R.id.layoutSeccionDisciplinas);
         tvTituloDisciplinas = findViewById(R.id.tvTituloDisciplinas);
         progressBar = findViewById(R.id.progressBar);
+        btnGuardar = findViewById(R.id.btnGuardar);
 
-        // Referencias a los Layouts para gestionar errores visuales
-        layNombre = (TextInputLayout) etNombre.getParent().getParent();
-        layDni = (TextInputLayout) etDni.getParent().getParent();
-        layEmail = (TextInputLayout) etEmail.getParent().getParent();
-        layTipo = (TextInputLayout) spinnerTipo.getParent().getParent();
+        layNombre = findViewById(R.id.layNombre);
+        layDni = findViewById(R.id.layDni);
+        layEmail = findViewById(R.id.layEmail);
+        layTipo = findViewById(R.id.layTipo);
 
         cbDoma = findViewById(R.id.cbDomaClasica);
         cbSalto = findViewById(R.id.cbSalto);
@@ -70,92 +97,12 @@ public class AltaUsuarioActivity extends AppCompatActivity {
         spinnerNivelSalto = findViewById(R.id.spinnerNivelSalto);
         spinnerNivelVaquera = findViewById(R.id.spinnerNivelVaquera);
 
-        layoutNivelDoma = (TextInputLayout) spinnerNivelDoma.getParent().getParent();
-        layoutNivelSalto = (TextInputLayout) spinnerNivelSalto.getParent().getParent();
-        layoutNivelVaquera = (TextInputLayout) spinnerNivelVaquera.getParent().getParent();
+        layoutNivelDoma = findViewById(R.id.layNivelDoma);
+        layoutNivelSalto = findViewById(R.id.layNivelSalto);
+        layoutNivelVaquera = findViewById(R.id.layNivelVaquera);
 
-        findViewById(R.id.btnGuardar).setOnClickListener(v -> recolectarYEnviar());
+        btnGuardar.setOnClickListener(v -> recolectarYEnviar());
         findViewById(R.id.btnVolver).setOnClickListener(v -> finish());
-    }
-
-    private void observarViewModel() {
-        viewModel.getMensajeEstado().observe(this, mensaje -> {
-            if (mensaje != null) {
-                // Si el error viene de la DB (duplicados), lo asignamos al campo
-                if (mensaje.contains("DNI ya está registrado")) {
-                    layDni.setError(mensaje);
-                } else if (mensaje.contains("email ya está registrado")) {
-                    layEmail.setError(mensaje);
-                } else {
-                    Toast.makeText(this, mensaje, Toast.LENGTH_LONG).show();
-                    if (mensaje.startsWith("Éxito")) {
-                        finish();
-                    }
-                }
-            }
-        });
-
-        viewModel.getCargando().observe(this, estaCargando -> {
-            progressBar.setVisibility(estaCargando ? View.VISIBLE : View.GONE);
-            findViewById(R.id.btnGuardar).setEnabled(!estaCargando);
-        });
-    }
-
-    private void recolectarYEnviar() {
-        // 1. Resetear errores visuales
-        layNombre.setError(null);
-        layDni.setError(null);
-        layEmail.setError(null);
-        layTipo.setError(null);
-
-        // 2. Extraer strings
-        String nombre = etNombre.getText().toString().trim();
-        String ap1 = etApellido1.getText().toString().trim();
-        String ap2 = etApellido2.getText().toString().trim();
-        String dni = etDni.getText().toString().trim();
-        String email = etEmail.getText().toString().trim();
-        String sexo = spinnerSexo.getText().toString();
-        String tipo = spinnerTipo.getText().toString();
-
-        // 3. Validaciones de Formato y Campos Vacíos (UI)
-        boolean hayError = false;
-
-        if (nombre.isEmpty()) {
-            layNombre.setError("El nombre es obligatorio");
-            hayError = true;
-        }
-
-        // Validación 8 números y 1 letra
-        if (!dni.matches("\\d{8}[A-Za-z]")) {
-            layDni.setError("Formato incorrecto (8 números y 1 letra)");
-            hayError = true;
-        }
-
-        if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            layEmail.setError("Introduce un email válido");
-            hayError = true;
-        }
-
-        if (tipo.isEmpty()) {
-            layTipo.setError("Selecciona un tipo de usuario");
-            hayError = true;
-        }
-
-        if (hayError) {
-            return;
-        }
-
-        // 4. Obtener disciplinas
-        List<SeleccionDisciplina> selecciones = new ArrayList<>();
-        if (cbDoma.isChecked())
-            selecciones.add(new SeleccionDisciplina(1, spinnerNivelDoma.getText().toString()));
-        if (cbSalto.isChecked())
-            selecciones.add(new SeleccionDisciplina(2, spinnerNivelSalto.getText().toString()));
-        if (cbVaquera.isChecked())
-            selecciones.add(new SeleccionDisciplina(3, spinnerNivelVaquera.getText().toString()));
-
-        // 5. Enviar al ViewModel (para validación de negocio y BD)
-        viewModel.registrarNuevoUsuario(nombre, ap1, ap2, dni, email, sexo, tipo, selecciones);
     }
 
     private void configurarComponentes() {
@@ -169,24 +116,87 @@ public class AltaUsuarioActivity extends AppCompatActivity {
         spinnerNivelVaquera.setAdapter(adapterNiveles);
 
         spinnerTipo.setOnItemClickListener((parent, view, position, id) -> {
-            layTipo.setError(null); // Limpiar error al seleccionar
-            String seleccion = (String) parent.getItemAtPosition(position);
-
-            if (seleccion.equals("Propietario")) {
-                layoutSeccionDisciplinas.setVisibility(View.GONE);
-            } else {
-                layoutSeccionDisciplinas.setVisibility(View.VISIBLE);
-                boolean esAlumno = seleccion.equals("Alumno");
-                int visibilidadNivel = esAlumno ? View.VISIBLE : View.GONE;
-                layoutNivelDoma.setVisibility(visibilidadNivel);
-                layoutNivelSalto.setVisibility(visibilidadNivel);
-                layoutNivelVaquera.setVisibility(visibilidadNivel);
-                tvTituloDisciplinas.setText(esAlumno ? "Disciplinas y Niveles" : "Disciplinas que enseña");
-            }
+            layTipo.setError(null);
+            actualizarInterfazSegunTipo((String) parent.getItemAtPosition(position));
         });
 
         cbDoma.setOnCheckedChangeListener((v, checked) -> spinnerNivelDoma.setEnabled(checked));
         cbSalto.setOnCheckedChangeListener((v, checked) -> spinnerNivelSalto.setEnabled(checked));
         cbVaquera.setOnCheckedChangeListener((v, checked) -> spinnerNivelVaquera.setEnabled(checked));
+    }
+
+    private void actualizarInterfazSegunTipo(String seleccion) {
+        if ("Propietario".equals(seleccion)) {
+            layoutSeccionDisciplinas.setVisibility(View.GONE);
+        } else {
+            layoutSeccionDisciplinas.setVisibility(View.VISIBLE);
+            boolean esAlumno = "Alumno".equals(seleccion);
+            int visibilidadNivel = esAlumno ? View.VISIBLE : View.GONE;
+
+            layoutNivelDoma.setVisibility(visibilidadNivel);
+            layoutNivelSalto.setVisibility(visibilidadNivel);
+            layoutNivelVaquera.setVisibility(visibilidadNivel);
+
+            tvTituloDisciplinas.setText(esAlumno ? "Disciplinas y Niveles" : "Disciplinas que enseña");
+        }
+    }
+
+    private void recolectarYEnviar() {
+        // Reset errores
+        layNombre.setError(null); layDni.setError(null); layEmail.setError(null);
+
+        String nombre = etNombre.getText().toString().trim();
+        String ap1 = etApellido1.getText().toString().trim();
+        String ap2 = etApellido2.getText().toString().trim();
+        String dni = etDni.getText().toString().trim();
+        String email = etEmail.getText().toString().trim();
+        String sexo = spinnerSexo.getText().toString();
+        String tipo = spinnerTipo.getText().toString();
+
+        if (validarCampos(nombre, dni, email, tipo)) {
+            List<SeleccionDisciplina> selecciones = new ArrayList<>();
+            if (cbDoma.isChecked()) selecciones.add(new SeleccionDisciplina(1, spinnerNivelDoma.getText().toString()));
+            if (cbSalto.isChecked()) selecciones.add(new SeleccionDisciplina(2, spinnerNivelSalto.getText().toString()));
+            if (cbVaquera.isChecked()) selecciones.add(new SeleccionDisciplina(3, spinnerNivelVaquera.getText().toString()));
+
+            if (usuarioIdEdicion == -1) {
+                // MODO ALTA
+                viewModel.registrarNuevoUsuario(nombre, ap1, ap2, dni, email, sexo, tipo, selecciones);
+            } else {
+                // MODO ACTUALIZACIÓN (Debes tener este método en tu ViewModel)
+                viewModel.actualizarUsuario(usuarioIdEdicion, nombre, ap1, ap2, dni, email, sexo, tipo, selecciones);
+            }
+        }
+    }
+
+    private boolean validarCampos(String n, String d, String e, String t) {
+        boolean ok = true;
+        if (n.isEmpty()) { layNombre.setError("Obligatorio"); ok = false; }
+        if (!d.matches("\\d{8}[A-Za-z]")) { layDni.setError("DNI inválido"); ok = false; }
+        if (e.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(e).matches()) { layEmail.setError("Email inválido"); ok = false; }
+        if (t.isEmpty()) { layTipo.setError("Selecciona tipo"); ok = false; }
+        return ok;
+    }
+
+    private void observarViewModel() {
+        viewModel.getMensajeEstado().observe(this, mensaje -> {
+            if (mensaje != null) {
+                Toast.makeText(this, mensaje, Toast.LENGTH_LONG).show();
+                if (mensaje.startsWith("Éxito")) finish();
+            }
+        });
+
+        viewModel.getCargando().observe(this, cargando -> {
+            progressBar.setVisibility(cargando ? View.VISIBLE : View.GONE);
+            btnGuardar.setEnabled(!cargando);
+        });
+    }
+
+    private void prepararModoEdicion(int id) {
+        if (tvTituloPrincipal != null) tvTituloPrincipal.setText("Editar Registro");
+        btnGuardar.setText("ACTUALIZAR DATOS");
+
+        // Aquí deberías llamar a un método del viewModel para cargar los datos actuales
+        // viewModel.cargarDatosUsuario(id);
     }
 }

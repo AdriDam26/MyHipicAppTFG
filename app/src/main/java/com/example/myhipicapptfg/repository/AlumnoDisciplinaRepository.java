@@ -68,4 +68,8 @@ public class AlumnoDisciplinaRepository {
             Log.e("DEBUG_AD", "ERROR SQL: " + e.getMessage());
         }
     }
+
+    public void eliminarDisciplinasPorAlumnoSync(int idAlumno) {
+        dao.eliminarDisciplinasPorAlumno(idAlumno);
+    }
 }
