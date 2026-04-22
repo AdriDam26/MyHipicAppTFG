@@ -1,97 +1,124 @@
 package com.example.myhipicapptfg.database;
 
+import android.content.Context;
 
-
+import androidx.annotation.NonNull;
 import androidx.room.Database;
+import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.example.myhipicapptfg.dao.AlumnoDao;
-import com.example.myhipicapptfg.dao.AlumnoDisciplinaDao;
-import com.example.myhipicapptfg.dao.CalificacionDao;
-import com.example.myhipicapptfg.dao.ClaseDao;
-import com.example.myhipicapptfg.dao.CompeticionDao;
-import com.example.myhipicapptfg.dao.ConvocatoriaDao;
-import com.example.myhipicapptfg.dao.CoordenadaRutaDao;
-import com.example.myhipicapptfg.dao.CuadraDao;
-import com.example.myhipicapptfg.dao.CuidadoDao;
-import com.example.myhipicapptfg.dao.DisciplinaDao;
-import com.example.myhipicapptfg.dao.DisciplinaEquinoDao;
-import com.example.myhipicapptfg.dao.EquinoDao;
-import com.example.myhipicapptfg.dao.ParticipacionDao;
-import com.example.myhipicapptfg.dao.PistaDao;
-import com.example.myhipicapptfg.dao.PlantillaPruebaDao;
-import com.example.myhipicapptfg.dao.ProfesorDao;
-import com.example.myhipicapptfg.dao.ProfesorDisciplinaDao;
-import com.example.myhipicapptfg.dao.ReprisaDao;
-import com.example.myhipicapptfg.dao.ReservaClaseDao;
-import com.example.myhipicapptfg.dao.RutaPersonalDao;
-import com.example.myhipicapptfg.dao.UsuarioDao;
-import com.example.myhipicapptfg.entities.Alumno;
-import com.example.myhipicapptfg.entities.AlumnoDisciplina;
-import com.example.myhipicapptfg.entities.Clase;
-import com.example.myhipicapptfg.entities.Competicion;
-import com.example.myhipicapptfg.entities.CoordenadaRuta;
-import com.example.myhipicapptfg.entities.Cuidado;
-import com.example.myhipicapptfg.entities.Disciplina;
-import com.example.myhipicapptfg.entities.DisciplinaEquino;
-import com.example.myhipicapptfg.entities.Equino;
-import com.example.myhipicapptfg.entities.Participacion;
-import com.example.myhipicapptfg.entities.Pista;
-import com.example.myhipicapptfg.entities.Profesor;
-import com.example.myhipicapptfg.entities.ReservaClase;
-import com.example.myhipicapptfg.entities.RutaPersonal;
-import com.example.myhipicapptfg.entities.Usuario;
-
+import com.example.myhipicapptfg.dao.*;
+import com.example.myhipicapptfg.entities.*;
 
 @Database(
         entities = {
+
                 Usuario.class,
                 Alumno.class,
                 Profesor.class,
-                Propietario.class,
-                Disciplina.class,
+                Juez.class,
+
+                Equino.class,
+                Cuidado.class,
+
                 Pista.class,
                 Clase.class,
+                ReservaClase.class,
+
                 RutaPersonal.class,
                 CoordenadaRuta.class,
-                AlumnoDisciplina.class,
-                ProfesorDisciplina.class,
-                Equino.class,
-                Cuadra.class,
-                Cuidado.class,
-                DisciplinaEquino.class,
-                ReservaClase.class,
-                PlantillaPrueba.class,
-                Reprisa.class,
+
                 Competicion.class,
-                Convocatoria.class,
+                Prueba.class,
                 Participacion.class,
-                Calificacion.class
+
+                Movimiento.class,
+                NotaMovimiento.class
         },
-        version = 1
+        version = 1,
+        exportSchema = false
 )
 public abstract class AppDatabase extends RoomDatabase {
 
+    // ---------------- DAOs ----------------
     public abstract UsuarioDao usuarioDao();
     public abstract AlumnoDao alumnoDao();
     public abstract ProfesorDao profesorDao();
-    public abstract PropietarioDao propietarioDao();
-    public abstract DisciplinaDao disciplinaDao();
+    public abstract JuezDao juezDao();
+
+    public abstract EquinoDao equinoDao();
+    public abstract CuidadoDao cuidadoDao();
+
     public abstract PistaDao pistaDao();
     public abstract ClaseDao claseDao();
+    public abstract ReservaClaseDao reservaClaseDao();
+
     public abstract RutaPersonalDao rutaPersonalDao();
     public abstract CoordenadaRutaDao coordenadaRutaDao();
-    public abstract AlumnoDisciplinaDao alumnoDisciplinaDao();
-    public abstract ProfesorDisciplinaDao profesorDisciplinaDao();
-    public abstract EquinoDao equinoDao();
-    public abstract CuadraDao cuadraDao();
-    public abstract CuidadoDao cuidadoDao();
-    public abstract DisciplinaEquinoDao disciplinaEquinoDao();
-    public abstract ReservaClaseDao reservaClaseDao();
-    public abstract PlantillaPruebaDao plantillaPruebaDao();
-    public abstract ReprisaDao reprisaDao();
+
     public abstract CompeticionDao competicionDao();
-    public abstract ConvocatoriaDao convocatoriaDao();
+    public abstract PruebaDao pruebaDao();
     public abstract ParticipacionDao participacionDao();
-    public abstract CalificacionDao calificacionDao();
+
+    public abstract MovimientoDao movimientoDao();
+    public abstract NotaMovimientoDao notaMovimientoDao();
+
+    // ---------------- SINGLETON ----------------
+    private static volatile AppDatabase INSTANCE;
+
+    public static AppDatabase getInstance(Context context) {
+        if (INSTANCE == null) {
+            synchronized (AppDatabase.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = Room.databaseBuilder(
+                                    context.getApplicationContext(),
+                                    AppDatabase.class,
+                                    "myhipica_app.db"
+                            )
+                            .fallbackToDestructiveMigration()
+
+                            // 🔥 CALLBACK: modo TEST (reinicio automático)
+                            .addCallback(new RoomDatabase.Callback() {
+
+                                @Override
+                                public void onOpen(@NonNull SupportSQLiteDatabase db) {
+                                    super.onOpen(db);
+
+                                    // 🔥 ORDEN IMPORTANTE (por FOREIGN KEYS)
+                                    db.execSQL("DELETE FROM Nota_Movimiento");
+                                    db.execSQL("DELETE FROM Movimiento");
+                                    db.execSQL("DELETE FROM Participacion");
+                                    db.execSQL("DELETE FROM Prueba");
+                                    db.execSQL("DELETE FROM Competicion");
+
+                                    db.execSQL("DELETE FROM ReservaClase");
+                                    db.execSQL("DELETE FROM Clase");
+                                    db.execSQL("DELETE FROM Pista");
+
+                                    db.execSQL("DELETE FROM Cuidado");
+                                    db.execSQL("DELETE FROM Equino");
+
+                                    db.execSQL("DELETE FROM CoordenadaRuta");
+                                    db.execSQL("DELETE FROM RutaPersonal");
+
+                                    db.execSQL("DELETE FROM Juez");
+                                    db.execSQL("DELETE FROM Profesor");
+                                    db.execSQL("DELETE FROM Alumno");
+                                    db.execSQL("DELETE FROM Usuario");
+                                }
+
+
+                            })
+                            .build();
+                }
+            }
+        }
+        return INSTANCE;
+    }
+
+    // 🔥 utilidad manual si la quieres usar desde app
+    public void limpiarTodo() {
+        clearAllTables();
+    }
 }

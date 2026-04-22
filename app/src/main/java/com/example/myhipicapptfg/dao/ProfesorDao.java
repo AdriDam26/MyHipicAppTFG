@@ -1,6 +1,5 @@
 package com.example.myhipicapptfg.dao;
 
-
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -10,49 +9,45 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.example.myhipicapptfg.entities.Profesor;
-import com.example.myhipicapptfg.entities.Usuario;
 
 import java.util.List;
 
 @Dao
 public interface ProfesorDao {
 
-    @Insert
-    void insertarProfesor(Profesor profesor);
+    // 🔹 INSERT
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    long insertarProfesor(Profesor profesor);
 
+    // 🔹 UPDATE
     @Update
-    void actualizarProfesor(Profesor profesor);
+    int actualizarProfesor(Profesor profesor);
 
+    // 🔹 DELETE
     @Delete
-    void eliminarProfesor(Profesor profesor);
+    int eliminarProfesor(Profesor profesor);
 
-    // Usamos LiveData para que el repositorio pueda observar cambios
+    // 🔹 LISTADO GENERAL
     @Query("SELECT * FROM Profesor")
     LiveData<List<Profesor>> obtenerTodosProfesores();
 
+    // 🔹 BUSCAR POR ID
     @Query("SELECT * FROM Profesor WHERE ID_Profesor = :id LIMIT 1")
     LiveData<Profesor> buscarPorId(int id);
 
+    // 🔹 CONTAR
     @Query("SELECT COUNT(*) FROM Profesor")
     LiveData<Integer> contarProfesores();
 
-    // Método síncrono por si necesitas consultar datos en un hilo de fondo sin observar
+    // 🔹 SYNC (validaciones / lógica interna)
     @Query("SELECT * FROM Profesor WHERE ID_Profesor = :id LIMIT 1")
     Profesor buscarPorIdSync(int id);
 
-    @Query("SELECT p.ID_Profesor FROM Profesor p " +
+    // 🔹 OBTENER ID POR NOMBRE
+    @Query("SELECT p.ID_Profesor " +
+            "FROM Profesor p " +
             "INNER JOIN Usuario u ON p.ID_Profesor = u.ID_Usuario " +
-            "WHERE u.Nombre = :nombre LIMIT 1")
+            "WHERE u.Nombre = :nombre " +
+            "LIMIT 1")
     int obtenerIdProfesorPorNombreSync(String nombre);
-
-    @Query("SELECT Usuario.nombre, Usuario.apellido1, Usuario.apellido2, Usuario.ID_Usuario FROM Usuario " +
-            "INNER JOIN Profesor ON Usuario.ID_Usuario = Profesor.ID_Profesor " +
-            "WHERE Profesor.ID_Profesor NOT IN (" +
-            "    SELECT ID_Profesor FROM Clase " +
-            "    WHERE Fecha = :fecha " +
-            "    AND (time(Hora_Inicio) < time(:hFin) AND time(Hora_Fin) > time(:hIni))" +
-            ")")
-    List<Usuario> obtenerProfesoresLibresSync(String fecha, String hIni, String hFin);
-
-
 }

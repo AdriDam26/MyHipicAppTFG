@@ -5,7 +5,6 @@ import android.app.Application;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.myhipicapptfg.dao.DisciplinaEquinoDao;
 import com.example.myhipicapptfg.database.TestDatabase;
 import com.example.myhipicapptfg.entities.DisciplinaEquino;
 

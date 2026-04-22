@@ -1,40 +1,64 @@
 package com.example.myhipicapptfg.dao;
 
-
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
 import com.example.myhipicapptfg.entities.Equino;
+
 import java.util.List;
 
 @Dao
 public interface EquinoDao {
 
-    @Insert
-    long insertar(Equino equino);
+    // 🔹 INSERT
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    long insertarEquino(Equino equino);
 
+    // 🔹 UPDATE
     @Update
-    void actualizar(Equino equino);
+    int actualizarEquino(Equino equino);
 
+    // 🔹 DELETE
     @Delete
-    void eliminar(Equino equino);
+    int eliminarEquino(Equino equino);
 
+    // 🔹 LISTADO GENERAL (UI)
     @Query("SELECT * FROM Equino ORDER BY Nombre ASC")
-    LiveData<List<Equino>> obtenerTodos();
+    LiveData<List<Equino>> obtenerTodosEquinos();
 
-    // Verificación 1: ¿Existe la Cuadra?
-    @Query("SELECT EXISTS(SELECT 1 FROM Cuadra WHERE ID_Cuadra = :id)")
-    boolean existeCuadra(int id);
+    // 🔹 BUSCAR POR ID (UI)
+    @Query("SELECT * FROM Equino WHERE ID_Equino = :id LIMIT 1")
+    LiveData<Equino> buscarEquinoPorId(int id);
 
-    // Verificación 2: ¿Existe el Propietario (y es de tipo Propietario)?
-    @Query("SELECT EXISTS(SELECT 1 FROM Usuario WHERE ID_Usuario = :id AND Tipo = 'Propietario')")
-    boolean esPropietarioValido(int id);
+    // 🔹 BUSCAR POR USUARIO (UI)
+    @Query("SELECT * FROM Equino WHERE ID_Usuario = :idUsuario")
+    LiveData<List<Equino>> buscarEquinosPorUsuario(int idUsuario);
 
-    // Verificación 3: ¿El microchip ya está registrado? (Para evitar crashes por el Index UNIQUE)
-    @Query("SELECT EXISTS(SELECT 1 FROM Equino WHERE Numero_Microchip = :microchip)")
-    boolean existeMicrochip(String microchip);
+    // 🔹 CONTAR (UI)
+    @Query("SELECT COUNT(*) FROM Equino")
+    LiveData<Integer> contarEquinos();
+
+    // ----------------------------------------------------
+    // 🔹 MÉTODOS SYNC (lógica en repositorio / background)
+    // ----------------------------------------------------
+
+    // ✔ validar microchip único
+    @Query("SELECT EXISTS(" +
+            "SELECT 1 FROM Equino WHERE Numero_Microchip = :microchip)")
+    int existeMicrochipSync(String microchip);
+
+    // ✔ validar propietario
+    @Query("SELECT EXISTS(" +
+            "SELECT 1 FROM Usuario " +
+            "WHERE ID_Usuario = :id AND Tipo = 'propietario')")
+    int esPropietarioValidoSync(int id);
+
+
+    @Query("SELECT * FROM Equino WHERE Numero_Cuadra = :numeroCuadra")
+    List<Equino> buscarPorCuadraSync(int numeroCuadra);
 }

@@ -6,7 +6,6 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.myhipicapptfg.dao.AlumnoDisciplinaDao;
 import com.example.myhipicapptfg.database.TestDatabase;
 import com.example.myhipicapptfg.entities.AlumnoDisciplina;
 

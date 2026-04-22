@@ -2,45 +2,44 @@ package com.example.myhipicapptfg.dao;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
-import androidx.room.Delete;
+
 import com.example.myhipicapptfg.entities.Pista;
+
 import java.util.List;
 
 @Dao
 public interface PistaDao {
 
-    @Insert
+    // 🔹 INSERT
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     long insertarPista(Pista pista);
 
+    // 🔹 UPDATE
     @Update
-    void actualizarPista(Pista pista);
+    int actualizarPista(Pista pista);
 
+    // 🔹 DELETE
     @Delete
-    void eliminarPista(Pista pista);
+    int eliminarPista(Pista pista);
 
+    // 🔹 LISTADO GENERAL
     @Query("SELECT * FROM Pista")
     LiveData<List<Pista>> obtenerTodasPistas();
 
+    // 🔹 BUSCAR POR ID
     @Query("SELECT * FROM Pista WHERE ID_Pista = :id LIMIT 1")
     LiveData<Pista> buscarPorId(int id);
 
+    // 🔹 BUSCAR POR NOMBRE (SYNC)
     @Query("SELECT * FROM Pista WHERE Nombre = :nombre LIMIT 1")
     Pista buscarPorNombreSync(String nombre);
 
-    @Query("SELECT * FROM Pista WHERE Estado = :estado")
-    LiveData<List<Pista>> obtenerPistasPorEstado(String estado);
-
+    // 🔹 CONTAR
     @Query("SELECT COUNT(*) FROM Pista")
     LiveData<Integer> contarPistas();
-
-    @Query("SELECT * FROM Pista WHERE Estado = 'Disponible' AND ID_Pista NOT IN (" +
-            "    SELECT ID_Pista FROM Clase " +
-            "    WHERE Fecha = :fecha " +
-            "    AND (time(Hora_Inicio) < time(:hFin) AND time(Hora_Fin) > time(:hIni))" +
-            ")")
-    List<Pista> obtenerPistasLibresSync(String fecha, String hIni, String hFin);
 }

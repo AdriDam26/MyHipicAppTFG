@@ -1,42 +1,68 @@
 package com.example.myhipicapptfg.dao;
 
-
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
 import com.example.myhipicapptfg.entities.Participacion;
+
 import java.util.List;
 
 @Dao
 public interface ParticipacionDao {
 
-    @Insert
+    // 🔹 INSERT
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     long insertarParticipacion(Participacion participacion);
 
+    // 🔹 UPDATE
     @Update
-    void actualizarParticipacion(Participacion participacion);
+    int actualizarParticipacion(Participacion participacion);
 
+    // 🔹 DELETE
     @Delete
-    void eliminarParticipacion(Participacion participacion);
+    int eliminarParticipacion(Participacion participacion);
 
-    @Query("SELECT * FROM Participacion WHERE ID_Convocatoria = :idConv ORDER BY Hora ASC")
-    LiveData<List<Participacion>> obtenerPorConvocatoriaLiveData(int idConv);
+    // 🔹 LISTADO GENERAL
+    @Query("SELECT * FROM Participacion")
+    LiveData<List<Participacion>> obtenerTodasParticipaciones();
 
-    // --- VALIDACIONES DE ADUANA ---
-    @Query("SELECT EXISTS(SELECT 1 FROM Usuario WHERE ID_Usuario = :id AND Tipo = 'Alumno')")
-    boolean existeAlumno(int id);
+    // 🔹 POR PRUEBA
+    @Query("SELECT * FROM Participacion " +
+            "WHERE ID_Prueba = :idPrueba " +
+            "ORDER BY Posicion ASC")
+    LiveData<List<Participacion>> obtenerPorPrueba(int idPrueba);
 
-    @Query("SELECT EXISTS(SELECT 1 FROM Equino WHERE ID_Equino = :id)")
-    boolean existeEquino(int id);
+    // 🔹 POR ALUMNO
+    @Query("SELECT * FROM Participacion " +
+            "WHERE ID_Alumno = :idAlumno")
+    LiveData<List<Participacion>> obtenerPorAlumno(int idAlumno);
 
-    @Query("SELECT EXISTS(SELECT 1 FROM Convocatoria WHERE ID_Convocatoria = :id)")
-    boolean existeConvocatoria(int id);
+    // 🔹 POR EQUINO
+    @Query("SELECT * FROM Participacion " +
+            "WHERE ID_Equino = :idEquino")
+    LiveData<List<Participacion>> obtenerPorEquino(int idEquino);
 
-    // Evitar que un mismo binomio se inscriba dos veces en la misma convocatoria
-    @Query("SELECT EXISTS(SELECT 1 FROM Participacion WHERE ID_Alumno = :idAlu AND ID_Equino = :idEq AND ID_Convocatoria = :idConv)")
-    boolean existeBinomioEnConvocatoria(int idAlu, int idEq, int idConv);
+    // 🔹 DETALLE (UI)
+    @Query("SELECT * FROM Participacion " +
+            "WHERE ID_Participacion = :id LIMIT 1")
+    LiveData<Participacion> buscarPorId(int id);
+
+    // ----------------------------------------------------
+    // 🔹 MÉTODOS SYNC (validaciones / lógica negocio)
+    // ----------------------------------------------------
+
+    // ✔ comprobar si ya está inscrito en la prueba
+    @Query("SELECT EXISTS(" +
+            "SELECT 1 FROM Participacion " +
+            "WHERE ID_Alumno = :idAlumno AND ID_Prueba = :idPrueba)")
+    int yaParticipaSync(int idAlumno, int idPrueba);
+
+    // ✔ contar participantes en una prueba
+    @Query("SELECT COUNT(*) FROM Participacion WHERE ID_Prueba = :idPrueba")
+    int contarParticipantesSync(int idPrueba);
 }

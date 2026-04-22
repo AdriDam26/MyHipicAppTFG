@@ -5,7 +5,6 @@ import android.app.Application;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.myhipicapptfg.dao.ConvocatoriaDao;
 import com.example.myhipicapptfg.database.TestDatabase;
 
 import java.util.concurrent.ExecutorService;

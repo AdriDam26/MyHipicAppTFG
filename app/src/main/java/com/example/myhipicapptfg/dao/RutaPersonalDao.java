@@ -1,36 +1,43 @@
 package com.example.myhipicapptfg.dao;
 
-
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
 import com.example.myhipicapptfg.entities.RutaPersonal;
+
 import java.util.List;
 
 @Dao
 public interface RutaPersonalDao {
 
-    @Insert
-    long insertar(RutaPersonal ruta);
+    // 🔹 INSERT
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    long insertarRuta(RutaPersonal ruta);
 
+    // 🔹 UPDATE
     @Update
-    void actualizar(RutaPersonal ruta);
+    int actualizarRuta(RutaPersonal ruta);
 
+    // 🔹 DELETE
     @Delete
-    void eliminar(RutaPersonal ruta);
+    int eliminarRuta(RutaPersonal ruta);
 
-    // Para ver todas las rutas en un RecyclerView (se actualiza solo)
+    // 🔹 LISTADO GENERAL
     @Query("SELECT * FROM RutaPersonal ORDER BY ID_Ruta_Personal DESC")
-    LiveData<List<RutaPersonal>> obtenerTodas();
+    LiveData<List<RutaPersonal>> obtenerTodasRutas();
 
-    // Para buscar el ID del dueño por su nombre (Usa el JOIN con Usuario)
-    @Query("SELECT u.ID_Usuario FROM Usuario u WHERE u.Nombre = :nombreUsuario LIMIT 1")
-    int buscarIdPorNombre(String nombreUsuario);
+    // 🔹 BUSCAR ID USUARIO POR NOMBRE
+    @Query("SELECT ID_Usuario FROM Usuario WHERE Nombre = :nombre LIMIT 1")
+    int buscarIdPorNombre(String nombre);
 
-    @Query("SELECT EXISTS(SELECT 1 FROM Usuario WHERE ID_Usuario = :id AND Tipo = 'Propietario')")
-    boolean esPropietarioValido(int id);
+    // 🔹 VALIDAR SI ES PROPIETARIO
+    @Query("SELECT EXISTS(" +
+            "SELECT 1 FROM Usuario " +
+            "WHERE ID_Usuario = :id AND Tipo = 'propietario')")
+    int esPropietarioValido(int id);
 }
