@@ -1,11 +1,13 @@
 package com.example.myhipicapptfg.repository;
 
 import android.app.Application;
+
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.myhipicapptfg.dao.CompeticionDao;
-import com.example.myhipicapptfg.database.TestDatabase;
+import com.example.myhipicapptfg.database.AppDatabase;
 import com.example.myhipicapptfg.entities.Competicion;
 
 import java.util.concurrent.ExecutorService;
@@ -15,37 +17,72 @@ public class CompeticionRepository {
 
     private final CompeticionDao dao;
     private final ExecutorService executor;
-    private final MutableLiveData<String> mensajeStatus = new MutableLiveData<>();
 
-    public CompeticionRepository(Application application) {
-        dao = TestDatabase.getInstance(application).competicionDao();
+    private final MutableLiveData<String> estadoOperacion = new MutableLiveData<>();
+
+    public CompeticionRepository(@NonNull Application application) {
+
+        AppDatabase db = AppDatabase.getInstance(application);
+        dao = db.competicionDao();
+
         executor = Executors.newSingleThreadExecutor();
     }
 
-    public LiveData<String> getMensajeStatus() {
-        return mensajeStatus;
+    public LiveData<String> getEstadoOperacion() {
+        return estadoOperacion;
     }
 
+    // =====================================
+    // 🔹 INSERTAR
+    // =====================================
     public void insertar(Competicion comp) {
-        executor.execute(() -> {
-            // 1. Validar Disciplina
-            if (!dao.existeDisciplina(comp.idDisciplina)) {
-                mensajeStatus.postValue("Error: La Disciplina no existe.");
-                return;
-            }
 
-            // 2. Validar Nombre Único (Evitar crash por Unique Constraint)
+        executor.execute(() -> {
+
+            // 1. Validar nombre único
             if (dao.existeNombre(comp.nombre)) {
-                mensajeStatus.postValue("Error: Ya existe una competición con el nombre '" + comp.nombre + "'.");
+                estadoOperacion.postValue("ERROR_NOMBRE_DUPLICADO");
                 return;
             }
 
             try {
                 dao.insertarCompeticion(comp);
-                mensajeStatus.postValue(null); // Éxito
+                estadoOperacion.postValue("EXITO");
             } catch (Exception e) {
-                mensajeStatus.postValue("Error técnico al guardar la competición.");
+                estadoOperacion.postValue("ERROR_BD");
             }
         });
     }
+
+    // =====================================
+    // 🔹 UPDATE
+    // =====================================
+    public void actualizar(Competicion comp) {
+
+        executor.execute(() -> {
+            try {
+                dao.actualizarCompeticion(comp);
+                estadoOperacion.postValue("EXITO");
+            } catch (Exception e) {
+                estadoOperacion.postValue("ERROR_BD");
+            }
+        });
+    }
+
+    // =====================================
+    // 🔹 DELETE
+    // =====================================
+    public void eliminar(Competicion comp) {
+
+        executor.execute(() -> {
+            try {
+                dao.eliminarCompeticion(comp);
+                estadoOperacion.postValue("EXITO");
+            } catch (Exception e) {
+                estadoOperacion.postValue("ERROR_BD");
+            }
+        });
+    }
+
+
 }

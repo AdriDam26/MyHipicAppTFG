@@ -31,25 +31,20 @@ public interface ReservaClaseDao {
     @Query("SELECT * FROM ReservaClase")
     LiveData<List<ReservaClase>> obtenerTodasReservas();
 
-    // 🔹 VER SI YA ESTÁ RESERVADO
-    @Query("SELECT EXISTS(" +
-            "SELECT 1 FROM ReservaClase " +
-            "WHERE ID_Alumno = :idAlu AND ID_Clase = :idCla)")
-    int yaEstaReservado(int idAlu, int idCla);
+
 
     // 🔹 CONTAR ALUMNOS EN UNA CLASE
     @Query("SELECT COUNT(*) FROM ReservaClase WHERE ID_Clase = :idClase")
     int contarAlumnosEnClase(int idClase);
 
     // 🔹 VALIDAR ALUMNO
-    @Query("SELECT EXISTS(" +
-            "SELECT 1 FROM Usuario " +
-            "WHERE ID_Usuario = :id AND Tipo = 'alumno')")
-    int esAlumnoValido(int id);
-
+    @Query("SELECT EXISTS(SELECT 1 FROM Usuario WHERE ID_Usuario = :id AND Tipo = 'alumno')")
+    boolean esAlumnoValido(int id);
     // 🔹 VALIDAR CLASE
-    @Query("SELECT EXISTS(" +
-            "SELECT 1 FROM Clase " +
-            "WHERE ID_Clase = :id)")
-    int existeClase(int id);
+    @Query("SELECT EXISTS(SELECT 1 FROM Clase WHERE ID_Clase = :id)")
+    boolean existeClase(int id);
+
+    // 🔹 VER SI YA ESTÁ RESERVADO
+    @Query("SELECT EXISTS(SELECT 1 FROM ReservaClase WHERE ID_Alumno = :idAlu AND ID_Clase = :idCla)")
+    boolean yaEstaReservado(int idAlu, int idCla);
 }

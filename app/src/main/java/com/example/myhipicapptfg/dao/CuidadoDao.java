@@ -35,7 +35,6 @@ public interface CuidadoDao {
     // 🔹 SYNC (validaciones internas / repositorio)
     // ----------------------------------------------------
 
-    @Query("SELECT EXISTS(" +
-            "SELECT 1 FROM Equino WHERE ID_Equino = :id)")
-    int existeEquinoSync(int id);
+    @Query("SELECT EXISTS(SELECT 1 FROM Equino WHERE ID_Equino = :id)")
+    boolean existeEquino(int id);
 }

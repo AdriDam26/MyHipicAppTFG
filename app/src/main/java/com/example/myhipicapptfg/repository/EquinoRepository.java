@@ -1,12 +1,13 @@
 package com.example.myhipicapptfg.repository;
 
-
 import android.app.Application;
+
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.myhipicapptfg.dao.EquinoDao;
-import com.example.myhipicapptfg.database.TestDatabase;
+import com.example.myhipicapptfg.database.AppDatabase;
 import com.example.myhipicapptfg.entities.Equino;
 
 import java.util.concurrent.ExecutorService;
@@ -14,83 +15,61 @@ import java.util.concurrent.Executors;
 
 public class EquinoRepository {
 
-    private final EquinoDao dao;
-    private final ExecutorService executor;
-    private final MutableLiveData<String> mensajeStatus = new MutableLiveData<>();
+    private final EquinoDao equinoDao;
+    private final ExecutorService executorService;
 
-    public EquinoRepository(Application application) {
-        TestDatabase db = TestDatabase.getInstance(application);
-        dao = db.equinoDao();
-        executor = Executors.newSingleThreadExecutor();
+    private final MutableLiveData<String> estadoOperacion = new MutableLiveData<>();
+
+    public EquinoRepository(@NonNull Application application) {
+
+        AppDatabase db = AppDatabase.getInstance(application);
+        equinoDao = db.equinoDao();
+
+        executorService = Executors.newSingleThreadExecutor();
     }
 
-    public LiveData<String> getMensajeStatus() { return mensajeStatus; }
+    public LiveData<String> getEstadoOperacion() {
+        return estadoOperacion;
+    }
 
-    public long insertar(Equino equino) {
-        executor.execute(() -> {
-            // 1. Validar Cuadra (Obligatoria)
-            if (!dao.existeCuadra(equino.idCuadra)) {
-                mensajeStatus.postValue("Error: La Cuadra especificada no existe.");
+    // =====================================
+    // 🔹 INSERTAR (ASYNC)
+    // =====================================
+
+    public void insertarEquino(Equino equino) {
+
+        executorService.execute(() -> {
+
+            // 1️⃣ Validar microchip único
+            if (equinoDao.existeMicrochip(equino.numeroMicrochip)) {
+                estadoOperacion.postValue("ERROR_MICROCHIP_DUPLICADO");
                 return;
             }
 
-            // 2. Validar Propietario (Opcional)
-            if (equino.idPropietario != null) {
-                if (!dao.esPropietarioValido(equino.idPropietario)) {
-                    mensajeStatus.postValue("Error: El Propietario no es válido.");
+            // 2️⃣ Validar cuadra
+            if (!equinoDao.existeCuadra(equino.numeroCuadra)) {
+                estadoOperacion.postValue("ERROR_CUADRA_NO_EXISTE");
+                return;
+            }
+
+            // 3️⃣ Validar propietario (puede ser null)
+            if (equino.idUsuario != null) {
+                if (!equinoDao.esPropietarioValido(equino.idUsuario)) {
+                    estadoOperacion.postValue("ERROR_PROPIETARIO_NO_VALIDO");
                     return;
                 }
             }
 
-            // 3. Validar Microchip Único
-            if (dao.existeMicrochip(equino.numeroMicrochip)) {
-                mensajeStatus.postValue("Error: El microchip " + equino.numeroMicrochip + " ya existe.");
-                return;
-            }
-
             try {
-                dao.insertar(equino);
-                mensajeStatus.postValue(null);
+                equinoDao.insertarEquino(equino);
+                estadoOperacion.postValue("EXITO");
             } catch (Exception e) {
-                mensajeStatus.postValue("Error técnico al insertar el caballo.");
+                estadoOperacion.postValue("ERROR_BD");
             }
         });
-        return 0;
     }
 
 
-    public long insertarSync(Equino equino) {
-        try {
-            if (dao.existeMicrochip(equino.numeroMicrochip)) {
-                // Usamos el nombre unificado
-                mensajeStatus.postValue("Error: El microchip " + equino.numeroMicrochip + " ya existe.");
-                return -1;
-            }
 
-            if (!dao.existeCuadra(equino.idCuadra)) {
-                mensajeStatus.postValue("Error: La Cuadra especificada no existe.");
-                return -1;
-            }
 
-            if (equino.idPropietario != null) {
-                if (!dao.esPropietarioValido(equino.idPropietario)) {
-                    mensajeStatus.postValue("Error: El Propietario no es válido.");
-                    return -1;
-                }
-            }
-
-            long idGenerado = dao.insertar(equino);
-
-            if (idGenerado > 0) {
-                return idGenerado;
-            } else {
-                mensajeStatus.postValue("Error al insertar en la tabla Equino.");
-                return -1;
-            }
-
-        } catch (Exception e) {
-            mensajeStatus.postValue("Error crítico: " + e.getMessage());
-            return -1;
-        }
-    }
 }

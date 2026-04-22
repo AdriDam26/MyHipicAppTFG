@@ -46,10 +46,10 @@ public interface PruebaDao {
     // ✔ validar nombre único (evitar duplicados)
     @Query("SELECT EXISTS(" +
             "SELECT 1 FROM Prueba WHERE Nombre = :nombre)")
-    int existeNombreSync(String nombre);
+    boolean existeNombreSync(String nombre);
 
     // ✔ validar competición
     @Query("SELECT EXISTS(" +
             "SELECT 1 FROM Competicion WHERE ID_Competicion = :id)")
-    int existeCompeticionSync(int id);
+    boolean existeCompeticionSync(int id);
 }

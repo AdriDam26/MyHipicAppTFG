@@ -56,7 +56,7 @@ public interface NotaMovimientoDao {
             "WHERE ID_Juez = :idJuez " +
             "AND ID_Movimiento = :idMovimiento " +
             "AND ID_Participacion = :idParticipacion)")
-    int yaPuntuadoSync(int idJuez, int idMovimiento, int idParticipacion);
+    boolean yaPuntuado(int idJuez, int idMovimiento, int idParticipacion);
 
 
     // ✔ calcular puntuación total de una participación

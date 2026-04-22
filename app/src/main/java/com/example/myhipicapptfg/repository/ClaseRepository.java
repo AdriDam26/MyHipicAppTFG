@@ -1,14 +1,13 @@
 package com.example.myhipicapptfg.repository;
 
-
-
 import android.app.Application;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.myhipicapptfg.dao.ClaseDao;
-import com.example.myhipicapptfg.database.TestDatabase;
+import com.example.myhipicapptfg.database.AppDatabase;
 import com.example.myhipicapptfg.entities.Clase;
 
 import java.util.List;
@@ -19,71 +18,85 @@ public class ClaseRepository {
 
     private final ClaseDao claseDao;
     private final ExecutorService executorService;
-
-    // Canal para errores de integridad (Solo se usa en insertar)
-    private final MutableLiveData<String> errorLiveData = new MutableLiveData<>();
+    private final MutableLiveData<String> estadoOperacion = new MutableLiveData<>();
 
     public ClaseRepository(@NonNull Application application) {
-        TestDatabase db = TestDatabase.getInstance(application);
+
+        AppDatabase db = AppDatabase.getInstance(application);
         claseDao = db.claseDao();
-        executorService = Executors.newFixedThreadPool(4);
+
+        executorService = Executors.newSingleThreadExecutor();
     }
 
-    /**
-     * Devuelve el canal de errores. La UI debe observar esto para saber si
-     * la inserción falló por falta de alguna dependencia (Pista, Disciplina o Profesor).
-     */
-    public LiveData<String> getErrorLiveData() {
-        return errorLiveData;
+    public LiveData<String> getEstadoOperacion() {
+        return estadoOperacion;
     }
 
-    // --- MÉTODOS DE ESCRITURA ---
+    // =====================================
+    // 🔹 INSERTAR
+    // =====================================
 
-    /**
-     * Inserta una clase validando que existan sus llaves foráneas.
-     * Si falta alguna, el error se publica en errorLiveData.
-     */
     public void insertarClase(Clase clase) {
+
         executorService.execute(() -> {
-            // 1. Validar Pista
+
+            // Validar Pista
             if (!claseDao.existePistaSync(clase.idPista)) {
-                errorLiveData.postValue("Error: No existe la Pista (ID: " + clase.idPista + ")");
+                estadoOperacion.postValue("ERROR_PISTA_NO_EXISTE");
                 return;
             }
 
-            // 2. Validar Disciplina
-            if (!claseDao.existeDisciplinaSync(clase.idDisciplina)) {
-                errorLiveData.postValue("Error: No existe la Disciplina (ID: " + clase.idDisciplina + ")");
-                return;
-            }
 
-            // 3. Validar Profesor
+            // Validar Profesor
             if (!claseDao.existeProfesorSync(clase.idProfesor)) {
-                errorLiveData.postValue("Error: No existe el Profesor (ID: " + clase.idProfesor + ")");
+                estadoOperacion.postValue("ERROR_PROFESOR_NO_EXISTE");
                 return;
             }
 
-
-
-            // Si todo es correcto, procedemos a insertar
             try {
                 claseDao.insertarClase(clase);
-                errorLiveData.postValue(null); // Notificar éxito
+                estadoOperacion.postValue("EXITO");
             } catch (Exception e) {
-                errorLiveData.postValue("Error técnico al guardar la clase.");
+                estadoOperacion.postValue("ERROR_BD");
             }
         });
     }
 
+    // =====================================
+    // 🔹 UPDATE
+    // =====================================
+
     public void actualizarClase(Clase clase) {
-        executorService.execute(() -> claseDao.actualizarClase(clase));
+
+        executorService.execute(() -> {
+            try {
+                claseDao.actualizarClase(clase);
+                estadoOperacion.postValue("EXITO");
+            } catch (Exception e) {
+                estadoOperacion.postValue("ERROR_BD");
+            }
+        });
     }
+
+    // =====================================
+    // 🔹 DELETE
+    // =====================================
 
     public void eliminarClase(Clase clase) {
-        executorService.execute(() -> claseDao.eliminarClase(clase));
+
+        executorService.execute(() -> {
+            try {
+                claseDao.eliminarClase(clase);
+                estadoOperacion.postValue("EXITO");
+            } catch (Exception e) {
+                estadoOperacion.postValue("ERROR_BD");
+            }
+        });
     }
 
-    // --- MÉTODOS DE LECTURA (LiveData) ---
+    // =====================================
+    // 🔹 LECTURA
+    // =====================================
 
     public LiveData<List<Clase>> obtenerTodasClases() {
         return claseDao.obtenerTodasClases();
@@ -92,4 +105,10 @@ public class ClaseRepository {
     public LiveData<Clase> buscarPorId(int id) {
         return claseDao.buscarPorId(id);
     }
+
+    public LiveData<Integer> contarClases() {
+        return claseDao.contarClases();
+    }
+
+
 }

@@ -6,26 +6,25 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.myhipicapptfg.dao.PistaDao;
+import com.example.myhipicapptfg.dao.PruebaDao;
 import com.example.myhipicapptfg.database.AppDatabase;
-import com.example.myhipicapptfg.entities.Pista;
+import com.example.myhipicapptfg.entities.Prueba;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class PistaRepository {
+public class PruebaRepository {
 
-    private final PistaDao pistaDao;
-    private final ExecutorService executorService;
+    private final PruebaDao dao;
+    private final ExecutorService executor;
+
     private final MutableLiveData<String> estadoOperacion = new MutableLiveData<>();
 
-    public PistaRepository(@NonNull Application application) {
-
+    public PruebaRepository(@NonNull Application application) {
         AppDatabase db = AppDatabase.getInstance(application);
-        pistaDao = db.pistaDao();
-
-        executorService = Executors.newSingleThreadExecutor();
+        dao = db.pruebaDao();
+        executor = Executors.newSingleThreadExecutor();
     }
 
     public LiveData<String> getEstadoOperacion() {
@@ -35,21 +34,24 @@ public class PistaRepository {
     // =====================================
     // 🔹 INSERTAR
     // =====================================
+    public void insertarPrueba(Prueba prueba) {
 
-    public void insertarPista(Pista pista) {
+        executor.execute(() -> {
 
-        executorService.execute(() -> {
-
-            // Validación: nombre único
-            Pista existente = pistaDao.buscarPorNombreSync(pista.nombre);
-
-            if (existente != null) {
+            // 1. Validar nombre único
+            if (dao.existeNombreSync(prueba.nombre)) {
                 estadoOperacion.postValue("ERROR_NOMBRE_DUPLICADO");
                 return;
             }
 
+            // 2. Validar competición existente
+            if (!dao.existeCompeticionSync(prueba.idCompeticion)) {
+                estadoOperacion.postValue("ERROR_COMPETICION_NO_EXISTE");
+                return;
+            }
+
             try {
-                pistaDao.insertarPista(pista);
+                dao.insertarPrueba(prueba);
                 estadoOperacion.postValue("EXITO");
             } catch (Exception e) {
                 estadoOperacion.postValue("ERROR_BD");
@@ -58,14 +60,13 @@ public class PistaRepository {
     }
 
     // =====================================
-    // 🔹 UPDATE
+    // 🔹 ACTUALIZAR
     // =====================================
+    public void actualizarPrueba(Prueba prueba) {
 
-    public void actualizarPista(Pista pista) {
-
-        executorService.execute(() -> {
+        executor.execute(() -> {
             try {
-                pistaDao.actualizarPista(pista);
+                dao.actualizarPrueba(prueba);
                 estadoOperacion.postValue("EXITO");
             } catch (Exception e) {
                 estadoOperacion.postValue("ERROR_BD");
@@ -74,14 +75,13 @@ public class PistaRepository {
     }
 
     // =====================================
-    // 🔹 DELETE
+    // 🔹 ELIMINAR
     // =====================================
+    public void eliminarPrueba(Prueba prueba) {
 
-    public void eliminarPista(Pista pista) {
-
-        executorService.execute(() -> {
+        executor.execute(() -> {
             try {
-                pistaDao.eliminarPista(pista);
+                dao.eliminarPrueba(prueba);
                 estadoOperacion.postValue("EXITO");
             } catch (Exception e) {
                 estadoOperacion.postValue("ERROR_BD");
@@ -90,20 +90,19 @@ public class PistaRepository {
     }
 
     // =====================================
-    // 🔹 LECTURA (LiveData)
+    // 🔹 LECTURA (LIVE DATA)
     // =====================================
 
-    public LiveData<List<Pista>> obtenerTodasPistas() {
-        return pistaDao.obtenerTodasPistas();
+    public LiveData<List<Prueba>> obtenerTodas() {
+        return dao.obtenerTodasPruebas();
     }
 
-    public LiveData<Pista> buscarPorId(int id) {
-        return pistaDao.buscarPorId(id);
+    public LiveData<Prueba> buscarPorId(int id) {
+        return dao.buscarPruebaPorId(id);
     }
 
-
-    public LiveData<Integer> contarPistas() {
-        return pistaDao.contarPistas();
+    public LiveData<List<Prueba>> obtenerPorCompeticion(int idCompeticion) {
+        return dao.obtenerPorCompeticion(idCompeticion);
     }
 
 

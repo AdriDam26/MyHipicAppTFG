@@ -2,30 +2,26 @@ package com.example.myhipicapptfg.repository;
 
 import android.app.Application;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.myhipicapptfg.dao.PistaDao;
 import com.example.myhipicapptfg.database.AppDatabase;
-import com.example.myhipicapptfg.entities.Pista;
+import com.example.myhipicapptfg.dao.MovimientoDao;
+import com.example.myhipicapptfg.entities.Movimiento;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class PistaRepository {
+public class MovimientoRepository {
 
-    private final PistaDao pistaDao;
-    private final ExecutorService executorService;
+    private final MovimientoDao dao;
+    private final ExecutorService executor;
     private final MutableLiveData<String> estadoOperacion = new MutableLiveData<>();
 
-    public PistaRepository(@NonNull Application application) {
-
-        AppDatabase db = AppDatabase.getInstance(application);
-        pistaDao = db.pistaDao();
-
-        executorService = Executors.newSingleThreadExecutor();
+    public MovimientoRepository(Application application) {
+        dao = AppDatabase.getInstance(application).movimientoDao();
+        executor = Executors.newSingleThreadExecutor();
     }
 
     public LiveData<String> getEstadoOperacion() {
@@ -35,21 +31,18 @@ public class PistaRepository {
     // =====================================
     // 🔹 INSERTAR
     // =====================================
+    public void insertar(Movimiento m) {
 
-    public void insertarPista(Pista pista) {
+        executor.execute(() -> {
 
-        executorService.execute(() -> {
-
-            // Validación: nombre único
-            Pista existente = pistaDao.buscarPorNombreSync(pista.nombre);
-
-            if (existente != null) {
-                estadoOperacion.postValue("ERROR_NOMBRE_DUPLICADO");
+            // 🔹 Validar orden único
+            if (dao.existeOrdenSync(m.orden) > 0) {
+                estadoOperacion.postValue("ERROR_ORDEN_DUPLICADO");
                 return;
             }
 
             try {
-                pistaDao.insertarPista(pista);
+                dao.insertarMovimiento(m);
                 estadoOperacion.postValue("EXITO");
             } catch (Exception e) {
                 estadoOperacion.postValue("ERROR_BD");
@@ -58,14 +51,14 @@ public class PistaRepository {
     }
 
     // =====================================
-    // 🔹 UPDATE
+    // 🔹 ACTUALIZAR
     // =====================================
+    public void actualizar(Movimiento m) {
 
-    public void actualizarPista(Pista pista) {
+        executor.execute(() -> {
 
-        executorService.execute(() -> {
             try {
-                pistaDao.actualizarPista(pista);
+                dao.actualizarMovimiento(m);
                 estadoOperacion.postValue("EXITO");
             } catch (Exception e) {
                 estadoOperacion.postValue("ERROR_BD");
@@ -74,14 +67,14 @@ public class PistaRepository {
     }
 
     // =====================================
-    // 🔹 DELETE
+    // 🔹 ELIMINAR
     // =====================================
+    public void eliminar(Movimiento m) {
 
-    public void eliminarPista(Pista pista) {
+        executor.execute(() -> {
 
-        executorService.execute(() -> {
             try {
-                pistaDao.eliminarPista(pista);
+                dao.eliminarMovimiento(m);
                 estadoOperacion.postValue("EXITO");
             } catch (Exception e) {
                 estadoOperacion.postValue("ERROR_BD");
@@ -90,21 +83,18 @@ public class PistaRepository {
     }
 
     // =====================================
-    // 🔹 LECTURA (LiveData)
+    // 🔹 LECTURA
     // =====================================
 
-    public LiveData<List<Pista>> obtenerTodasPistas() {
-        return pistaDao.obtenerTodasPistas();
+    public LiveData<List<Movimiento>> obtenerTodos() {
+        return dao.obtenerTodosMovimientos();
     }
 
-    public LiveData<Pista> buscarPorId(int id) {
-        return pistaDao.buscarPorId(id);
+    public LiveData<Movimiento> buscarPorId(int id) {
+        return dao.buscarMovimientoPorId(id);
     }
 
-
-    public LiveData<Integer> contarPistas() {
-        return pistaDao.contarPistas();
+    public LiveData<List<Movimiento>> obtenerOrdenados() {
+        return dao.obtenerMovimientosOrdenados();
     }
-
-
 }

@@ -9,8 +9,6 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.myhipicapptfg.entities.DisciplinaEquino;
 import com.example.myhipicapptfg.entities.Equino;
 import com.example.myhipicapptfg.entities.Usuario;
-import com.example.myhipicapptfg.repository.CuadraRepository;
-import com.example.myhipicapptfg.repository.DisciplinaEquinoRepository;
 import com.example.myhipicapptfg.repository.EquinoRepository;
 import com.example.myhipicapptfg.repository.UsuarioRepository;
 

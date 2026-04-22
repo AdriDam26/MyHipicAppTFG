@@ -11,7 +11,6 @@ import com.example.myhipicapptfg.entities.Disciplina;
 import com.example.myhipicapptfg.entities.Pista;
 import com.example.myhipicapptfg.entities.Usuario;
 import com.example.myhipicapptfg.repository.ClaseRepository;
-import com.example.myhipicapptfg.repository.DisciplinaRepository;
 import com.example.myhipicapptfg.repository.PistaRepository;
 import com.example.myhipicapptfg.repository.ProfesorRepository; // CAMBIADO
 

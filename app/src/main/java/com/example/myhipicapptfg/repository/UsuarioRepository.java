@@ -1,14 +1,15 @@
 package com.example.myhipicapptfg.repository;
 
-
 import android.app.Application;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.myhipicapptfg.dao.UsuarioDao;
-import com.example.myhipicapptfg.database.TestDatabase;
+import com.example.myhipicapptfg.database.AppDatabase;
 import com.example.myhipicapptfg.entities.Usuario;
+
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -17,53 +18,81 @@ public class UsuarioRepository {
 
     private final UsuarioDao usuarioDao;
     private final ExecutorService executorService;
-
-    private final MutableLiveData<String> errorProgreso = new MutableLiveData<>();
+    private final MutableLiveData<String> estadoOperacion = new MutableLiveData<>();
 
     public UsuarioRepository(@NonNull Application application) {
-        TestDatabase db = TestDatabase.getInstance(application);
+
+        AppDatabase db = AppDatabase.getInstance(application);
         usuarioDao = db.usuarioDao();
-        // Usamos un pool de 4 hilos para manejar múltiples peticiones si fuera necesario
-        executorService = Executors.newFixedThreadPool(4);
+
+        executorService = Executors.newSingleThreadExecutor();
     }
 
-    public LiveData<String> getErrorProgreso() {
-        return errorProgreso;
+    public LiveData<String> getEstadoOperacion() {
+        return estadoOperacion;
     }
 
+    // =====================================
+    // 🔹 INSERTAR
+    // =====================================
 
-    public void insertarUsuario(Usuario nuevoUsuario) {
+    public void insertarUsuario(Usuario usuario) {
         executorService.execute(() -> {
-            // 1. Validaciones
-            if (usuarioDao.buscarPorEmailSync(nuevoUsuario.email) != null) {
-                errorProgreso.postValue("Error: El email ya está registrado.");
+
+            // Validaciones
+            if (usuarioDao.buscarPorEmailSync(usuario.email) != null) {
+                estadoOperacion.postValue("ERROR_EMAIL_DUPLICADO");
                 return;
             }
-            if (usuarioDao.buscarPorDNISync(nuevoUsuario.dni) != null) {
-                errorProgreso.postValue("Error: El DNI ya pertenece a otro usuario.");
+
+            if (usuarioDao.buscarPorDNISync(usuario.dni) != null) {
+                estadoOperacion.postValue("ERROR_DNI_DUPLICADO");
                 return;
             }
 
             try {
-                // 2. Inserción real
-                usuarioDao.insertarUsuario(nuevoUsuario);
-                // 3. ¡IMPORTANTE! Notificamos el éxito aquí mismo
-                errorProgreso.postValue("EXITO_BASE_DATOS");
+                usuarioDao.insertarUsuario(usuario);
+                estadoOperacion.postValue("EXITO");
             } catch (Exception e) {
-                errorProgreso.postValue("Error: Fallo al guardar en la base de datos.");
+                estadoOperacion.postValue("ERROR_BD");
             }
         });
     }
 
+    // =====================================
+    // 🔹 UPDATE
+    // =====================================
+
     public void actualizarUsuario(Usuario usuario) {
-        executorService.execute(() -> usuarioDao.actualizarUsuario(usuario));
+        executorService.execute(() -> {
+            try {
+                usuarioDao.actualizarUsuario(usuario);
+                estadoOperacion.postValue("EXITO");
+            } catch (Exception e) {
+                estadoOperacion.postValue("ERROR_BD");
+            }
+        });
     }
+
+    // =====================================
+    // 🔹 DELETE
+    // =====================================
 
     public void eliminarUsuario(Usuario usuario) {
-        executorService.execute(() -> usuarioDao.eliminarUsuario(usuario));
+        executorService.execute(() -> {
+            try {
+                usuarioDao.eliminarUsuario(usuario);
+                estadoOperacion.postValue("EXITO");
+            } catch (Exception e) {
+                estadoOperacion.postValue("ERROR_BD");
+            }
+        });
     }
 
-    // --- LECTURA (LiveData) ---
+    // =====================================
+    // 🔹 LECTURA (LiveData)
+    // =====================================
+
     public LiveData<List<Usuario>> obtenerTodosUsuarios() {
         return usuarioDao.obtenerTodosUsuarios();
     }
@@ -80,52 +109,11 @@ public class UsuarioRepository {
         return usuarioDao.buscarPorDNI(dni);
     }
 
-    public LiveData<Integer> contarUsuarios() {
-        return usuarioDao.contarUsuarios();
-    }
-
-    // --- CONSULTAS SÍNCRONAS (Para lógica de negocio) ---
-    public Usuario buscarPorEmailSync(String email) {
-        return usuarioDao.buscarPorEmailSync(email);
-    }
-
-    public Usuario buscarPorDNISync(String dni) {
-        return usuarioDao.buscarPorDNISync(dni);
-    }
-
-    public long insertarUsuarioSync(Usuario usuario) {
-        // 1. Validaciones previas (Síncronas)
-        if (usuarioDao.buscarPorEmailSync(usuario.email) != null) {
-            return -1; // Código de error: Email duplicado
-        }
-        if (usuarioDao.buscarPorDNISync(usuario.dni) != null) {
-            return -2; // Código de error: DNI duplicado
-        }
-
-        try {
-            // 2. Inserción real: Room devuelve el ID generado por SQLite
-            return usuarioDao.insertarUsuario(usuario);
-        } catch (Exception e) {
-            return -3; // Código de error: Fallo general
-        }
-    }
-
     public LiveData<List<Usuario>> obtenerUsuariosPorTipo(String tipo) {
         return usuarioDao.obtenerUsuariosPorTipo(tipo);
     }
 
-    public int actualizarUsuarioSync(Usuario u) {
-        try {
-            return usuarioDao.actualizarUsuarioSync(u);
-        } catch (Exception e) {
-            // Aquí manejamos los códigos de error que ya usas en tu ViewModel
-            if (e.getMessage().contains("dni")) return -2;
-            if (e.getMessage().contains("email")) return -1;
-            return -3; // Error genérico
-        }
+    public LiveData<Integer> contarUsuarios() {
+        return usuarioDao.contarUsuarios();
     }
-
-
-
-
 }

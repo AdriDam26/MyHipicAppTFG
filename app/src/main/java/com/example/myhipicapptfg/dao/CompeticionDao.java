@@ -39,8 +39,7 @@ public interface CompeticionDao {
     // 🔹 MÉTODOS SYNC (validaciones / repositorio)
     // ----------------------------------------------------
 
-    // ✔ validar nombre único
-    @Query("SELECT EXISTS(" +
-            "SELECT 1 FROM Competicion WHERE Nombre = :nombre)")
-    int existeNombreSync(String nombre);
+    // validar nombre único
+    @Query("SELECT EXISTS(SELECT 1 FROM Competicion WHERE Nombre = :nombre)")
+    boolean existeNombre(String nombre);
 }

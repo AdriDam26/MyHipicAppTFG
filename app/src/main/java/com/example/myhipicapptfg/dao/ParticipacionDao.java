@@ -57,12 +57,20 @@ public interface ParticipacionDao {
     // ----------------------------------------------------
 
     // ✔ comprobar si ya está inscrito en la prueba
+    @Query("SELECT EXISTS(SELECT 1 FROM Alumno WHERE ID_Alumno = :id)")
+    boolean existeAlumno(int id);
+
+    @Query("SELECT EXISTS(SELECT 1 FROM Equino WHERE ID_Equino = :id)")
+    boolean existeEquino(int id);
+
+    @Query("SELECT EXISTS(SELECT 1 FROM Prueba WHERE ID_Prueba = :id)")
+    boolean existePrueba(int id);
+
+    // 🔹 EVITAR DUPLICADOS (MUY IMPORTANTE)
     @Query("SELECT EXISTS(" +
             "SELECT 1 FROM Participacion " +
-            "WHERE ID_Alumno = :idAlumno AND ID_Prueba = :idPrueba)")
-    int yaParticipaSync(int idAlumno, int idPrueba);
-
-    // ✔ contar participantes en una prueba
-    @Query("SELECT COUNT(*) FROM Participacion WHERE ID_Prueba = :idPrueba")
-    int contarParticipantesSync(int idPrueba);
+            "WHERE ID_Alumno = :idAlumno " +
+            "AND ID_Equino = :idEquino " +
+            "AND ID_Prueba = :idPrueba)")
+    boolean existeParticipacion(int idAlumno, int idEquino, int idPrueba);
 }

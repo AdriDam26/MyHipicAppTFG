@@ -38,4 +38,16 @@ public interface ClaseDao {
     // 🔹 CONTAR
     @Query("SELECT COUNT(*) FROM Clase")
     LiveData<Integer> contarClases();
+
+    // 🔹 VALIDAR EXISTENCIA PISTA (SYNC)
+    @Query("SELECT EXISTS(SELECT 1 FROM Pista WHERE ID_Pista = :idPista)")
+    boolean existePistaSync(int idPista);
+
+    // 🔹 VALIDAR EXISTENCIA PROFESOR (SYNC)
+    @Query("SELECT EXISTS(SELECT 1 FROM Profesor WHERE ID_Profesor = :idProfesor)")
+    boolean existeProfesorSync(int idProfesor);
+
+    // 🔹 BUSCAR POR ID (SYNC)
+    @Query("SELECT * FROM Clase WHERE ID_Clase = :id LIMIT 1")
+    Clase buscarPorIdSync(int id);
 }

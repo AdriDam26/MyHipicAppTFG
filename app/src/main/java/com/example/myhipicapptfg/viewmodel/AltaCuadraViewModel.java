@@ -6,8 +6,6 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.myhipicapptfg.repository.CuadraRepository;
-
 public class AltaCuadraViewModel extends AndroidViewModel {
 
     private final CuadraRepository repository;
