@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import com.example.myhipicapptfg.dao.ProfesorDisciplinaDao;
 import com.example.myhipicapptfg.database.TestDatabase;
-import com.example.myhipicapptfg.entities.ProfesorDisciplina;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 

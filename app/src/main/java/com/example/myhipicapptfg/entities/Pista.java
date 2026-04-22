@@ -25,18 +25,22 @@ public class Pista {
     @ColumnInfo(name = "Largo")
     public double largo;
 
-    @ColumnInfo(name = "Estado")
-    public String estado;
-
-    // Valores permitidos para Estado
-    public static final String DISPONIBLE = "Disponible";
-    public static final String MANTENIMIENTO = "Mantenimiento";
-    public static final String CERRADA = "Cerrada";
 
     @Override
     public String toString() {
-        // Si tu columna se llama nombrePista, pon eso.
-        // Es lo que verá el usuario en el desplegable.
         return nombre;
     }
+
+    public Pista() {
+        // Constructor vacío obligatorio para Room
+    }
+
+    public Pista(String nombre, double ancho, double largo) {
+        this.nombre = nombre;
+        this.ancho = ancho;
+        this.largo = largo;
+    }
+
+
+
 }

@@ -20,12 +20,25 @@ public class Profesor {
     @ColumnInfo(name = "ID_Profesor")
     public int idProfesor;
 
-    // Constructor vacío
+    @ColumnInfo(name = "Puede_Dar_Doma")
+    public boolean puedeDarDoma;
+
+    @ColumnInfo(name = "Puede_Dar_Salto")
+    public boolean puedeDarSalto;
+
+    @ColumnInfo(name = "Anios_Experiencia")
+    public int aniosExperiencia;
+
     public Profesor() {}
 
-    // Constructor con ID
-    public Profesor(int idProfesor) {
-        this.idProfesor = idProfesor;
-    }
+    public Profesor(int idProfesor,
+                    boolean puedeDarDoma,
+                    boolean puedeDarSalto,
+                    int aniosExperiencia) {
 
+        this.idProfesor = idProfesor;
+        this.puedeDarDoma = puedeDarDoma;
+        this.puedeDarSalto = puedeDarSalto;
+        this.aniosExperiencia = aniosExperiencia;
+    }
 }

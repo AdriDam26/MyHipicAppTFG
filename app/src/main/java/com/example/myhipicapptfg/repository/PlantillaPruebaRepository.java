@@ -8,7 +8,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.myhipicapptfg.dao.PlantillaPruebaDao;
 import com.example.myhipicapptfg.database.TestDatabase;
-import com.example.myhipicapptfg.entities.PlantillaPrueba;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;

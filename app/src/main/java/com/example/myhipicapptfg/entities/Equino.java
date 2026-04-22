@@ -1,7 +1,5 @@
 package com.example.myhipicapptfg.entities;
 
-
-
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -12,19 +10,16 @@ import androidx.room.PrimaryKey;
         tableName = "Equino",
         foreignKeys = {
                 @ForeignKey(
-                        entity = Propietario.class,
-                        parentColumns = "ID_Propietario",
-                        childColumns = "ID_Propietario",
+                        entity = Usuario.class,
+                        parentColumns = "ID_Usuario",
+                        childColumns = "ID_Usuario",
                         onDelete = ForeignKey.SET_NULL
-                ),
-                @ForeignKey(
-                        entity = Cuadra.class,
-                        parentColumns = "ID_Cuadra",
-                        childColumns = "ID_Cuadra",
-                        onDelete = ForeignKey.CASCADE
                 )
         },
-        indices = {@Index(value = {"Numero_Microchip"}, unique = true)}
+        indices = {
+                @Index(value = {"Numero_Microchip"}, unique = true),
+                @Index(value = {"ID_Usuario"})
+        }
 )
 public class Equino {
 
@@ -39,16 +34,16 @@ public class Equino {
     public String raza;
 
     @ColumnInfo(name = "Fecha_Nacimiento")
-    public String fechaNacimiento; // TEXT 'YYYY-MM-DD'
+    public long fechaNacimiento;
 
     @ColumnInfo(name = "Sexo")
-    public String sexo; // 'M' o 'H'
+    public String sexo;
 
     @ColumnInfo(name = "Altura")
-    public double altura; // en metros
+    public double altura;
 
     @ColumnInfo(name = "Peso")
-    public double peso; // en Kg
+    public double peso;
 
     @ColumnInfo(name = "Temperamento")
     public String temperamento;
@@ -59,24 +54,60 @@ public class Equino {
     @ColumnInfo(name = "Numero_Microchip")
     public String numeroMicrochip;
 
-    @ColumnInfo(name = "ID_Propietario")
-    public Integer idPropietario; // opcional
+    @ColumnInfo(name = "Sabe_Salto")
+    public boolean sabeSalto;
 
-    @ColumnInfo(name = "ID_Cuadra")
-    public int idCuadra;
+    @ColumnInfo(name = "Sabe_Doma")
+    public boolean sabeDoma;
 
+    @ColumnInfo(name = "ID_Usuario")
+    public Integer idUsuario; // puede ser nulo
 
-    // Constantes Sexo
+    @ColumnInfo(name = "Numero_Cuadra")
+    public int numeroCuadra;
+
+    // 🔹 Constantes
     public static final String SEXO_MACHO = "M";
     public static final String SEXO_HEMBRA = "H";
 
-    // Constantes Temperamento
-    public static final String FACIL = "Fácil";
+    public static final String FACIL = "Facil";
     public static final String MANEJABLE = "Manejable";
     public static final String DIFICIL = "Dificil";
 
-    // Constantes Estado Salud
     public static final String BUENO = "Bueno";
     public static final String REGULAR = "Regular";
     public static final String MALO = "Malo";
+
+    // 🔹 Constructor vacío (Room)
+    public Equino() {}
+
+    // 🔹 Constructor recomendado
+    public Equino(String nombre,
+                  String raza,
+                  long fechaNacimiento,
+                  String sexo,
+                  double altura,
+                  double peso,
+                  String temperamento,
+                  String estadoSalud,
+                  String numeroMicrochip,
+                  boolean sabeSalto,
+                  boolean sabeDoma,
+                  Integer idUsuario,
+                  int numeroCuadra) {
+
+        this.nombre = nombre;
+        this.raza = raza;
+        this.fechaNacimiento = fechaNacimiento;
+        this.sexo = sexo;
+        this.altura = altura;
+        this.peso = peso;
+        this.temperamento = temperamento;
+        this.estadoSalud = estadoSalud;
+        this.numeroMicrochip = numeroMicrochip;
+        this.sabeSalto = sabeSalto;
+        this.sabeDoma = sabeDoma;
+        this.idUsuario = idUsuario;
+        this.numeroCuadra = numeroCuadra;
+    }
 }

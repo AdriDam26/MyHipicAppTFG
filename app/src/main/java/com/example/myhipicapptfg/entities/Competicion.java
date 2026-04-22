@@ -1,21 +1,15 @@
 package com.example.myhipicapptfg.entities;
 
-
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 @Entity(
         tableName = "Competicion",
-        foreignKeys = @ForeignKey(
-                entity = Disciplina.class,
-                parentColumns = "ID_Disciplina",
-                childColumns = "ID_Disciplina",
-                onDelete = ForeignKey.CASCADE
-        ),
-        indices = {@Index(value = {"Nombre"}, unique = true)}
+        indices = {
+                @Index(value = {"Nombre"}, unique = true)
+        }
 )
 public class Competicion {
 
@@ -27,8 +21,14 @@ public class Competicion {
     public String nombre;
 
     @ColumnInfo(name = "Fecha")
-    public String fecha; // TEXT 'YYYY-MM-DD'
+    public long fecha;
 
-    @ColumnInfo(name = "ID_Disciplina")
-    public int idDisciplina;
+    // 🔹 Constructor vacío (Room)
+    public Competicion() {}
+
+    // 🔹 Constructor recomendado
+    public Competicion(String nombre, long fecha) {
+        this.nombre = nombre;
+        this.fecha = fecha;
+    }
 }

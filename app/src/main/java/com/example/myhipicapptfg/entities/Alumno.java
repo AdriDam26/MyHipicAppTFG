@@ -10,24 +10,35 @@ import androidx.room.PrimaryKey;
         tableName = "Alumno",
         foreignKeys = @ForeignKey(
                 entity = Usuario.class,
-                parentColumns = "ID_Usuario", // columna en Usuario
-                childColumns = "ID_Alumno",   // columna en Alumno que referencia
+                parentColumns = "ID_Usuario",
+                childColumns = "ID_Alumno",
                 onDelete = ForeignKey.CASCADE
         )
 )
 public class Alumno {
 
     @PrimaryKey
-    @ColumnInfo(name = "ID_Alumno")  // nombre exacto de la columna en la tabla
+    @ColumnInfo(name = "ID_Alumno")
     public int idAlumno;
 
-    //Necesario para Room
+    @ColumnInfo(name = "Nivel_Doma")
+    public String nivelDoma;
+
+    @ColumnInfo(name = "Nivel_Salto")
+    public String nivelSalto;
+
+    public static final String PRINCIPIANTE = "Principiante";
+    public static final String INTERMEDIO = "Intermedio";
+    public static final String AVANZADO = "Avanzado";
+
     public Alumno() {}
 
-
-    public Alumno(int idAlumno) {
+    public Alumno(int idAlumno, String nivelDoma, String nivelSalto) {
         this.idAlumno = idAlumno;
+        this.nivelDoma = nivelDoma;
+        this.nivelSalto = nivelSalto;
     }
+
 
 }
 

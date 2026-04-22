@@ -7,7 +7,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.myhipicapptfg.dao.CuadraDao;
 import com.example.myhipicapptfg.database.TestDatabase;
-import com.example.myhipicapptfg.entities.Cuadra;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;

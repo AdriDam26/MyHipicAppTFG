@@ -8,7 +8,6 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.example.myhipicapptfg.entities.PlantillaPrueba;
 import java.util.List;
 
 @Dao

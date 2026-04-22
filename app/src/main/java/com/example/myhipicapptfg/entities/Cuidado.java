@@ -1,6 +1,5 @@
 package com.example.myhipicapptfg.entities;
 
-
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -25,10 +24,8 @@ public class Cuidado {
     public String tipoCuidado;
 
     @ColumnInfo(name = "Fecha")
-    public String fecha; // TEXT 'YYYY-MM-DD'
+    public long fecha;
 
-    @ColumnInfo(name = "Proxima_Revision")
-    public String proximaRevision; // puede ser null
 
     @ColumnInfo(name = "Descripcion")
     public String descripcion;
@@ -36,16 +33,29 @@ public class Cuidado {
     @ColumnInfo(name = "ID_Equino")
     public int idEquino;
 
-    // Constantes Tipo de Cuidado
+    // 🔹 Tipos de cuidado
     public static final String VETERINARIO = "Veterinario";
     public static final String VACUNA = "Vacuna";
     public static final String HERRAJE = "Herraje";
-    public static final String DENTISTA = "Dentista";
+    public static final String DESPARASITACION = "Desparasitacion";
     public static final String FISIOTERAPIA = "Fisioterapia";
-    public static final String DESPARASITACION = "Desparasitación";
+    public static final String ALIMENTACION = "Alimentacion";
     public static final String ENTRENAMIENTO = "Entrenamiento";
-    public static final String ALIMENTACION = "Alimentación";
-    public static final String MEDICINAS = "Medicinas";
-    public static final String PELUQUERIA = "Peluquería";
     public static final String OTROS = "Otros";
+
+    // 🔹 Constructor vacío (OBLIGATORIO Room)
+    public Cuidado() {}
+
+    // 🔹 Constructor recomendado
+    public Cuidado(int idEquino,
+                   String tipoCuidado,
+                   long fecha,
+                   Long proximaRevision,
+                   String descripcion) {
+
+        this.idEquino = idEquino;
+        this.tipoCuidado = tipoCuidado;
+        this.fecha = fecha;
+        this.descripcion = descripcion;
+    }
 }

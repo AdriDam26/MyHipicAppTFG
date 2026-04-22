@@ -6,7 +6,6 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.myhipicapptfg.entities.Cuadra;
 import com.example.myhipicapptfg.entities.DisciplinaEquino;
 import com.example.myhipicapptfg.entities.Equino;
 import com.example.myhipicapptfg.entities.Usuario;

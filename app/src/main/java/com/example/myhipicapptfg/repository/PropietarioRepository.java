@@ -6,10 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.myhipicapptfg.dao.PropietarioDao;
 import com.example.myhipicapptfg.dao.UsuarioDao; // Necesario para validar
 import com.example.myhipicapptfg.database.TestDatabase;
-import com.example.myhipicapptfg.entities.Propietario;
 import com.example.myhipicapptfg.entities.Usuario;
 
 import java.util.List;

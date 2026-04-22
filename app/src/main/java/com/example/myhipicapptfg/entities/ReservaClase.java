@@ -29,4 +29,25 @@ public class ReservaClase {
 
     @ColumnInfo(name = "ID_Clase")
     public int idClase;
+
+    @ColumnInfo(name = "Fecha_Reserva")
+    public long fechaReserva;
+
+    @ColumnInfo(name = "Estado")
+    public String estado;
+
+    // 🔹 Estados posibles
+    public static final String CONFIRMADA = "Confirmada";
+    public static final String CANCELADA = "Cancelada";
+
+    // 🔹 Constructor vacío (OBLIGATORIO Room)
+    public ReservaClase() {}
+
+    // 🔹 Constructor recomendado
+    public ReservaClase(int idAlumno, int idClase, long fechaReserva, String estado) {
+        this.idAlumno = idAlumno;
+        this.idClase = idClase;
+        this.fechaReserva = fechaReserva;
+        this.estado = estado;
+    }
 }

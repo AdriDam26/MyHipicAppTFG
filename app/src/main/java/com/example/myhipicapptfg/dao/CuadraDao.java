@@ -8,7 +8,6 @@ import androidx.room.Query;
 import androidx.room.Update;
 import androidx.room.Delete;
 
-import com.example.myhipicapptfg.entities.Cuadra;
 import java.util.List;
 
 @Dao

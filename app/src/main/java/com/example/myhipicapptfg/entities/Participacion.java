@@ -1,9 +1,9 @@
 package com.example.myhipicapptfg.entities;
 
-
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 @Entity(
@@ -22,11 +22,16 @@ import androidx.room.PrimaryKey;
                         onDelete = ForeignKey.CASCADE
                 ),
                 @ForeignKey(
-                        entity = Convocatoria.class,
-                        parentColumns = "ID_Convocatoria",
-                        childColumns = "ID_Convocatoria",
+                        entity = Prueba.class,
+                        parentColumns = "ID_Prueba",
+                        childColumns = "ID_Prueba",
                         onDelete = ForeignKey.CASCADE
                 )
+        },
+        indices = {
+                @Index(value = {"ID_Alumno"}),
+                @Index(value = {"ID_Equino"}),
+                @Index(value = {"ID_Prueba"})
         }
 )
 public class Participacion {
@@ -35,11 +40,11 @@ public class Participacion {
     @ColumnInfo(name = "ID_Participacion")
     public int idParticipacion;
 
-    @ColumnInfo(name = "Puntaje")
-    public double puntaje; // derivado, puede calcularse desde Calificación
+    @ColumnInfo(name = "Posicion")
+    public int posicion;
 
-    @ColumnInfo(name = "Hora")
-    public String hora; // Time 'HH:MM:SS'
+    @ColumnInfo(name = "Hora_Salida")
+    public long horaSalida;
 
     @ColumnInfo(name = "ID_Alumno")
     public int idAlumno;
@@ -47,6 +52,23 @@ public class Participacion {
     @ColumnInfo(name = "ID_Equino")
     public int idEquino;
 
-    @ColumnInfo(name = "ID_Convocatoria")
-    public int idConvocatoria;
+    @ColumnInfo(name = "ID_Prueba")
+    public int idPrueba;
+
+    // 🔹 Constructor vacío (Room)
+    public Participacion() {}
+
+    // 🔹 Constructor recomendado
+    public Participacion(int posicion,
+                         long horaSalida,
+                         int idAlumno,
+                         int idEquino,
+                         int idPrueba) {
+
+        this.posicion = posicion;
+        this.horaSalida = horaSalida;
+        this.idAlumno = idAlumno;
+        this.idEquino = idEquino;
+        this.idPrueba = idPrueba;
+    }
 }

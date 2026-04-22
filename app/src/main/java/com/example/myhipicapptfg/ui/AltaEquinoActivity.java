@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.myhipicapptfg.R;
-import com.example.myhipicapptfg.entities.Cuadra;
 import com.example.myhipicapptfg.entities.Equino;
 import com.example.myhipicapptfg.entities.Usuario;
 import com.example.myhipicapptfg.viewmodel.AltaEquinoViewModel;

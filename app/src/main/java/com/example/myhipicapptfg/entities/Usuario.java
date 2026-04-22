@@ -20,7 +20,6 @@ public class Usuario {
 
     @ColumnInfo(name = "Email")
     public String email;
-
     @ColumnInfo(name = "Telefono")
     public String telefono;
 
@@ -37,7 +36,10 @@ public class Usuario {
     public String nombre;
 
     @ColumnInfo(name = "Fecha_Nacimiento")
-    public String fechaNacimiento; // Guardar como TEXT 'YYYY-MM-DD'
+    public long fechaNacimiento;
+
+    @ColumnInfo(name = "Fecha_Registro")
+    public long fechaRegistro;
 
     @ColumnInfo(name = "Sexo")
     public String sexo;
@@ -55,9 +57,30 @@ public class Usuario {
     public static final String TIPO_PROFESOR = "profesor";
     public static final String TIPO_PROPIETARIO = "propietario";
 
+    public static final String TIPO_JUEZ = "juez";
+
     @Override
     public String toString() {
         return nombre + " " + apellido1 + " " + apellido2;
+    }
+
+    public Usuario() {}
+
+    public Usuario(String email, String telefono,
+                   String apellido1, String apellido2, String dni,
+                   String nombre, long fechaNacimiento,
+                   long fechaRegistro, String sexo, String tipo) {
+
+        this.email = email;
+        this.telefono = telefono;
+        this.apellido1 = apellido1;
+        this.apellido2 = apellido2;
+        this.dni = dni;
+        this.nombre = nombre;
+        this.fechaNacimiento = fechaNacimiento;
+        this.fechaRegistro = fechaRegistro;
+        this.sexo = sexo;
+        this.tipo = tipo;
     }
 
 
