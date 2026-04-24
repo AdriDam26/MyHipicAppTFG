@@ -22,21 +22,13 @@
         </activity>
 
         <activity
-            android:name=".ui.AltaUsuarioActivity"
+            android:name=".ui.GestionUsuariosActivity"
             android:exported="false" />
+
         <activity
-            android:name=".ui.GestionAlumnosActivity"
+            android:name=".ui.UsuarioFormActivity"
             android:exported="false" />
-        <activity android:name=".ui.SeleccionInstalacionActivity"
-            android:exported="false" />
-        <activity android:name=".ui.AltaCuadraActivity"
-            android:exported="false" />
-        <activity android:name=".ui.AltaPistaActivity"
-            android:exported="false" />
-        <activity android:name=".ui.AltaEquinoActivity"
-            android:exported="false" />
-        <activity android:name=".ui.AltaClaseActivity"
-            android:exported="false" />
+
 
     </application>
 

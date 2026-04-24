@@ -36,7 +36,7 @@ import com.example.myhipicapptfg.entities.*;
                 Movimiento.class,
                 NotaMovimiento.class
         },
-        version = 1,
+        version = 5,
         exportSchema = false
 )
 public abstract class AppDatabase extends RoomDatabase {

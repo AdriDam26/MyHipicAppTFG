@@ -6,6 +6,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.myhipicapptfg.R;
 import com.google.android.material.card.MaterialCardView;
+import com.example.myhipicapptfg.ui.GestionUsuariosActivity;
 
 public class AdminMenuActivity extends AppCompatActivity {
 
@@ -14,41 +15,27 @@ public class AdminMenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_menu);
 
-        // 1. Vincular las tarjetas
+        configurarNavegacion();
+    }
+
+    private void configurarNavegacion() {
+        // 1. Vincular las tarjetas desde el XML
         MaterialCardView cardUsuarios = findViewById(R.id.cardUsuarios);
         MaterialCardView cardEquinos = findViewById(R.id.cardEquinos);
         MaterialCardView cardInstalaciones = findViewById(R.id.cardInstalaciones);
         MaterialCardView cardClases = findViewById(R.id.cardClases);
+        MaterialCardView cardCompeticiones = findViewById(R.id.cardCompeticiones);
 
-        // 2. Configurar Clics
+        // 2. Configurar los eventos de clic
 
         // USUARIOS
         cardUsuarios.setOnClickListener(v -> {
-            Intent intent = new Intent(AdminMenuActivity.this, GestionAlumnosActivity.class);
+            Intent intent = new Intent(this, GestionUsuariosActivity.class);
             startActivity(intent);
         });
 
-        // EQUINOS
-        cardEquinos.setOnClickListener(v -> {
-            Intent intent = new Intent(this, AltaEquinoActivity.class);
-            startActivity(intent);
-        });
 
-        // INSTALACIONES
-        cardInstalaciones.setOnClickListener(v -> {
-            Intent intent = new Intent(this, SeleccionInstalacionActivity.class);
-            startActivity(intent);
-        });
-
-        // CLASES
-        cardClases.setOnClickListener(v -> {
-            Intent intent = new Intent(this, AltaClaseActivity.class);
-            startActivity(intent);
-            showComingSoon("Calendario de Clases");
-        });
     }
 
-    private void showComingSoon(String seccion) {
-        Toast.makeText(this, seccion + " próximamente", Toast.LENGTH_SHORT).show();
-    }
+
 }

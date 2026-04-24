@@ -21,6 +21,12 @@ public class Alumno {
     @ColumnInfo(name = "ID_Alumno")
     public int idAlumno;
 
+    @ColumnInfo(name = "Practica_Doma")
+    public boolean practicaDoma;
+
+    @ColumnInfo(name = "Practica_Salto")
+    public boolean practicaSalto;
+
     @ColumnInfo(name = "Nivel_Doma")
     public String nivelDoma;
 
@@ -33,8 +39,15 @@ public class Alumno {
 
     public Alumno() {}
 
-    public Alumno(int idAlumno, String nivelDoma, String nivelSalto) {
+    public Alumno(int idAlumno,
+                  boolean practicaDoma,
+                  boolean practicaSalto,
+                  String nivelDoma,
+                  String nivelSalto) {
+
         this.idAlumno = idAlumno;
+        this.practicaDoma = practicaDoma;
+        this.practicaSalto = practicaSalto;
         this.nivelDoma = nivelDoma;
         this.nivelSalto = nivelSalto;
     }

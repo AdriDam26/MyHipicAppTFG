@@ -8,6 +8,9 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.myhipicapptfg.dao.UsuarioDao;
 import com.example.myhipicapptfg.database.AppDatabase;
+import com.example.myhipicapptfg.entities.Alumno;
+import com.example.myhipicapptfg.entities.Juez;
+import com.example.myhipicapptfg.entities.Profesor;
 import com.example.myhipicapptfg.entities.Usuario;
 
 import java.util.List;
@@ -58,6 +61,36 @@ public class UsuarioRepository {
             }
         });
     }
+
+    public void insertarUsuarioCompleto(
+            Usuario u,
+            Alumno a,
+            Profesor p,
+            Juez j
+    ) {
+        executorService.execute(() -> {
+
+            if (usuarioDao.buscarPorEmailSync(u.email) != null) {
+                estadoOperacion.postValue("ERROR_EMAIL_DUPLICADO");
+                return;
+            }
+
+            if (usuarioDao.buscarPorDNISync(u.dni) != null) {
+                estadoOperacion.postValue("ERROR_DNI_DUPLICADO");
+                return;
+            }
+
+            try {
+                usuarioDao.insertarUsuarioCompleto(u, a, p, j);
+                estadoOperacion.postValue("EXITO");
+
+            } catch (Exception e) {
+                estadoOperacion.postValue("ERROR_BD");
+            }
+        });
+    }
+
+
 
     // =====================================
     // 🔹 UPDATE
@@ -115,5 +148,38 @@ public class UsuarioRepository {
 
     public LiveData<Integer> contarUsuarios() {
         return usuarioDao.contarUsuarios();
+    }
+
+    public void actualizarUsuarioCompleto(
+            Usuario u,
+            Alumno a,
+            Profesor p,
+            Juez j
+    ) {
+        executorService.execute(() -> {
+
+            try {
+                // 1. actualizar usuario base
+                usuarioDao.actualizarUsuario(u);
+
+                // 2. actualizar según tipo
+                if (a != null) {
+                    usuarioDao.actualizarAlumno(a);
+                }
+
+                if (p != null) {
+                    usuarioDao.actualizarProfesor(p);
+                }
+
+                if (j != null) {
+                    usuarioDao.actualizarJuez(j);
+                }
+
+                estadoOperacion.postValue("EXITO");
+
+            } catch (Exception e) {
+                estadoOperacion.postValue("ERROR_BD");
+            }
+        });
     }
 }

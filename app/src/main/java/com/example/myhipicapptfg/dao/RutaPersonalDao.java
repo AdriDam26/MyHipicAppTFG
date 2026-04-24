@@ -39,5 +39,5 @@ public interface RutaPersonalDao {
     @Query("SELECT EXISTS(" +
             "SELECT 1 FROM Usuario " +
             "WHERE ID_Usuario = :id AND Tipo = 'propietario')")
-    int esPropietarioValido(int id);
+    boolean esPropietarioValido(int id);
 }

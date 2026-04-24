@@ -6,8 +6,12 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Transaction;
 import androidx.room.Update;
 
+import com.example.myhipicapptfg.entities.Alumno;
+import com.example.myhipicapptfg.entities.Juez;
+import com.example.myhipicapptfg.entities.Profesor;
 import com.example.myhipicapptfg.entities.Usuario;
 
 import java.util.List;
@@ -61,4 +65,73 @@ public interface UsuarioDao {
 
     @Query("SELECT * FROM Usuario WHERE ID_Usuario = :id LIMIT 1")
     Usuario buscarPorIdSync(int id);
+
+
+    @Transaction
+    default void insertarUsuarioCompleto(
+            Usuario usuario,
+            Alumno alumno,
+            Profesor profesor,
+            Juez juez
+    ) {
+        long id = insertarUsuario(usuario);
+
+        if (alumno != null) {
+            alumno.idAlumno = (int) id;
+            insertarAlumno(alumno);
+        }
+
+        if (profesor != null) {
+            profesor.idProfesor = (int) id;
+            insertarProfesor(profesor);
+        }
+
+        if (juez != null) {
+            juez.idJuez = (int) id;
+            insertarJuez(juez);
+        }
+    }
+
+    @Insert
+    void insertarAlumno(Alumno alumno);
+
+    @Insert
+    void insertarProfesor(Profesor profesor);
+
+    @Insert
+    void insertarJuez(Juez juez);
+
+
+    @Transaction
+    default void actualizarUsuarioCompleto(
+            Usuario usuario,
+            Alumno alumno,
+            Profesor profesor,
+            Juez juez
+    ) {
+        actualizarUsuario(usuario);
+
+        if (alumno != null) {
+            actualizarAlumno(alumno);
+        }
+
+        if (profesor != null) {
+            actualizarProfesor(profesor);
+        }
+
+        if (juez != null) {
+            actualizarJuez(juez);
+        }
+    }
+
+    @Update
+    void actualizarAlumno(Alumno alumno);
+
+    @Update
+    void actualizarProfesor(Profesor profesor);
+
+    @Update
+    void actualizarJuez(Juez juez);
+
+
 }

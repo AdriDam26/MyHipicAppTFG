@@ -44,31 +44,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="20dp"
+                android:padding="24dp"
                 android:gravity="center_vertical">
                 <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:src="@android:drawable/ic_menu_myplaces"
                     app:tint="#0061A4"/>
-                <LinearLayout
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginStart="20dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Usuarios"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="#1A1C1E"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Alumnos, Profesores y Propietarios"
-                        android:textColor="#42474E"/>
-                </LinearLayout>
+                    android:text="Usuarios"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="#1A1C1E"
+                    android:layout_marginStart="20dp"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -88,31 +78,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="20dp"
+                android:padding="24dp"
                 android:gravity="center_vertical">
                 <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@android:drawable/star_on"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@android:drawable/btn_star_big_on"
                     app:tint="#006D39"/>
-                <LinearLayout
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginStart="20dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Equinos"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="#1A1C1E"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Gestión de caballos"
-                        android:textColor="#42474E"/>
-                </LinearLayout>
+                    android:text="Equinos"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="#1A1C1E"
+                    android:layout_marginStart="20dp"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -132,31 +112,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="20dp"
+                android:padding="24dp"
                 android:gravity="center_vertical">
                 <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:src="@android:drawable/ic_menu_manage"
                     app:tint="#8F4C00"/>
-                <LinearLayout
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginStart="20dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Instalaciones"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="#1A1C1E"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Cuadras y Pistas"
-                        android:textColor="#42474E"/>
-                </LinearLayout>
+                    android:text="Instalaciones"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="#1A1C1E"
+                    android:layout_marginStart="20dp"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -176,31 +146,55 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="20dp"
+                android:padding="24dp"
                 android:gravity="center_vertical">
                 <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:src="@android:drawable/ic_menu_today"
                     app:tint="#6750A4"/>
-                <LinearLayout
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginStart="20dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Clases"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="#1A1C1E"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Horarios y reservas"
-                        android:textColor="#42474E"/>
-                </LinearLayout>
+                    android:text="Clases"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="#1A1C1E"
+                    android:layout_marginStart="20dp"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardCompeticiones"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            app:cardCornerRadius="28dp"
+            app:strokeColor="#DCE2E9"
+            app:strokeWidth="1dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="24dp"
+                android:gravity="center_vertical">
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@android:drawable/ic_menu_compass"
+                    app:tint="#B3261E"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Competiciones"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="#1A1C1E"
+                    android:layout_marginStart="20dp"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 

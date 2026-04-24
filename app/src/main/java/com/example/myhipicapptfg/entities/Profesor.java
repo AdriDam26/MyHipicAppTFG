@@ -23,13 +23,28 @@ public class Profesor {
     @ColumnInfo(name = "Puede_Dar_Doma")
     public boolean puedeDarDoma;
 
+
+    @ColumnInfo(name = "Nivel_Maximo_Doma")
+    public String nivelMaximoDoma;
+
     @ColumnInfo(name = "Puede_Dar_Salto")
     public boolean puedeDarSalto;
+
+    @ColumnInfo(name = "Nivel_Maximo_Salto")
+    public String nivelMaximoSalto;
 
     @ColumnInfo(name = "Anios_Experiencia")
     public int aniosExperiencia;
 
+    @ColumnInfo(name = "Activo")
+    public boolean activo;
+
     public Profesor() {}
+
+
+    public static final String PRINCIPIANTE = "Principiante";
+    public static final String INTERMEDIO = "Intermedio";
+    public static final String AVANZADO = "Avanzado";
 
     public Profesor(int idProfesor,
                     boolean puedeDarDoma,

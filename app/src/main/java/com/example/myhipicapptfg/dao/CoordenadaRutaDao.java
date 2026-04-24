@@ -41,7 +41,7 @@ public interface CoordenadaRutaDao {
     @Query("SELECT EXISTS(" +
             "SELECT 1 FROM RutaPersonal " +
             "WHERE ID_Ruta_Personal = :idRuta)")
-    int existeRuta(int idRuta);
+    boolean existeRuta(int idRuta);
 
     // 🔹 BORRAR TODAS LAS COORDENADAS DE UNA RUTA
     @Query("DELETE FROM CoordenadaRuta WHERE ID_Ruta_Personal = :idRuta")

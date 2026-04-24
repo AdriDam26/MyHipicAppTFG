@@ -26,6 +26,15 @@ public class Juez {
     @ColumnInfo(name = "Federacion")
     public String federacion;
 
+
+    @ColumnInfo(name = "Activo")
+    public boolean activo;
+
+    public static final String ESPAÑOLA = "Real Federación Hípica Española (RFHE)";
+    public static final String FRANCESA = "Fédération Française d'Équitation (FFE)";
+    public static final String BRITANICA = "British Equestrian (BEF)";
+    public static final String INTERNACIONAL = "Fédération Equestre Internationale (FEI)";
+
     // Constructor vacío
     public Juez() {}
 
