@@ -29,6 +29,22 @@
             android:name=".ui.UsuarioFormActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ui.GestionPistaActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.PistaFormActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.GestionEquinosActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.EquinoFormActivity"
+            android:exported="false" />
+
 
     </application>
 

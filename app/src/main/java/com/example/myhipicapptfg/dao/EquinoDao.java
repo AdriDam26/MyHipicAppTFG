@@ -57,5 +57,5 @@ public interface EquinoDao {
 
 
     @Query("SELECT EXISTS(SELECT 1 FROM Equino WHERE Numero_Cuadra = :numeroCuadra)")
-    boolean existeCuadra(int numeroCuadra);
+    boolean esCuadraOcupada(int numeroCuadra);
 }

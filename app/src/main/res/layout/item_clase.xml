@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="12dp"
+    android:layout_marginVertical="6dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="4dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="#E5E7EB">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="90dp"
+            android:layout_height="60dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="#F3F4F6"
+            android:layout_marginEnd="16dp">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@android:drawable/ic_menu_recent_history"
+                app:tint="#4B5563" />
+
+            <TextView
+                android:id="@+id/txtRangoHorarioClase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="10:00 - 11:30"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textColor="#1F2937"
+                android:layout_marginTop="4dp"
+                android:gravity="center"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtDisciplinaClase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="DOMA CLÁSICA"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#111827"
+                android:maxLines="1"
+                android:ellipsize="end"/>
+
+            <TextView
+                android:id="@+id/txtInfoProfesorPista"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Prof. Juan Pérez • Pista 2"
+                android:textSize="13sp"
+                android:textColor="#6B7280"
+                android:layout_marginTop="2dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp">
+
+                <TextView
+                    android:id="@+id/txtNivelClase"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="2dp"
+                    android:background="#E0E7FF"
+                    android:text="INTERMEDIO"
+                    android:textColor="#4338CA"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:layout_marginEnd="6dp"/>
+
+                <TextView
+                    android:id="@+id/txtFechaClase"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="2dp"
+                    android:background="#F3F4F6"
+                    android:text="27 Abr 2026"
+                    android:textColor="#374151"
+                    android:textSize="10sp"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btnEditarClase"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@android:drawable/ic_menu_edit"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Editar"
+                app:tint="?attr/colorPrimary"/>
+
+            <ImageButton
+                android:id="@+id/btnEliminarClase"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@android:drawable/ic_menu_delete"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Eliminar"
+                app:tint="#EF4444"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

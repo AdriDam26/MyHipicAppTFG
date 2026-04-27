@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey;
 
 @Entity(
         tableName = "Pista",
-        indices = {@Index(value = {"Nombre"}, unique = true)} // ⚡ índice único en Nombre
+        indices = {@Index(value = {"Nombre"}, unique = true)}
 )
 public class Pista {
 
