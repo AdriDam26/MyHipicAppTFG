@@ -45,6 +45,14 @@
             android:name=".ui.EquinoFormActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ui.GestionClasesActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.ClaseFormActivity"
+            android:exported="false" />
+
 
     </application>
 

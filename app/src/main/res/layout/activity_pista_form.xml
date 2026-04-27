@@ -11,7 +11,6 @@
         android:orientation="vertical"
         android:padding="24dp">
 
-        <!-- BOTÓN VOLVER -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnVolverPista"
             style="@style/Widget.MaterialComponents.Button.TextButton"
@@ -20,97 +19,85 @@
             android:text="VOLVER"
             app:icon="@android:drawable/ic_menu_revert" />
 
-        <!-- TÍTULO -->
         <TextView
+            android:id="@+id/tvTituloPista"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nueva Pista"
+            android:text="Gestión de Pista"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="20dp"
+            android:textColor="@color/black" />
 
-        <!-- NOMBRE -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/layoutNombrePista"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
             android:hint="Nombre de la pista"
-            app:errorEnabled="true">
+            android:layout_marginBottom="16dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etNombrePista"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
+                android:layout_height="wrap_content"
+                android:inputType="textCapSentences" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- ANCHO Y LARGO -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:baselineAligned="false">
+            android:orientation="horizontal">
 
-            <!-- ANCHO -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layoutAnchoPista"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="6dp"
-                android:hint="Ancho (m)"
-                app:errorEnabled="true">
+                android:layout_weight="1"
+                android:layout_marginEnd="4dp"
+                android:hint="Ancho (m)">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etAnchoPista"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="numberDecimal" />
-
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- LARGO -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layoutLargoPista"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:hint="Largo (m)"
-                app:errorEnabled="true">
+                android:layout_weight="1"
+                android:layout_marginStart="4dp"
+                android:hint="Largo (m)">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etLargoPista"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="numberDecimal" />
-
             </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
 
-        <!-- PROGRESS -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnGuardarPista"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="32dp"
+            android:text="GUARDAR PISTA"
+            app:cornerRadius="8dp" />
+
         <ProgressBar
             android:id="@+id/progressBarPista"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             android:visibility="gone" />
-
-        <!-- BOTÓN GUARDAR -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnGuardarPista"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginTop="24dp"
-            android:text="GUARDAR PISTA"
-            app:cornerRadius="12dp" />
 
     </LinearLayout>
 </ScrollView>

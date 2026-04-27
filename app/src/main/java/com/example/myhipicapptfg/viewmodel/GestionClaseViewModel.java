@@ -7,6 +7,9 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.example.myhipicapptfg.entities.Clase;
+import com.example.myhipicapptfg.entities.Pista;
+import com.example.myhipicapptfg.entities.Profesor;
+import com.example.myhipicapptfg.entities.Usuario;
 import com.example.myhipicapptfg.repository.ClaseRepository;
 
 import java.util.List;
@@ -38,7 +41,17 @@ public class GestionClaseViewModel extends AndroidViewModel {
         return repository.buscarPorId(id);
     }
 
+    public LiveData<List<Profesor>> obtenerTodosLosProfesores() {
+        return repository.obtenerTodosLosProfesores();
+    }
 
+    public LiveData<List<Pista>> obtenerTodasLasPistas() {
+        return repository.obtenerTodasLasPistas();
+    }
+
+    public LiveData<List<Usuario>> obtenerTodosLosUsuarios() {
+        return repository.obtenerTodosLosUsuarios();
+    }
 
 
     // =====================================

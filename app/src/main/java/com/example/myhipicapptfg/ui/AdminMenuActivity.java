@@ -40,6 +40,10 @@ public class AdminMenuActivity extends AppCompatActivity {
             startActivity(new Intent(this, GestionEquinosActivity.class));
         });
 
+        cardClases.setOnClickListener(v -> {
+            startActivity(new Intent(this, GestionClasesActivity.class));
+        });
+
 
     }
 }
