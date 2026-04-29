@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.myhipicapptfg.dao.RutaPersonalDao;
 import com.example.myhipicapptfg.database.AppDatabase;
+import com.example.myhipicapptfg.entities.CoordenadaRuta;
 import com.example.myhipicapptfg.entities.RutaPersonal;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class RutaPersonalRepository {
     private final ExecutorService executorService;
 
     private final MutableLiveData<String> estadoOperacion = new MutableLiveData<>();
+
     private final LiveData<List<RutaPersonal>> rutas;
 
     public RutaPersonalRepository(@NonNull Application application) {
@@ -29,7 +31,7 @@ public class RutaPersonalRepository {
 
         executorService = Executors.newSingleThreadExecutor();
 
-        rutas = rutaPersonalDao.obtenerTodasRutas();
+        rutas = rutaPersonalDao.obtenerTodas();
     }
 
     // =====================================
@@ -45,20 +47,21 @@ public class RutaPersonalRepository {
     }
 
     // =====================================
-    // 🔹 INSERTAR
+    // 🔹 INSERTAR RUTA + COORDENADAS
     // =====================================
 
-    public void insertarRuta(RutaPersonal ruta) {
+    public void insertarRutaCompleta(RutaPersonal ruta, List<CoordenadaRuta> coordenadas) {
+
         executorService.execute(() -> {
 
-            // Validación: propietario válido
-            if (!rutaPersonalDao.esPropietarioValido(ruta.idUsuario)) {
+            // Validación propietario
+            if (!rutaPersonalDao.esPropietarioValido(ruta.idPropietario)) {
                 estadoOperacion.postValue("ERROR_USUARIO_NO_PROPIETARIO");
                 return;
             }
 
             try {
-                rutaPersonalDao.insertarRuta(ruta);
+                rutaPersonalDao.guardarRutaConPuntos(ruta, coordenadas);
                 estadoOperacion.postValue("EXITO");
             } catch (Exception e) {
                 estadoOperacion.postValue("ERROR_BD");
@@ -71,9 +74,10 @@ public class RutaPersonalRepository {
     // =====================================
 
     public void actualizarRuta(RutaPersonal ruta) {
+
         executorService.execute(() -> {
             try {
-                rutaPersonalDao.actualizarRuta(ruta);
+                rutaPersonalDao.actualizar(ruta);
                 estadoOperacion.postValue("EXITO");
             } catch (Exception e) {
                 estadoOperacion.postValue("ERROR_BD");
@@ -86,13 +90,22 @@ public class RutaPersonalRepository {
     // =====================================
 
     public void eliminarRuta(RutaPersonal ruta) {
+
         executorService.execute(() -> {
             try {
-                rutaPersonalDao.eliminarRuta(ruta);
+                rutaPersonalDao.eliminar(ruta);
                 estadoOperacion.postValue("EXITO");
             } catch (Exception e) {
                 estadoOperacion.postValue("ERROR_BD");
             }
         });
+    }
+
+    // =====================================
+    // 🔹 FILTRO POR PROPIETARIO
+    // =====================================
+
+    public LiveData<List<RutaPersonal>> obtenerPorPropietario(long idPropietario) {
+        return rutaPersonalDao.obtenerPorPropietario(idPropietario);
     }
 }

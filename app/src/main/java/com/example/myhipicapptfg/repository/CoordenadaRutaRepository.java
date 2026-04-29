@@ -37,28 +37,24 @@ public class CoordenadaRutaRepository {
     }
 
     // =====================================
-    // 🔹 INSERTAR TRAYECTO
+    // 🔹 INSERTAR LISTA
     // =====================================
 
-    public void insertarTrayecto(List<CoordenadaRuta> trayecto) {
+    public void insertarCoordenadas(List<CoordenadaRuta> coordenadas) {
 
-        if (trayecto == null || trayecto.isEmpty()) {
-            estadoOperacion.postValue("ERROR_TRAYECTO_VACIO");
-            return;
-        }
+        if (coordenadas == null || coordenadas.isEmpty()) return;
 
         executorService.execute(() -> {
 
-            int idRuta = trayecto.get(0).idRutaPersonal;
+            long idRuta = coordenadas.get(0).idRutaPersonal;
 
-            // Validar ruta existe
             if (!coordenadaRutaDao.existeRuta(idRuta)) {
                 estadoOperacion.postValue("ERROR_RUTA_NO_EXISTE");
                 return;
             }
 
             try {
-               // coordenadaRutaDao.insertarLista(trayecto);
+                coordenadaRutaDao.insertarLista(coordenadas);
                 estadoOperacion.postValue("EXITO");
             } catch (Exception e) {
                 estadoOperacion.postValue("ERROR_BD");
@@ -67,10 +63,26 @@ public class CoordenadaRutaRepository {
     }
 
     // =====================================
-    // 🔹 CONSULTA
+    // 🔹 OBTENER POR RUTA
     // =====================================
 
-    public LiveData<List<CoordenadaRuta>> obtenerCoordenadas(int idRuta) {
+    public LiveData<List<CoordenadaRuta>> obtenerPorRuta(long idRuta) {
         return coordenadaRutaDao.obtenerPorRuta(idRuta);
+    }
+
+    // =====================================
+    // 🔹 ELIMINAR POR RUTA
+    // =====================================
+
+    public void eliminarPorRuta(long idRuta) {
+
+        executorService.execute(() -> {
+            try {
+                coordenadaRutaDao.eliminarPorRuta(idRuta);
+                estadoOperacion.postValue("EXITO");
+            } catch (Exception e) {
+                estadoOperacion.postValue("ERROR_BD");
+            }
+        });
     }
 }

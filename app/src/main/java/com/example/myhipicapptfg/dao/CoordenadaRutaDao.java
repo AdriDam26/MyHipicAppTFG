@@ -1,12 +1,7 @@
 package com.example.myhipicapptfg.dao;
 
 import androidx.lifecycle.LiveData;
-import androidx.room.Dao;
-import androidx.room.Delete;
-import androidx.room.Insert;
-import androidx.room.OnConflictStrategy;
-import androidx.room.Query;
-import androidx.room.Update;
+import androidx.room.*;
 
 import com.example.myhipicapptfg.entities.CoordenadaRuta;
 
@@ -15,35 +10,24 @@ import java.util.List;
 @Dao
 public interface CoordenadaRutaDao {
 
-    // 🔹 INSERT (una coordenada)
-    @Insert(onConflict = OnConflictStrategy.ABORT)
-    long insertarCoordenada(CoordenadaRuta coordenada);
+    @Insert
+    void insertar(CoordenadaRuta coordenada);
 
-    // 🔹 INSERT LISTA (trayecto completo GPS)
-    @Insert(onConflict = OnConflictStrategy.ABORT)
-    void insertarListaCoordenadas(List<CoordenadaRuta> coordenadas);
+    @Insert
+    void insertarLista(List<CoordenadaRuta> coordenadas);
 
-    // 🔹 UPDATE
     @Update
-    int actualizarCoordenada(CoordenadaRuta coordenada);
+    void actualizar(CoordenadaRuta coordenada);
 
-    // 🔹 DELETE (una coordenada)
     @Delete
-    int eliminarCoordenada(CoordenadaRuta coordenada);
+    void eliminar(CoordenadaRuta coordenada);
 
-    // 🔹 OBTENER RUTA ORDENADA (para dibujar mapa)
-    @Query("SELECT * FROM CoordenadaRuta " +
-            "WHERE ID_Ruta_Personal = :idRuta " +
-            "ORDER BY Orden ASC")
-    LiveData<List<CoordenadaRuta>> obtenerPorRuta(int idRuta);
+    @Query("SELECT * FROM CoordenadaRuta WHERE ID_Ruta_Personal = :idRuta ORDER BY Orden ASC")
+    LiveData<List<CoordenadaRuta>> obtenerPorRuta(long idRuta);
 
-    // 🔹 VALIDAR QUE EXISTE LA RUTA PADRE
-    @Query("SELECT EXISTS(" +
-            "SELECT 1 FROM RutaPersonal " +
-            "WHERE ID_Ruta_Personal = :idRuta)")
-    boolean existeRuta(int idRuta);
-
-    // 🔹 BORRAR TODAS LAS COORDENADAS DE UNA RUTA
     @Query("DELETE FROM CoordenadaRuta WHERE ID_Ruta_Personal = :idRuta")
-    void eliminarPorRuta(int idRuta);
+    void eliminarPorRuta(long idRuta);
+
+    @Query("SELECT EXISTS(SELECT 1 FROM RutaPersonal WHERE ID_Ruta_Personal = :idRuta)")
+    boolean existeRuta(long idRuta);
 }
