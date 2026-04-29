@@ -19,7 +19,7 @@ import com.example.myhipicapptfg.entities.*;
                 Competicion.class, Prueba.class, Participacion.class,
                 Movimiento.class, NotaMovimiento.class
         },
-        version = 11,
+        version = 12,
         exportSchema = false
 )
 public abstract class AppDatabase extends RoomDatabase {

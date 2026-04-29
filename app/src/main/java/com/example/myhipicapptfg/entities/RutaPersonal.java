@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey;
         tableName = "RutaPersonal",
         foreignKeys = @ForeignKey(
                 entity = Usuario.class,
-                parentColumns = "ID_Propietario",
+                parentColumns = "ID_Usuario",
                 childColumns = "ID_Propietario",
                 onDelete = ForeignKey.CASCADE
         )
