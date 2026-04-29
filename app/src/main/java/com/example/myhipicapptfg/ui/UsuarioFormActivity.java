@@ -534,7 +534,7 @@ public class UsuarioFormActivity extends AppCompatActivity {
 
         Usuario u = new Usuario(
                 etEmail.getText().toString().trim(),
-                spinnerPrefijo.getText().toString().trim()
+                spinnerPrefijo.getText().toString().trim() + " "
                         + etTelefono.getText().toString().trim(),
                 etApellido1.getText().toString().trim(),
                 etApellido2.getText().toString().trim(),

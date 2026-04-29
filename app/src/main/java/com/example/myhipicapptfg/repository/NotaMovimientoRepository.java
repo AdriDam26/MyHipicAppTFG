@@ -35,11 +35,6 @@ public class NotaMovimientoRepository {
 
         executor.execute(() -> {
 
-            // 🔹 Validar que el juez no haya puntuado ya ese movimiento
-            if (dao.yaPuntuado(n.idJuez, n.idMovimiento, n.idParticipacion)) {
-                estadoOperacion.postValue("ERROR_YA_PUNTUADO");
-                return;
-            }
 
             try {
                 dao.insertarNotaMovimiento(n);
@@ -96,9 +91,7 @@ public class NotaMovimientoRepository {
         return dao.obtenerPorMovimiento(idMovimiento);
     }
 
-    public LiveData<List<NotaMovimiento>> obtenerPorJuez(int idJuez) {
-        return dao.obtenerPorJuez(idJuez);
-    }
+
 
     // =====================================
     // 🔹 SYNC (UTILIDADES)

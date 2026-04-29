@@ -119,6 +119,10 @@ public class EquinoRepository {
         return equinoDao.buscarEquinoPorId(id);
     }
 
+    public LiveData<List<Equino>> obtenerEquinosDoma() {
+        return equinoDao.obtenerEquinosDoma();
+    }
+
 
 
 

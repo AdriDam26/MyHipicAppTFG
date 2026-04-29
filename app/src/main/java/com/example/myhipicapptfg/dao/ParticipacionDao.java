@@ -32,9 +32,7 @@ public interface ParticipacionDao {
     LiveData<List<Participacion>> obtenerTodasParticipaciones();
 
     // 🔹 POR PRUEBA
-    @Query("SELECT * FROM Participacion " +
-            "WHERE ID_Prueba = :idPrueba " +
-            "ORDER BY Posicion ASC")
+    @Query("SELECT * FROM Participacion WHERE ID_Prueba = :idPrueba ORDER BY Orden_Salida ASC")
     LiveData<List<Participacion>> obtenerPorPrueba(int idPrueba);
 
     // 🔹 POR ALUMNO
@@ -73,4 +71,7 @@ public interface ParticipacionDao {
             "AND ID_Equino = :idEquino " +
             "AND ID_Prueba = :idPrueba)")
     boolean existeParticipacion(int idAlumno, int idEquino, int idPrueba);
+
+    @Query("SELECT IFNULL(MAX(orden_Salida), 0) + 1 FROM Participacion WHERE id_Prueba = :idPrueba")
+    LiveData<Integer> obtenerSiguienteOrden(int idPrueba);
 }

@@ -110,4 +110,9 @@ public class Equino {
         this.idUsuario = idUsuario;
         this.numeroCuadra = numeroCuadra;
     }
+
+    @Override
+    public String toString() {
+        return nombre;
+    }
 }

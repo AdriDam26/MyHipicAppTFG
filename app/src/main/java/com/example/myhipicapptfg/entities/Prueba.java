@@ -8,12 +8,22 @@ import androidx.room.PrimaryKey;
 
 @Entity(
         tableName = "Prueba",
-        foreignKeys = @ForeignKey(
-                entity = Competicion.class,
-                parentColumns = "ID_Competicion",
-                childColumns = "ID_Competicion",
-                onDelete = ForeignKey.CASCADE
-        ),
+        foreignKeys = {
+                @ForeignKey(
+                        entity = Competicion.class,
+                        parentColumns = "ID_Competicion",
+                        childColumns = "ID_Competicion",
+                        onDelete = ForeignKey.CASCADE
+                ),
+                @ForeignKey(
+                        entity = Juez.class,
+                        parentColumns = "ID_Juez",
+                        childColumns = "ID_Juez",
+                        // SET_NULL porque si borras el juez
+                        // la prueba no debería desaparecer
+                        onDelete = ForeignKey.SET_NULL
+                )
+        },
         indices = {
                 @Index(value = {"ID_Competicion"}),
                 @Index(value = {"Nombre"}, unique = true)
@@ -39,6 +49,9 @@ public class Prueba {
     @ColumnInfo(name = "ID_Competicion")
     public int idCompeticion;
 
+    @ColumnInfo(name = "ID_Juez")
+    public Integer idJuez;
+
     // 🔹 Categorías RFHE (simplificadas)
     public static final String ALEVIN = "Alevin";
     public static final String INFANTIL = "Infantil";
@@ -62,10 +75,12 @@ public class Prueba {
     public Prueba() {}
 
     // Constructor recomendado
-    public Prueba(String nombre, String categoria, String nivel, int idCompeticion) {
-        this.nombre = nombre;
-        this.categoria = categoria;
-        this.nivel = nivel;
+    public Prueba(String nombre, String categoria, String nivel,
+                  int idCompeticion, Integer idJuez) {
+        this.nombre        = nombre;
+        this.categoria     = categoria;
+        this.nivel         = nivel;
         this.idCompeticion = idCompeticion;
+        this.idJuez        = idJuez;
     }
 }

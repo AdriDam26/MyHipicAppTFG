@@ -4,10 +4,11 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
-import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Transaction;
 import androidx.room.Update;
 
+import com.example.myhipicapptfg.entities.Movimiento;
 import com.example.myhipicapptfg.entities.Prueba;
 
 import java.util.List;
@@ -15,41 +16,66 @@ import java.util.List;
 @Dao
 public interface PruebaDao {
 
-    // 🔹 INSERT
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert
     long insertarPrueba(Prueba prueba);
 
-    // 🔹 UPDATE
     @Update
-    int actualizarPrueba(Prueba prueba);
+    void actualizarPrueba(Prueba prueba);
 
-    // 🔹 DELETE
     @Delete
-    int eliminarPrueba(Prueba prueba);
+    void eliminarPrueba(Prueba prueba);
 
-    // 🔹 LISTADO GENERAL (UI)
     @Query("SELECT * FROM Prueba ORDER BY Nombre ASC")
     LiveData<List<Prueba>> obtenerTodasPruebas();
 
-    // 🔹 BUSCAR POR ID (UI)
-    @Query("SELECT * FROM Prueba WHERE ID_Prueba = :id LIMIT 1")
+    @Query("SELECT * FROM Prueba WHERE ID_Prueba = :id")
     LiveData<Prueba> buscarPruebaPorId(int id);
 
-    // 🔹 BUSCAR POR COMPETICIÓN (UI)
-    @Query("SELECT * FROM Prueba WHERE ID_Competicion = :idCompeticion")
+    @Query("SELECT * FROM Prueba WHERE ID_Competicion = :idCompeticion ORDER BY Nombre ASC")
     LiveData<List<Prueba>> obtenerPorCompeticion(int idCompeticion);
 
-    // ----------------------------------------------------
-    // 🔹 MÉTODOS SYNC (validaciones / repositorio)
-    // ----------------------------------------------------
-
-    // ✔ validar nombre único (evitar duplicados)
-    @Query("SELECT EXISTS(" +
-            "SELECT 1 FROM Prueba WHERE Nombre = :nombre)")
+    @Query("SELECT COUNT(*) > 0 FROM Prueba WHERE Nombre = :nombre")
     boolean existeNombreSync(String nombre);
 
-    // ✔ validar competición
-    @Query("SELECT EXISTS(" +
-            "SELECT 1 FROM Competicion WHERE ID_Competicion = :id)")
-    boolean existeCompeticionSync(int id);
+    @Query("SELECT COUNT(*) > 0 FROM Prueba WHERE Nombre = :nombre AND ID_Prueba != :idExcluir")
+    boolean existeNombreExcluyendoSync(String nombre, int idExcluir);
+
+    @Query("SELECT COUNT(*) > 0 FROM Competicion WHERE ID_Competicion = :idCompeticion")
+    boolean existeCompeticionSync(int idCompeticion);
+
+    @Insert
+    void insertarMovimientos(List<Movimiento> movimientos);
+
+    @Update
+    void actualizarMovimientos(List<Movimiento> movimientos);
+
+    @Query("SELECT * FROM Movimiento WHERE ID_Prueba = :idPrueba ORDER BY Orden ASC")
+    LiveData<List<Movimiento>> obtenerMovimientosPorPrueba(int idPrueba);
+
+    @Query("SELECT * FROM Movimiento WHERE ID_Prueba = :idPrueba ORDER BY Orden ASC")
+    List<Movimiento> obtenerMovimientosPorPruebaSync(int idPrueba);
+
+    @Query("DELETE FROM Movimiento WHERE ID_Prueba = :idPrueba")
+    void eliminarMovimientosDePrueba(int idPrueba);
+
+    @Transaction
+    default long insertarPruebaConMovimientos(Prueba prueba, List<Movimiento> movimientos) {
+        long idPrueba = insertarPrueba(prueba);
+        for (Movimiento m : movimientos) {
+            m.idPrueba = (int) idPrueba;
+        }
+        insertarMovimientos(movimientos);
+        return idPrueba;
+    }
+
+    @Transaction
+    default void actualizarPruebaConMovimientos(Prueba prueba, List<Movimiento> movimientos) {
+        actualizarPrueba(prueba);
+        eliminarMovimientosDePrueba(prueba.idPrueba);
+        for (Movimiento m : movimientos) {
+            m.idPrueba    = prueba.idPrueba;
+            m.idMovimiento = 0;
+        }
+        insertarMovimientos(movimientos);
+    }
 }

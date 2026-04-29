@@ -44,6 +44,10 @@ public class AdminMenuActivity extends AppCompatActivity {
             startActivity(new Intent(this, GestionClasesActivity.class));
         });
 
+        cardCompeticiones.setOnClickListener(v -> {
+            startActivity(new Intent(this, GestionCompeticionesActivity.class));
+        });
+
 
     }
 }

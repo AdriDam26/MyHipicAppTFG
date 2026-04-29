@@ -42,21 +42,6 @@ public interface NotaMovimientoDao {
     LiveData<List<NotaMovimiento>> obtenerPorMovimiento(int idMovimiento);
 
     // 🔹 POR JUEZ
-    @Query("SELECT * FROM Nota_Movimiento " +
-            "WHERE ID_Juez = :idJuez")
-    LiveData<List<NotaMovimiento>> obtenerPorJuez(int idJuez);
-
-    // ----------------------------------------------------
-    // 🔹 SYNC (lógica de negocio / validaciones)
-    // ----------------------------------------------------
-
-    // comprobar si un juez ya ha puntuado ese movimiento
-    @Query("SELECT EXISTS(" +
-            "SELECT 1 FROM Nota_Movimiento " +
-            "WHERE ID_Juez = :idJuez " +
-            "AND ID_Movimiento = :idMovimiento " +
-            "AND ID_Participacion = :idParticipacion)")
-    boolean yaPuntuado(int idJuez, int idMovimiento, int idParticipacion);
 
 
     // ✔ calcular puntuación total de una participación

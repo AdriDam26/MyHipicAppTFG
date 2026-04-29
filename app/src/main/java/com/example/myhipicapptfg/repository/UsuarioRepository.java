@@ -150,6 +150,14 @@ public class UsuarioRepository {
         return usuarioDao.contarUsuarios();
     }
 
+    public LiveData<List<Usuario>> obtenerAlumnosDoma() {
+        return usuarioDao.obtenerAlumnosDoma();
+    }
+
+    public LiveData<List<Usuario>> obtenerJuecesActivos() {
+        return usuarioDao.obtenerJuecesActivos();
+    }
+
     public void actualizarUsuarioCompleto(
             Usuario u,
             Alumno a,

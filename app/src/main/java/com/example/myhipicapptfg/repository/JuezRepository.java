@@ -104,9 +104,6 @@ public class JuezRepository {
         });
     }
 
-    // =====================================
-    // 🔹 LECTURA (LiveData)
-    // =====================================
 
     public LiveData<List<Juez>> obtenerTodosJueces() {
         return juezDao.obtenerTodosJueces();
@@ -118,5 +115,9 @@ public class JuezRepository {
 
     public LiveData<Integer> contarJueces() {
         return juezDao.contarJueces();
+    }
+
+    public LiveData<List<Usuario>> obtenerJuecesActivosConNombre() {
+        return juezDao.obtenerJuecesActivosConNombre();
     }
 }

@@ -66,6 +66,17 @@ public interface UsuarioDao {
     @Query("SELECT * FROM Usuario WHERE ID_Usuario = :id LIMIT 1")
     Usuario buscarPorIdSync(int id);
 
+    @Query("SELECT Usuario.* FROM Usuario " +
+            "INNER JOIN Alumno ON Usuario.ID_Usuario = Alumno.ID_Alumno " +
+            "WHERE Alumno.Practica_Doma = 1")
+    LiveData<List<Usuario>> obtenerAlumnosDoma();
+
+    // Obtener Usuarios que son Jueces y están activos
+    @Query("SELECT Usuario.* FROM Usuario " +
+            "INNER JOIN Juez ON Usuario.ID_Usuario = Juez.ID_Juez " +
+            "WHERE Juez.Activo = 1")
+    LiveData<List<Usuario>> obtenerJuecesActivos();
+
 
     @Transaction
     default void insertarUsuarioCompleto(

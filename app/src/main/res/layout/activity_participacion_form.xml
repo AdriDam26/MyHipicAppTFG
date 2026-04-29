@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F7F9FC"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Inscribir Binomio"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#111827"
+            android:layout_marginBottom="24dp"/>
+
+        <!-- ALUMNO -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layAlumnoParticipacion"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:hint="Alumno">
+            <AutoCompleteTextView
+                android:id="@+id/spinnerAlumno"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:padding="16dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- EQUINO -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layEquinoParticipacion"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:hint="Caballo">
+            <AutoCompleteTextView
+                android:id="@+id/spinnerEquino"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:padding="16dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- ORDEN (solo lectura) -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layOrdenParticipacion"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Orden de Salida (Dorsal)"
+            android:layout_marginBottom="32dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etOrdenSalida"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:focusable="false"
+                android:clickable="false"
+                android:textColor="#1F2937"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- GUARDAR -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnGuardarParticipacion"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="GUARDAR INSCRIPCIÓN"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:cornerRadius="12dp"/>
+
+        <!-- CANCELAR -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnVolverParticipacion"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="CANCELAR"
+            android:textColor="#6B7280"/>
+
+    </LinearLayout>
+</ScrollView>

@@ -1,6 +1,6 @@
 package com.example.myhipicapptfg.adapter;
 
-import android.graphics.Color;
+import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +21,6 @@ public class EquinoAdapter extends RecyclerView.Adapter<EquinoAdapter.EquinoView
     private List<Equino> lista;
     private final OnClick listener;
 
-    // Interfaz para manejar los eventos de click desde la Activity
     public interface OnClick {
         void editar(Equino e);
         void eliminar(Equino e);
@@ -47,57 +46,75 @@ public class EquinoAdapter extends RecyclerView.Adapter<EquinoAdapter.EquinoView
 
     @Override
     public void onBindViewHolder(@NonNull EquinoViewHolder holder, int position) {
-        Equino equino = lista.get(position);
 
-        holder.txtNombre.setText(equino.nombre);
+        Equino e = lista.get(position);
 
-        // Concatenamos Raza y Microchip como planeamos en el XML
-        String infoSecundaria = equino.raza + " | Chip: " + equino.numeroMicrochip;
-        holder.txtRazaMicrochip.setText(infoSecundaria);
+        holder.txtNombre.setText(e.nombre);
+        holder.txtRaza.setText(e.raza);
+        holder.txtMicrochip.setText("Chip: " + e.numeroMicrochip);
 
-        // Mostramos el temperamento y ajustamos el color según la constante
-        holder.txtTemperamento.setText(equino.temperamento.toUpperCase());
-        configurarColorTemperamento(holder.txtTemperamento, equino.temperamento);
+        // 🧠 Disciplina
+        holder.txtDisciplina.setText(getDisciplina(e));
 
-        // Configuración de botones
-        holder.btnEditar.setOnClickListener(v -> listener.editar(equino));
-        holder.btnEliminar.setOnClickListener(v -> listener.eliminar(equino));
+        // 🎯 Temperamento
+        holder.txtTemperamento.setText(e.temperamento != null ? e.temperamento.toUpperCase() : "");
+
+        configurarColorTemperamento(holder.txtTemperamento, e.temperamento);
+
+        holder.btnEditar.setOnClickListener(v -> listener.editar(e));
+        holder.btnEliminar.setOnClickListener(v -> listener.eliminar(e));
     }
 
     @Override
     public int getItemCount() {
-        return lista.size();
+        return lista != null ? lista.size() : 0;
     }
 
-    /**
-     * Cambia el color de fondo del badge de temperamento para dar feedback visual rápido.
-     */
-    private void configurarColorTemperamento(TextView view, String temperamento) {
-        switch (temperamento) {
+    // 🔥 Disciplina calculada
+    private String getDisciplina(Equino e) {
+        if (e.sabeDoma && e.sabeSalto) return "DOMA + SALTO";
+        if (e.sabeDoma) return "DOMA";
+        if (e.sabeSalto) return "SALTO";
+        return "SIN DISCIPLINA";
+    }
+
+    // 🎨 Color del temperamento
+    private void configurarColorTemperamento(TextView view, String t) {
+
+        if (t == null) return;
+
+        switch (t) {
+
             case Equino.FACIL:
-                view.setBackgroundColor(Color.parseColor("#10B981")); // Verde
+                view.setBackgroundTintList(
+                        ColorStateList.valueOf(0xFF10B981)); // verde
                 break;
+
             case Equino.DIFICIL:
-                view.setBackgroundColor(Color.parseColor("#EF4444")); // Rojo
+                view.setBackgroundTintList(
+                        ColorStateList.valueOf(0xFFEF4444)); // rojo
                 break;
+
             case Equino.MANEJABLE:
             default:
-                view.setBackgroundColor(Color.parseColor("#D97706")); // Naranja/Ocre
+                view.setBackgroundTintList(
+                        ColorStateList.valueOf(0xFFD97706)); // naranja
                 break;
         }
     }
 
-    // ViewHolder que contiene las referencias a las vistas del item_equino.xml
     static class EquinoViewHolder extends RecyclerView.ViewHolder {
 
-        TextView txtNombre, txtRazaMicrochip, txtTemperamento;
+        TextView txtNombre, txtRaza, txtMicrochip, txtDisciplina, txtTemperamento;
         ImageButton btnEditar, btnEliminar;
 
         public EquinoViewHolder(@NonNull View itemView) {
             super(itemView);
 
             txtNombre = itemView.findViewById(R.id.txtNombreEquino);
-            txtRazaMicrochip = itemView.findViewById(R.id.txtRazaMicrochip);
+            txtRaza = itemView.findViewById(R.id.txtRazaEquino);
+            txtMicrochip = itemView.findViewById(R.id.txtMicrochipEquino);
+            txtDisciplina = itemView.findViewById(R.id.txtDisciplinaEquino);
             txtTemperamento = itemView.findViewById(R.id.txtTemperamentoEquino);
 
             btnEditar = itemView.findViewById(R.id.btnEditarEquino);

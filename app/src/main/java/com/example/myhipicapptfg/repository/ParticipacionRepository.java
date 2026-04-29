@@ -9,6 +9,7 @@ import com.example.myhipicapptfg.database.AppDatabase;
 import com.example.myhipicapptfg.dao.ParticipacionDao;
 import com.example.myhipicapptfg.entities.Participacion;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -31,6 +32,8 @@ public class ParticipacionRepository {
     // 🔹 INSERTAR
     // ==========================================
     public void insertar(Participacion p) {
+
+        estadoOperacion.postValue(null);
 
         executor.execute(() -> {
 
@@ -71,7 +74,7 @@ public class ParticipacionRepository {
     // 🔹 ACTUALIZAR
     // ==========================================
     public void actualizar(Participacion p) {
-
+        estadoOperacion.postValue(null);
         executor.execute(() -> {
             try {
                 dao.actualizarParticipacion(p);
@@ -82,11 +85,14 @@ public class ParticipacionRepository {
         });
     }
 
+
+
     // ==========================================
     // 🔹 ELIMINAR
     // ==========================================
     public void eliminar(Participacion p) {
 
+        estadoOperacion.postValue(null);
         executor.execute(() -> {
             try {
                 dao.eliminarParticipacion(p);
@@ -96,4 +102,20 @@ public class ParticipacionRepository {
             }
         });
     }
+
+    public LiveData<Participacion> buscarPorId(int id) {
+        return dao.buscarPorId(id);
+    }
+
+    public LiveData<List<Participacion>> obtenerPorPrueba(int idPrueba) {
+        return dao.obtenerPorPrueba(idPrueba);
+    }
+
+    public LiveData<Integer> obtenerSiguienteOrden(int idPrueba) {
+        return dao.obtenerSiguienteOrden(idPrueba);
+    }
+
+
+
+
 }

@@ -31,7 +31,8 @@ import androidx.room.PrimaryKey;
         indices = {
                 @Index(value = {"ID_Alumno"}),
                 @Index(value = {"ID_Equino"}),
-                @Index(value = {"ID_Prueba"})
+                @Index(value = {"ID_Prueba"}),
+                @Index(value = {"ID_Alumno", "ID_Equino", "ID_Prueba"}, unique = true)
         }
 )
 public class Participacion {
@@ -40,11 +41,16 @@ public class Participacion {
     @ColumnInfo(name = "ID_Participacion")
     public int idParticipacion;
 
-    @ColumnInfo(name = "Posicion")
-    public int posicion;
+    @ColumnInfo(name = "Orden_Salida")
+    public int ordenSalida;
 
-    @ColumnInfo(name = "Hora_Salida")
-    public long horaSalida;
+    // Calculado desde Puntuacion, no se introduce a mano
+    @ColumnInfo(name = "Nota_Final")
+    public double notaFinal;
+
+    // (suma notas×coef / suma 10×coef) × 100
+    @ColumnInfo(name = "Porcentaje")
+    public double porcentaje;
 
     @ColumnInfo(name = "ID_Alumno")
     public int idAlumno;
@@ -55,20 +61,15 @@ public class Participacion {
     @ColumnInfo(name = "ID_Prueba")
     public int idPrueba;
 
-    // 🔹 Constructor vacío (Room)
     public Participacion() {}
 
-    // 🔹 Constructor recomendado
-    public Participacion(int posicion,
-                         long horaSalida,
-                         int idAlumno,
-                         int idEquino,
-                         int idPrueba) {
-
-        this.posicion = posicion;
-        this.horaSalida = horaSalida;
-        this.idAlumno = idAlumno;
-        this.idEquino = idEquino;
-        this.idPrueba = idPrueba;
+    public Participacion(int ordenSalida, int idAlumno,
+                         int idEquino, int idPrueba) {
+        this.ordenSalida = ordenSalida;
+        this.idAlumno    = idAlumno;
+        this.idEquino    = idEquino;
+        this.idPrueba    = idPrueba;
+        this.notaFinal   = 0.0;
+        this.porcentaje  = 0.0;
     }
 }

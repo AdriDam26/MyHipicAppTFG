@@ -3,10 +3,12 @@ package com.example.myhipicapptfg.entities;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
-import androidx.room.PrimaryKey;
+import androidx.room.Index;
 
 @Entity(
         tableName = "Nota_Movimiento",
+        // Definimos la clave primaria combinando ambos IDs
+        primaryKeys = {"ID_Participacion", "ID_Movimiento"},
         foreignKeys = {
                 @ForeignKey(
                         entity = Movimiento.class,
@@ -19,20 +21,20 @@ import androidx.room.PrimaryKey;
                         parentColumns = "ID_Participacion",
                         childColumns = "ID_Participacion",
                         onDelete = ForeignKey.CASCADE
-                ),
-                @ForeignKey(
-                        entity = Juez.class,
-                        parentColumns = "ID_Juez",
-                        childColumns = "ID_Juez",
-                        onDelete = ForeignKey.CASCADE
                 )
+        },
+        indices = {
+                @Index(value = {"ID_Movimiento"}),
+                @Index(value = {"ID_Participacion"})
         }
 )
 public class NotaMovimiento {
 
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "ID_Nota_Movimiento")
-    public int idNotaMovimiento;
+    @ColumnInfo(name = "ID_Participacion")
+    public int idParticipacion;
+
+    @ColumnInfo(name = "ID_Movimiento")
+    public int idMovimiento;
 
     @ColumnInfo(name = "Nota")
     public double nota;
@@ -40,29 +42,14 @@ public class NotaMovimiento {
     @ColumnInfo(name = "Observacion")
     public String observacion;
 
-    @ColumnInfo(name = "ID_Movimiento")
-    public int idMovimiento;
+    // Nota: Hemos quitado idNotaMovimiento porque la clave ya son los otros dos IDs
 
-    @ColumnInfo(name = "ID_Participacion")
-    public int idParticipacion;
-
-    @ColumnInfo(name = "ID_Juez")
-    public int idJuez;
-
-    // 🔹 Constructor vacío (Room)
     public NotaMovimiento() {}
 
-    // 🔹 Constructor recomendado
-    public NotaMovimiento(double nota,
-                          String observacion,
-                          int idMovimiento,
-                          int idParticipacion,
-                          int idJuez) {
-
+    public NotaMovimiento(double nota, String observacion, int idMovimiento, int idParticipacion) {
         this.nota = nota;
         this.observacion = observacion;
         this.idMovimiento = idMovimiento;
         this.idParticipacion = idParticipacion;
-        this.idJuez = idJuez;
     }
 }

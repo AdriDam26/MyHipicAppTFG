@@ -10,6 +10,7 @@ import com.example.myhipicapptfg.dao.CompeticionDao;
 import com.example.myhipicapptfg.database.AppDatabase;
 import com.example.myhipicapptfg.entities.Competicion;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -17,36 +18,31 @@ public class CompeticionRepository {
 
     private final CompeticionDao dao;
     private final ExecutorService executor;
-
     private final MutableLiveData<String> estadoOperacion = new MutableLiveData<>();
 
     public CompeticionRepository(@NonNull Application application) {
-
-        AppDatabase db = AppDatabase.getInstance(application);
-        dao = db.competicionDao();
-
+        dao      = AppDatabase.getInstance(application).competicionDao();
         executor = Executors.newSingleThreadExecutor();
     }
 
-    public LiveData<String> getEstadoOperacion() {
-        return estadoOperacion;
+    public LiveData<String> getEstadoOperacion() { return estadoOperacion; }
+
+    public LiveData<List<Competicion>> obtenerTodas() {
+        return dao.obtenerTodas();
     }
 
-    // =====================================
-    // 🔹 INSERTAR
-    // =====================================
-    public void insertar(Competicion comp) {
+    public LiveData<Competicion> buscarPorId(int id) {
+        return dao.buscarPorId(id);
+    }
 
+    public void insertarCompeticion(Competicion c) {
         executor.execute(() -> {
-
-            // 1. Validar nombre único
-            if (dao.existeNombre(comp.nombre)) {
+            if (dao.existeNombreSync(c.nombre)) {
                 estadoOperacion.postValue("ERROR_NOMBRE_DUPLICADO");
                 return;
             }
-
             try {
-                dao.insertarCompeticion(comp);
+                dao.insertarCompeticion(c);
                 estadoOperacion.postValue("EXITO");
             } catch (Exception e) {
                 estadoOperacion.postValue("ERROR_BD");
@@ -54,35 +50,28 @@ public class CompeticionRepository {
         });
     }
 
-    // =====================================
-    // 🔹 UPDATE
-    // =====================================
-    public void actualizar(Competicion comp) {
+    public void actualizarCompeticion(Competicion c) {
+        executor.execute(() -> {
+            if (dao.existeNombreExcluyendoSync(c.nombre, c.idCompeticion)) {
+                estadoOperacion.postValue("ERROR_NOMBRE_DUPLICADO");
+                return;
+            }
+            try {
+                dao.actualizarCompeticion(c);
+                estadoOperacion.postValue("EXITO");
+            } catch (Exception e) {
+                estadoOperacion.postValue("ERROR_BD");
+            }
+        });
+    }
 
+    public void eliminarCompeticion(Competicion c) {
         executor.execute(() -> {
             try {
-                dao.actualizarCompeticion(comp);
-                estadoOperacion.postValue("EXITO");
+                dao.eliminarCompeticion(c);
             } catch (Exception e) {
                 estadoOperacion.postValue("ERROR_BD");
             }
         });
     }
-
-    // =====================================
-    // 🔹 DELETE
-    // =====================================
-    public void eliminar(Competicion comp) {
-
-        executor.execute(() -> {
-            try {
-                dao.eliminarCompeticion(comp);
-                estadoOperacion.postValue("EXITO");
-            } catch (Exception e) {
-                estadoOperacion.postValue("ERROR_BD");
-            }
-        });
-    }
-
-
 }

@@ -58,4 +58,7 @@ public interface EquinoDao {
 
     @Query("SELECT EXISTS(SELECT 1 FROM Equino WHERE Numero_Cuadra = :numeroCuadra)")
     boolean esCuadraOcupada(int numeroCuadra);
+
+    @Query("SELECT * FROM Equino WHERE Sabe_Doma = 1")
+    LiveData<List<Equino>> obtenerEquinosDoma();
 }

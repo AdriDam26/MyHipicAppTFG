@@ -9,6 +9,7 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.example.myhipicapptfg.entities.Juez;
+import com.example.myhipicapptfg.entities.Usuario;
 
 import java.util.List;
 
@@ -50,4 +51,10 @@ public interface JuezDao {
     // 🔹 OBTENER ID POR LICENCIA
     @Query("SELECT ID_Juez FROM Juez WHERE Numero_Licencia = :licencia LIMIT 1")
     int obtenerIdPorLicenciaSync(String licencia);
+
+    @Query("SELECT u.* FROM Usuario u " +
+            "INNER JOIN Juez j ON u.ID_Usuario = j.ID_Juez " +
+            "WHERE j.Activo = 1 " +
+            "ORDER BY u.Apellido1 ASC")
+    LiveData<List<Usuario>> obtenerJuecesActivosConNombre();
 }
