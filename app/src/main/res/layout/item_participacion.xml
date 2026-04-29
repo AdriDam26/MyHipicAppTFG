@@ -2,68 +2,92 @@
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="2dp">
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="8dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="2dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="#EEF2F7">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
         android:padding="16dp">
 
+        <!-- Badge Orden -->
         <TextView
             android:id="@+id/txtOrdenSalida"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@android:color/holo_blue_dark"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
             android:gravity="center"
-            android:text="1"
-            android:textColor="@android:color/white"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:textColor="#1D4ED8"
+            android:background="#DBEAFE"
+            android:backgroundTint="#DBEAFE"
+            android:elevation="2dp"
+            tools:text="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <LinearLayout
+        <!-- Nombre Binomio -->
+        <TextView
+            android:id="@+id/txtNombreBinomio"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:textColor="#111827"
+            android:maxLines="1"
+            android:ellipsize="end"
+            tools:text="Laura Gómez + Spirit"
+            app:layout_constraintStart_toEndOf="@id/txtOrdenSalida"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/layoutActionsParticipacion"/>
 
-            <TextView
-                android:id="@+id/txtNombreBinomio"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Jinete + Caballo"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+        <!-- Nota Final -->
+        <TextView
+            android:id="@+id/txtNotaFinal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="14sp"
+            android:textColor="#6B7280"
+            tools:text="Nota final: 72.35%"
+            app:layout_constraintStart_toStartOf="@id/txtNombreBinomio"
+            app:layout_constraintTop_toBottomOf="@id/txtNombreBinomio"/>
 
-            <TextView
-                android:id="@+id/txtNotaFinal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Nota: 0.0%"
-                android:textColor="@android:color/darker_gray" />
+        <!-- Acciones -->
+        <LinearLayout
+            android:id="@+id/layoutActionsParticipacion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageButton
+                android:id="@+id/btnEditarParticipacion"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_menu_edit"
+                app:tint="#64748B" />
+
+            <ImageButton
+                android:id="@+id/btnEliminarParticipacion"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_menu_delete"
+                app:tint="#EF4444" />
         </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/btnEditarParticipacion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@android:drawable/ic_menu_edit"
-            android:layout_marginEnd="8dp"
-            app:tint="@android:color/darker_gray" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <ImageButton
-            android:id="@+id/btnEliminarParticipacion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@android:drawable/ic_menu_delete"
-            app:tint="@android:color/holo_red_dark" />
-
-    </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

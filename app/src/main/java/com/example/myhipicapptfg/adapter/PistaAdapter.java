@@ -54,6 +54,10 @@ public class PistaAdapter extends RecyclerView.Adapter<PistaAdapter.PistaViewHol
                 "Ancho: " + pista.ancho + " m  |  Largo: " + pista.largo + " m"
         );
 
+        double area = pista.ancho * pista.largo;
+
+        holder.txtArea.setText(area + " m²");
+
         holder.btnEditar.setOnClickListener(v -> listener.editar(pista));
         holder.btnEliminar.setOnClickListener(v -> listener.eliminar(pista));
     }
@@ -64,13 +68,14 @@ public class PistaAdapter extends RecyclerView.Adapter<PistaAdapter.PistaViewHol
     }
 
     static class PistaViewHolder extends RecyclerView.ViewHolder {
-        TextView txtNombre, txtDimensiones;
+        TextView txtNombre, txtDimensiones, txtArea;
         ImageButton btnEditar, btnEliminar;
 
         public PistaViewHolder(@NonNull View itemView) {
             super(itemView);
             txtNombre = itemView.findViewById(R.id.txtNombrePista);
             txtDimensiones = itemView.findViewById(R.id.txtDimensionesPista);
+            txtArea = itemView.findViewById(R.id.txtAreaPista);
             // Cambia estos IDs para que coincidan con el XML
             btnEditar = itemView.findViewById(R.id.btnEditarPista);
             btnEliminar = itemView.findViewById(R.id.btnEliminarPista);

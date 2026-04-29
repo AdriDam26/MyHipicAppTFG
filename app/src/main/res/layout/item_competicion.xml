@@ -2,77 +2,105 @@
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="10dp"
-    android:layout_marginVertical="6dp"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="6dp"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="8dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="2dp"
     app:strokeWidth="1dp"
-    app:strokeColor="#E5E7EB">
+    app:strokeColor="#EEF2F7">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        android:gravity="center_vertical">
+        android:paddingVertical="12dp"
+        android:paddingHorizontal="16dp">
 
+        <!-- Barra lateral -->
+        <View
+            android:id="@+id/viewBar"
+            android:layout_width="4dp"
+            android:layout_height="0dp"
+            android:background="?attr/colorPrimary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <!-- Icono centrado verticalmente -->
         <ImageView
-            android:layout_width="44dp"
-            android:layout_height="44dp"
+            android:id="@+id/iconCompeticion"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="12dp"
+            android:background="#E0F2FE"
+            android:padding="10dp"
             android:src="@android:drawable/ic_menu_today"
-            android:layout_marginEnd="12dp"
-            android:contentDescription="Competición"/>
+            app:tint="#1F2937"
+            app:layout_constraintStart_toEndOf="@id/viewBar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <LinearLayout
+        <!-- Nombre -->
+        <TextView
+            android:id="@+id/txtNombreCompeticion"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:layout_marginStart="10dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#111827"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintStart_toEndOf="@id/iconCompeticion"
+            app:layout_constraintEnd_toStartOf="@id/layoutAcciones"
+            app:layout_constraintTop_toTopOf="@id/iconCompeticion"
+            tools:text="Campeonato Nacional 2026"/>
 
-            <TextView
-                android:id="@+id/txtNombreCompeticion"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="#111827"
-                android:maxLines="1"
-                android:ellipsize="end"/>
+        <!-- Fecha (pegada visualmente al nombre, sin hueco grande) -->
+        <TextView
+            android:id="@+id/txtFechaCompeticion"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textSize="13sp"
+            android:textColor="#6B7280"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintStart_toStartOf="@id/txtNombreCompeticion"
+            app:layout_constraintEnd_toStartOf="@id/layoutAcciones"
+            app:layout_constraintTop_toBottomOf="@id/txtNombreCompeticion"
+            app:layout_constraintBottom_toBottomOf="@id/iconCompeticion"
+            tools:text="12 Mayo 2026"/>
 
-            <TextView
-                android:id="@+id/txtFechaCompeticion"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="13sp"
-                android:textColor="#6B7280"/>
-
-        </LinearLayout>
-
+        <!-- Acciones centradas -->
         <LinearLayout
+            android:id="@+id/layoutAcciones"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
 
             <ImageButton
                 android:id="@+id/btnEditar"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@android:drawable/ic_menu_edit"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Editar"/>
+                android:src="@android:drawable/ic_menu_edit"
+                app:tint="#64748B"/>
 
             <ImageButton
                 android:id="@+id/btnEliminar"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@android:drawable/ic_menu_delete"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Eliminar"/>
-
+                android:src="@android:drawable/ic_menu_delete"
+                app:tint="#EF4444"/>
         </LinearLayout>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>

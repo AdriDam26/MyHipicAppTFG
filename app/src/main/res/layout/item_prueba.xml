@@ -2,111 +2,121 @@
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="10dp"
-    android:layout_marginVertical="6dp"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="6dp"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="8dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="2dp"
     app:strokeWidth="1dp"
-    app:strokeColor="#E5E7EB">
+    app:strokeColor="#EEF2F7">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        android:gravity="center_vertical">
+        android:padding="16dp">
 
-        <LinearLayout
+        <!-- Indicador lateral -->
+        <View
+            android:id="@+id/viewIndicatorPrueba"
+            android:layout_width="4dp"
+            android:layout_height="0dp"
+            android:background="?attr/colorPrimary"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <!-- Nombre -->
+        <TextView
+            android:id="@+id/txtNombrePrueba"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:layout_marginStart="16dp"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#111827"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintStart_toEndOf="@id/viewIndicatorPrueba"
+            app:layout_constraintEnd_toStartOf="@id/layoutActionsPrueba"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Gran Premio Juvenil"/>
 
-            <!-- NOMBRE -->
-            <TextView
-                android:id="@+id/txtNombrePrueba"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="#111827"
-                android:maxLines="1"
-                android:ellipsize="end"/>
+        <!-- Categoría -->
+        <TextView
+            android:id="@+id/txtCategoriaPrueba"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="14sp"
+            android:textColor="#6B7280"
+            app:layout_constraintStart_toStartOf="@id/txtNombrePrueba"
+            app:layout_constraintEnd_toStartOf="@id/layoutActionsPrueba"
+            app:layout_constraintTop_toBottomOf="@id/txtNombrePrueba"
+            tools:text="Categoría Alevín"/>
 
-            <!-- CATEGORÍA -->
-            <TextView
-                android:id="@+id/txtCategoriaPrueba"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="13sp"
-                android:textColor="#6B7280"
-                android:layout_marginTop="2dp"/>
-
-            <!-- FILA: NIVEL + JUEZ -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="6dp"
-                android:gravity="center_vertical">
-
-                <!-- BADGE NIVEL -->
-                <TextView
-                    android:id="@+id/txtNivelPrueba"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="10dp"
-                    android:paddingVertical="3dp"
-                    android:background="@android:color/holo_green_dark"
-                    android:textColor="@android:color/white"
-                    android:textSize="11sp"
-                    android:textStyle="bold"/>
-
-                <!-- BADGE JUEZ -->
-                <TextView
-                    android:id="@+id/txtJuezPrueba"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:paddingHorizontal="10dp"
-                    android:paddingVertical="3dp"
-                    android:background="@android:color/holo_blue_dark"
-                    android:textColor="@android:color/white"
-                    android:textSize="11sp"
-                    android:textStyle="bold"
-                    android:maxLines="1"
-                    android:ellipsize="end"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <!-- ACCIONES -->
-        <LinearLayout
+        <!-- Badge Nivel -->
+        <TextView
+            android:id="@+id/txtNivelPrueba"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginTop="10dp"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="4dp"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:textColor="#166534"
+            android:background="#DCFCE7"
+            app:layout_constraintStart_toStartOf="@id/txtNombrePrueba"
+            app:layout_constraintTop_toBottomOf="@id/txtCategoriaPrueba"
+            tools:text="NIVEL 2"/>
+
+        <!-- Badge Juez -->
+        <TextView
+            android:id="@+id/txtJuezPrueba"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="10dp"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="4dp"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:textColor="#1D4ED8"
+            android:background="#DBEAFE"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintStart_toEndOf="@id/txtNivelPrueba"
+            app:layout_constraintTop_toBottomOf="@id/txtCategoriaPrueba"
+            tools:text="Juez: María López"/>
+
+        <!-- Acciones -->
+        <LinearLayout
+            android:id="@+id/layoutActionsPrueba"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageButton
                 android:id="@+id/btnEditar"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@android:drawable/ic_menu_edit"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Editar"/>
+                android:src="@android:drawable/ic_menu_edit"
+                app:tint="#64748B"/>
 
             <ImageButton
                 android:id="@+id/btnEliminar"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@android:drawable/ic_menu_delete"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Eliminar"/>
-
+                android:src="@android:drawable/ic_menu_delete"
+                app:tint="#EF4444"/>
         </LinearLayout>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>
