@@ -18,23 +18,23 @@ public class RutaPersonal {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "ID_Ruta_Personal")
-    public long idRutaPersonal;
+    public int idRutaPersonal;
 
     @ColumnInfo(name = "Nombre")
     public String nombre;
 
     @ColumnInfo(name = "Duracion")
-    public String duracion;
+    public String duracion; // Guardar como TEXT HH:MM
 
     @ColumnInfo(name = "Hora")
-    public String hora;
+    public String hora; // Guardar como TEXT HH:MM
 
     @ColumnInfo(name = "Fecha")
-    public String fecha;
+    public String fecha; // Guardar como TEXT YYYY-MM-DD
 
     @ColumnInfo(name = "Distancia_Recorrida")
-    public double distanciaRecorrida;
+    public double distanciaRecorrida; // en Km
 
     @ColumnInfo(name = "ID_Propietario")
-    public long idPropietario;
+    public int idPropietario;
 }

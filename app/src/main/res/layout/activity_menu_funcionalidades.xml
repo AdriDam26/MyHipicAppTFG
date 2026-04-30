@@ -17,6 +17,7 @@
         android:layout_marginBottom="32dp"
         android:textColor="@color/black"/>
 
+    <!-- ADMIN -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardGestionAdmin"
         android:layout_width="match_parent"
@@ -51,10 +52,12 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
+    <!-- AR -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardRealidadAumentada"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         app:cardCornerRadius="12dp"
         app:cardElevation="4dp"
         android:clickable="true"
@@ -78,6 +81,41 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Escáner AR / QR"
+                android:textSize="18sp"
+                android:layout_marginTop="8dp"
+                android:textStyle="bold"/>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- GPS / RUTAS -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardGPS"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:rippleColor="@color/design_default_color_primary">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:src="@android:drawable/ic_dialog_map"
+                app:tint="@color/design_default_color_primary" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="GPS / Rutas"
                 android:textSize="18sp"
                 android:layout_marginTop="8dp"
                 android:textStyle="bold"/>

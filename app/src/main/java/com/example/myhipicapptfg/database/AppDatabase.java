@@ -19,7 +19,7 @@ import com.example.myhipicapptfg.entities.*;
                 Competicion.class, Prueba.class, Participacion.class,
                 Movimiento.class, NotaMovimiento.class
         },
-        version = 13,
+        version = 14,
         exportSchema = false
 )
 public abstract class AppDatabase extends RoomDatabase {
@@ -56,7 +56,7 @@ public abstract class AppDatabase extends RoomDatabase {
                                SI cambias la versión (ej. de 7 a 8) y no has definido una migración.
                                Para un TFG está bien, pero no cambies el número de versión a la ligera.
                             */
-                            //.fallbackToDestructiveMigration()
+                            .fallbackToDestructiveMigration()
                             .build();
                 }
             }

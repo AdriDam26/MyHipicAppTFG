@@ -2,6 +2,7 @@ package com.example.myhipicapptfg.repository;
 
 import android.app.Application;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -17,10 +18,9 @@ public class CoordenadaRutaRepository {
 
     private final CoordenadaRutaDao coordenadaRutaDao;
     private final ExecutorService executorService;
-
     private final MutableLiveData<String> estadoOperacion = new MutableLiveData<>();
 
-    public CoordenadaRutaRepository(Application application) {
+    public CoordenadaRutaRepository(@NonNull Application application) {
 
         AppDatabase db = AppDatabase.getInstance(application);
         coordenadaRutaDao = db.coordenadaRutaDao();
@@ -28,33 +28,29 @@ public class CoordenadaRutaRepository {
         executorService = Executors.newSingleThreadExecutor();
     }
 
-    // =====================================
-    // 🔹 ESTADO
-    // =====================================
-
     public LiveData<String> getEstadoOperacion() {
         return estadoOperacion;
     }
 
     // =====================================
-    // 🔹 INSERTAR LISTA
+    // 🔹 INSERTAR
     // =====================================
 
-    public void insertarCoordenadas(List<CoordenadaRuta> coordenadas) {
-
-        if (coordenadas == null || coordenadas.isEmpty()) return;
-
+    public void insertarCoordenada(CoordenadaRuta coordenada) {
         executorService.execute(() -> {
-
-            long idRuta = coordenadas.get(0).idRutaPersonal;
-
-            if (!coordenadaRutaDao.existeRuta(idRuta)) {
-                estadoOperacion.postValue("ERROR_RUTA_NO_EXISTE");
-                return;
-            }
-
             try {
-                coordenadaRutaDao.insertarLista(coordenadas);
+                coordenadaRutaDao.insertar(coordenada);
+                estadoOperacion.postValue("EXITO");
+            } catch (Exception e) {
+                estadoOperacion.postValue("ERROR_BD");
+            }
+        });
+    }
+
+    public void insertarListaCoordenadas(List<CoordenadaRuta> lista) {
+        executorService.execute(() -> {
+            try {
+                coordenadaRutaDao.insertarLista(lista);
                 estadoOperacion.postValue("EXITO");
             } catch (Exception e) {
                 estadoOperacion.postValue("ERROR_BD");
@@ -63,19 +59,10 @@ public class CoordenadaRutaRepository {
     }
 
     // =====================================
-    // 🔹 OBTENER POR RUTA
+    // 🔹 DELETE
     // =====================================
 
-    public LiveData<List<CoordenadaRuta>> obtenerPorRuta(long idRuta) {
-        return coordenadaRutaDao.obtenerPorRuta(idRuta);
-    }
-
-    // =====================================
-    // 🔹 ELIMINAR POR RUTA
-    // =====================================
-
-    public void eliminarPorRuta(long idRuta) {
-
+    public void eliminarCoordenadasPorRuta(int idRuta) {
         executorService.execute(() -> {
             try {
                 coordenadaRutaDao.eliminarPorRuta(idRuta);
@@ -85,4 +72,14 @@ public class CoordenadaRutaRepository {
             }
         });
     }
+
+    // =====================================
+    // 🔹 LECTURA (LiveData)
+    // =====================================
+
+    public LiveData<List<CoordenadaRuta>> obtenerCoordenadasPorRuta(int idRuta) {
+        return coordenadaRutaDao.obtenerPorRuta(idRuta);
+    }
+
+
 }

@@ -1,5 +1,6 @@
 package com.example.myhipicapptfg.entities;
 
+
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -18,10 +19,10 @@ public class CoordenadaRuta {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "ID_Coordenada")
-    public long idCoordenada;
+    public int idCordenada;
 
     @ColumnInfo(name = "Orden")
-    public int orden;
+    public int orden; // >=1
 
     @ColumnInfo(name = "Latitud")
     public double latitud;
@@ -36,5 +37,5 @@ public class CoordenadaRuta {
     public long marcaTiempo;
 
     @ColumnInfo(name = "ID_Ruta_Personal")
-    public long idRutaPersonal;
+    public int idRutaPersonal;
 }

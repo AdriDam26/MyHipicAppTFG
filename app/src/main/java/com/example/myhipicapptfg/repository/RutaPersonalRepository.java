@@ -2,7 +2,6 @@ package com.example.myhipicapptfg.repository;
 
 import android.app.Application;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -17,68 +16,43 @@ import java.util.concurrent.Executors;
 
 public class RutaPersonalRepository {
 
-    private final RutaPersonalDao rutaPersonalDao;
+    private final RutaPersonalDao dao;
     private final ExecutorService executorService;
 
     private final MutableLiveData<String> estadoOperacion = new MutableLiveData<>();
+    private final MutableLiveData<Long> idInsertado = new MutableLiveData<>();
 
-    private final LiveData<List<RutaPersonal>> rutas;
+    private final LiveData<List<RutaPersonal>> listaRutas;
 
-    public RutaPersonalRepository(@NonNull Application application) {
+    public RutaPersonalRepository(Application application) {
 
         AppDatabase db = AppDatabase.getInstance(application);
-        rutaPersonalDao = db.rutaPersonalDao();
+        dao = db.rutaPersonalDao();
 
         executorService = Executors.newSingleThreadExecutor();
 
-        rutas = rutaPersonalDao.obtenerTodas();
+        listaRutas = dao.obtenerTodas();
     }
 
     // =====================================
-    // 🔹 ESTADO
+    // 🔹 GUARDAR RUTA COMPLETA
     // =====================================
 
-    public LiveData<String> getEstadoOperacion() {
-        return estadoOperacion;
-    }
-
-    public LiveData<List<RutaPersonal>> getRutas() {
-        return rutas;
-    }
-
-    // =====================================
-    // 🔹 INSERTAR RUTA + COORDENADAS
-    // =====================================
-
-    public void insertarRutaCompleta(RutaPersonal ruta, List<CoordenadaRuta> coordenadas) {
+    public void guardarRutaCompleta(RutaPersonal ruta, List<CoordenadaRuta> puntos) {
 
         executorService.execute(() -> {
 
-            // Validación propietario
-            if (!rutaPersonalDao.esPropietarioValido(ruta.idPropietario)) {
-                estadoOperacion.postValue("ERROR_USUARIO_NO_PROPIETARIO");
+            if (!dao.esPropietarioValido(ruta.idPropietario)) {
+                estadoOperacion.postValue("ERROR_PROPIETARIO_NO_VALIDO");
                 return;
             }
 
             try {
-                rutaPersonalDao.guardarRutaConPuntos(ruta, coordenadas);
+                long id = dao.guardarRutaConPuntos(ruta, puntos);
+
+                idInsertado.postValue(id);
                 estadoOperacion.postValue("EXITO");
-            } catch (Exception e) {
-                estadoOperacion.postValue("ERROR_BD");
-            }
-        });
-    }
 
-    // =====================================
-    // 🔹 UPDATE
-    // =====================================
-
-    public void actualizarRuta(RutaPersonal ruta) {
-
-        executorService.execute(() -> {
-            try {
-                rutaPersonalDao.actualizar(ruta);
-                estadoOperacion.postValue("EXITO");
             } catch (Exception e) {
                 estadoOperacion.postValue("ERROR_BD");
             }
@@ -89,11 +63,10 @@ public class RutaPersonalRepository {
     // 🔹 DELETE
     // =====================================
 
-    public void eliminarRuta(RutaPersonal ruta) {
-
+    public void eliminar(RutaPersonal ruta) {
         executorService.execute(() -> {
             try {
-                rutaPersonalDao.eliminar(ruta);
+                dao.eliminar(ruta);
                 estadoOperacion.postValue("EXITO");
             } catch (Exception e) {
                 estadoOperacion.postValue("ERROR_BD");
@@ -102,10 +75,22 @@ public class RutaPersonalRepository {
     }
 
     // =====================================
-    // 🔹 FILTRO POR PROPIETARIO
+    // 🔹 READ
     // =====================================
 
-    public LiveData<List<RutaPersonal>> obtenerPorPropietario(long idPropietario) {
-        return rutaPersonalDao.obtenerPorPropietario(idPropietario);
+    public LiveData<List<RutaPersonal>> getListaRutas() {
+        return listaRutas;
+    }
+
+    public LiveData<List<RutaPersonal>> obtenerPorPropietario(int idPropietario) {
+        return dao.obtenerPorPropietario(idPropietario);
+    }
+
+    public LiveData<String> getEstadoOperacion() {
+        return estadoOperacion;
+    }
+
+    public LiveData<Long> getIdInsertado() {
+        return idInsertado;
     }
 }
