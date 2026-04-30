@@ -51,10 +51,24 @@ public interface EquinoDao {
     @Query("SELECT EXISTS(SELECT 1 FROM Equino WHERE Numero_Microchip = :microchip)")
     boolean existeMicrochip(String microchip);
 
+
+    @Query("SELECT * FROM Equino WHERE ID_Equino = :id LIMIT 1")
+    Equino buscarPorIdSync(int id);
+
+    @Query("SELECT * FROM Equino WHERE Numero_Microchip = :microchip LIMIT 1")
+    Equino buscarPorMicrochipSync(String microchip);
+
+
     // ✔ validar propietario
     @Query("SELECT EXISTS(SELECT 1 FROM Usuario WHERE ID_Usuario = :id AND Tipo = 'propietario')")
     boolean esPropietarioValido(int id);
 
+
+    @Query("SELECT EXISTS(" +
+            "SELECT 1 FROM Equino " +
+            "WHERE Numero_Cuadra = :numeroCuadra " +
+            "AND ID_Equino != :idEquino)")
+    boolean esCuadraOcupadaPorOtro(int numeroCuadra, int idEquino);
 
     @Query("SELECT EXISTS(SELECT 1 FROM Equino WHERE Numero_Cuadra = :numeroCuadra)")
     boolean esCuadraOcupada(int numeroCuadra);

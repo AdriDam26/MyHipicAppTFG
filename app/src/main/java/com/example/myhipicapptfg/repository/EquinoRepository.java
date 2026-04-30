@@ -76,7 +76,7 @@ public class EquinoRepository {
             // Nota: Si el microchip se puede editar, deberías validar aquí
             // que el nuevo microchip no pertenezca a OTRO caballo distinto.
 
-            if (equinoDao.esCuadraOcupada(equino.numeroCuadra)) {
+            if (equinoDao.esCuadraOcupadaPorOtro(equino.numeroCuadra, equino.idEquino)) {
                 estadoOperacion.postValue("ERROR_CUADRA_OCUPADA");
                 return;
             }
@@ -124,6 +124,13 @@ public class EquinoRepository {
     }
 
 
+    public Equino buscarPorIdSync(int id) {
+        return equinoDao.buscarPorIdSync(id);
+    }
+
+    public Equino buscarPorMicrochipSync(String microchip) {
+        return equinoDao.buscarPorMicrochipSync(microchip);
+    }
 
 
 }
