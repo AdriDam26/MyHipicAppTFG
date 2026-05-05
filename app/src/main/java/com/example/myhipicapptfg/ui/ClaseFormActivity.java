@@ -240,7 +240,9 @@ public class ClaseFormActivity extends AppCompatActivity {
 
         if (modoEdicion) c.idClase = claseId;
 
-        if (modoEdicion) viewModel.actualizar(c);
+        if (modoEdicion) {
+            viewModel.actualizar(c);
+        }
         else viewModel.insertar(c);
 
         finish();

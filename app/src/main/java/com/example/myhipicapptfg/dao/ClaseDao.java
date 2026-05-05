@@ -16,7 +16,7 @@ import java.util.List;
 public interface ClaseDao {
 
     // 🔹 INSERT
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert
     long insertarClase(Clase clase);
 
     // 🔹 UPDATE

@@ -33,12 +33,8 @@ public class ReservaClase {
     @ColumnInfo(name = "Fecha_Reserva")
     public long fechaReserva;
 
-    @ColumnInfo(name = "Estado")
-    public String estado;
 
     // 🔹 Estados posibles
-    public static final String CONFIRMADA = "Confirmada";
-    public static final String CANCELADA = "Cancelada";
 
     // 🔹 Constructor vacío (OBLIGATORIO Room)
     public ReservaClase() {}
@@ -48,6 +44,5 @@ public class ReservaClase {
         this.idAlumno = idAlumno;
         this.idClase = idClase;
         this.fechaReserva = fechaReserva;
-        this.estado = estado;
     }
 }

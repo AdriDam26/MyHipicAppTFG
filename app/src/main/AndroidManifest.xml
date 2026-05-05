@@ -95,6 +95,14 @@
             android:exported="false"/>
 
 
+        <activity
+            android:name=".ui.ReservaClaseActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.MisReservasActivity"
+            android:exported="false" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
@@ -107,6 +115,8 @@
             android:exported="false"/>
         <activity android:name=".ui.gps.SeguirRutaActivity"
             android:exported="false"/>
+
+
 
 
 

@@ -49,7 +49,7 @@ public class Clase {
     @ColumnInfo(name = "ID_Profesor")
     public int idProfesor;
 
-    // 🔹 Disciplina (solo 2 valores)
+    // 🔹 Disciplina
     public static final String DOMA = "Doma";
     public static final String SALTO = "Salto";
 
