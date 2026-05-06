@@ -50,4 +50,7 @@ public interface ClaseDao {
     // 🔹 BUSCAR POR ID (SYNC)
     @Query("SELECT * FROM Clase WHERE ID_Clase = :id LIMIT 1")
     Clase buscarPorIdSync(int id);
+
+    @Query("SELECT * FROM Clase WHERE ID_Profesor = :idProfesor ORDER BY Fecha ASC, Hora_Inicio ASC")
+    LiveData<List<Clase>> obtenerClasesPorProfesor(int idProfesor);
 }

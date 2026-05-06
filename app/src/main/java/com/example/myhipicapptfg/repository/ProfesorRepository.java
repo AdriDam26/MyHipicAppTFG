@@ -30,7 +30,7 @@ public class ProfesorRepository {
         profesorDao = db.profesorDao();
         usuarioDao = db.usuarioDao();
 
-        executorService = Executors.newSingleThreadExecutor();
+        executorService = AppDatabase.getDatabaseExecutor();
     }
 
     public LiveData<String> getEstadoOperacion() {

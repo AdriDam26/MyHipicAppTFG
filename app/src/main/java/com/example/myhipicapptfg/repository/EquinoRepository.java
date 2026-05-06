@@ -26,7 +26,7 @@ public class EquinoRepository {
         AppDatabase db = AppDatabase.getInstance(application);
         equinoDao = db.equinoDao();
 
-        executorService = Executors.newSingleThreadExecutor();
+        executorService = AppDatabase.getDatabaseExecutor();
     }
 
     public LiveData<String> getEstadoOperacion() {

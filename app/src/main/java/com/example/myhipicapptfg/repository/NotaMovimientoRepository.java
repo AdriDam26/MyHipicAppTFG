@@ -21,7 +21,7 @@ public class NotaMovimientoRepository {
 
     public NotaMovimientoRepository(Application application) {
         dao = AppDatabase.getInstance(application).notaMovimientoDao();
-        executor = Executors.newSingleThreadExecutor();
+        executor = AppDatabase.getDatabaseExecutor();
     }
 
     public LiveData<String> getEstadoOperacion() {

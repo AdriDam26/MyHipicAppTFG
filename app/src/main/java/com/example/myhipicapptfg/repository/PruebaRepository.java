@@ -23,7 +23,7 @@ public class PruebaRepository {
 
     public PruebaRepository(@NonNull Application application) {
         dao      = AppDatabase.getInstance(application).pruebaDao();
-        executor = Executors.newSingleThreadExecutor();
+        executor = AppDatabase.getDatabaseExecutor();
     }
 
     public LiveData<String> getEstadoOperacion() { return estadoOperacion; }

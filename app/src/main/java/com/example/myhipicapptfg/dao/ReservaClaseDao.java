@@ -86,4 +86,9 @@ public interface ReservaClaseDao {
     // Para contar los inscritos en tiempo real
     @Query("SELECT * FROM ReservaClase")
     LiveData<List<ReservaClase>> obtenerTodasLasReservas();
+
+
+
+
+
 }

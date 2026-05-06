@@ -30,7 +30,7 @@ public class JuezRepository {
         juezDao = db.juezDao();
         usuarioDao = db.usuarioDao();
 
-        executorService = Executors.newSingleThreadExecutor();
+        executorService = AppDatabase.getDatabaseExecutor();
     }
 
     public LiveData<String> getEstadoOperacion() {

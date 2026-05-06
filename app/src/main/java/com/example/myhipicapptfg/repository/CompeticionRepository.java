@@ -22,7 +22,7 @@ public class CompeticionRepository {
 
     public CompeticionRepository(@NonNull Application application) {
         dao      = AppDatabase.getInstance(application).competicionDao();
-        executor = Executors.newSingleThreadExecutor();
+        executor = AppDatabase.getDatabaseExecutor();
     }
 
     public LiveData<String> getEstadoOperacion() { return estadoOperacion; }

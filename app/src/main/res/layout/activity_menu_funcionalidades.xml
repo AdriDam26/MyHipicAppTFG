@@ -189,5 +189,39 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardVerClasesAsignadas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardBackgroundColor="#EFEBE9"> <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:src="@android:drawable/ic_menu_view"
+                app:tint="#5D4037" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ver Mis Clases (Profesor)"
+                android:textSize="18sp"
+                android:layout_marginTop="8dp"
+                android:textColor="#3E2723"
+                android:textStyle="bold"/>
+        </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+
     </LinearLayout>
 </ScrollView>

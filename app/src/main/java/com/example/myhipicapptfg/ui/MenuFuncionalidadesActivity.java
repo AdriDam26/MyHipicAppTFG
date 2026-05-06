@@ -22,6 +22,7 @@ public class MenuFuncionalidadesActivity extends AppCompatActivity {
         MaterialCardView cardGPS = findViewById(R.id.cardGPS);
         MaterialCardView cardReservar = findViewById(R.id.cardReservarClase);
         MaterialCardView cardMisReservas = findViewById(R.id.cardMisReservas); // Nueva tarjeta
+        MaterialCardView cardProfesor = findViewById(R.id.cardVerClasesAsignadas);
 
         // Navegación al menú Admin
         cardAdmin.setOnClickListener(v -> {
@@ -41,14 +42,21 @@ public class MenuFuncionalidadesActivity extends AppCompatActivity {
         // Navegación a Reservar Clase
         cardReservar.setOnClickListener(v -> {
             Intent intent = new Intent(this, ReservaClaseActivity.class);
-            intent.putExtra("ID_ALUMNO", 1); // ID de prueba
+            intent.putExtra("ID_ALUMNO", 3); // ID de prueba
             startActivity(intent);
         });
 
         // Navegación a Mis Reservas
         cardMisReservas.setOnClickListener(v -> {
             Intent intent = new Intent(this, MisReservasActivity.class);
-            intent.putExtra("ID_ALUMNO", 1); // ID de prueba
+            intent.putExtra("ID_ALUMNO", 3); // ID de prueba
+            startActivity(intent);
+        });
+
+        cardProfesor.setOnClickListener(v -> {
+            Intent intent = new Intent(this, MisClasesProfesorActivity.class);
+            // Pasamos el ID 1 como parámetro
+            intent.putExtra(MisClasesProfesorActivity.EXTRA_ID_PROFESOR, 1);
             startActivity(intent);
         });
     }

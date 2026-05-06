@@ -48,7 +48,9 @@ public class ReservaClaseActivity extends AppCompatActivity {
         setupRecyclerView();
         observarDatos();
 
+        android.util.Log.d("CADENA", "0. onCreate - idAlumno=" + idAlumno);
         viewModel.cargarDatosAlumno(idAlumno);
+        android.util.Log.d("CADENA", "0b. cargarDatosAlumno llamado con " + idAlumno);
     }
 
     private void initViews() {
@@ -72,8 +74,6 @@ public class ReservaClaseActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView() {
-        // esModoCancelacion = false (Pantalla de reserva)
-        // Esto ocultará automáticamente Profesor y Pista según la lógica del Adapter
         adapter = new ReservaClaseAdapter(false, clase -> {
             viewModel.reservarClase(idAlumno, clase.idClase);
         });
@@ -83,26 +83,35 @@ public class ReservaClaseActivity extends AppCompatActivity {
     }
 
     private void observarDatos() {
-        // 1. Observar las clases disponibles
+
+        android.util.Log.d("CADENA", "1. observarDatos() llamado");
+
+        viewModel.getPerfilAlumno().observe(this, alumno -> {
+            android.util.Log.d("CADENA", "2. perfilAlumno emitido: " +
+                    (alumno == null ? "NULL" : "ID=" + alumno.idAlumno +
+                            " doma=" + alumno.practicaDoma + " salto=" + alumno.practicaSalto));
+        });
+
         viewModel.getClasesRecomendadas().observe(this, clases -> {
+            android.util.Log.d("CADENA", "3. clasesRecomendadas emitido: " +
+                    (clases == null ? "null" : clases.size() + " clases"));
             if (clases != null) {
                 adapter.submitList(clases);
                 actualizarInterfazVacia(clases.isEmpty());
             }
         });
 
-        // 2. SOLO OBSERVAMOS LAS RESERVAS
-        // Necesario para que el contador "Inscritos: X/10" se actualice al momento
         viewModel.getReservas().observe(this, reservas -> {
+            android.util.Log.d("CADENA", "4. reservas emitido: " +
+                    (reservas == null ? "null" : reservas.size()));
             if (reservas != null) {
-                // Pasamos null en usuarios y pistas porque no se usan en esta pantalla
                 adapter.setDatosReferencia(null, null, reservas);
             }
         });
 
-        // 3. Estado de la operación
         viewModel.getEstadoOperacion().observe(this, estado -> {
             if (estado == null) return;
+            android.util.Log.d("CADENA", "5. estadoOperacion: " + estado);
             mostrarMensajeEstado(estado);
             viewModel.resetearEstado();
         });

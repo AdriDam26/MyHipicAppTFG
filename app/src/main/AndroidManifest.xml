@@ -103,6 +103,12 @@
             android:name=".ui.MisReservasActivity"
             android:exported="false" />
 
+        <activity android:name=".ui.MisClasesProfesorActivity"
+            android:label="Mis Clases" />
+
+        <activity android:name=".ui.AlumnosDeClaseActivity"
+            android:label="Alumnos de Clase" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />

@@ -29,7 +29,7 @@ public class RutaPersonalRepository {
         AppDatabase db = AppDatabase.getInstance(application);
         dao = db.rutaPersonalDao();
 
-        executorService = Executors.newSingleThreadExecutor();
+        executorService = AppDatabase.getDatabaseExecutor();
 
         listaRutas = dao.obtenerTodas();
     }

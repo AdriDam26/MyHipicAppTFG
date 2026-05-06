@@ -25,7 +25,7 @@ public class CoordenadaRutaRepository {
         AppDatabase db = AppDatabase.getInstance(application);
         coordenadaRutaDao = db.coordenadaRutaDao();
 
-        executorService = Executors.newSingleThreadExecutor();
+        executorService = AppDatabase.getDatabaseExecutor();
     }
 
     public LiveData<String> getEstadoOperacion() {

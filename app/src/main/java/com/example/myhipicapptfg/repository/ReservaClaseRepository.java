@@ -40,7 +40,7 @@ public class ReservaClaseRepository {
         alumnoDao = db.alumnoDao();
         usuarioDao = db.usuarioDao(); // Inicializar
         pistaDao = db.pistaDao();
-        executorService = Executors.newSingleThreadExecutor();
+        executorService = AppDatabase.getDatabaseExecutor();
     }
 
     public LiveData<String> getEstadoOperacion() {
@@ -78,10 +78,26 @@ public class ReservaClaseRepository {
 
 
     public LiveData<Alumno> getAlumnoById(int idAlumno) {
+        android.util.Log.d("CADENA", "REPO.getAlumnoById llamado con id=" + idAlumno);
+        AppDatabase.getDatabaseExecutor().execute(() -> {
+            int totalAlumnos = alumnoDao.contarAlumnos();
+            Alumno a = alumnoDao.buscarPorIdSync(1); // añade método sync al DAO
+            android.util.Log.d("CADENA", "total=" + totalAlumnos +
+                    " buscarPorId(1)=" + (a == null ? "NULL" : "encontrado ID=" + a.idAlumno));
+
+            List<Alumno> todos = alumnoDao.obtenerTodosSync();
+            for (Alumno alumno : todos) {
+                android.util.Log.d("CADENA", "Alumno existente: ID=" + alumno.idAlumno);
+            }
+        });
         return alumnoDao.buscarPorId(idAlumno);
     }
 
     public LiveData<List<Clase>> obtenerClasesPorPerfil(Alumno alumno, long fechaSeleccionada) {
+        android.util.Log.d("CADENA", "REPO.obtenerClasesPorPerfil: alumnoID=" + alumno.idAlumno +
+                " nivelDoma=" + alumno.nivelDoma + " practicaDoma=" + alumno.practicaDoma +
+                " nivelSalto=" + alumno.nivelSalto + " practicaSalto=" + alumno.practicaSalto +
+                " fecha=" + fechaSeleccionada);
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(fechaSeleccionada);
 
@@ -152,4 +168,10 @@ public class ReservaClaseRepository {
     public LiveData<List<ReservaClase>> obtenerTodasLasReservas() {
         return reservaClaseDao.obtenerTodasLasReservas();
     }
+
+    public LiveData<List<Usuario>> obtenerAlumnosDeClase(int idClase) {
+        return reservaClaseDao.obtenerAlumnosDeClase(idClase);
+    }
+
+
 }

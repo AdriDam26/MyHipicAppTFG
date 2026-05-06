@@ -22,7 +22,7 @@ public class PistaRepository {
     public PistaRepository(Application app) {
         AppDatabase db = AppDatabase.getInstance(app);
         pistaDao = db.pistaDao();
-        executor = Executors.newSingleThreadExecutor();
+        executor= AppDatabase.getDatabaseExecutor();
     }
 
     public LiveData<String> getEstadoOperacion() {

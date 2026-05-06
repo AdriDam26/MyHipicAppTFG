@@ -39,7 +39,7 @@ public class ClaseRepository {
         profesorDao = db.profesorDao();
         pistaDao = db.pistaDao();
         usuarioDao = db.usuarioDao();
-        executorService = Executors.newSingleThreadExecutor();
+        executorService = AppDatabase.getDatabaseExecutor();
     }
 
     public LiveData<String> getEstadoOperacion() {
@@ -138,4 +138,7 @@ public class ClaseRepository {
     }
 
 
+    public LiveData<List<Clase>> getClasesPorProfesor(int idProfesor) {
+        return claseDao.obtenerClasesPorProfesor(idProfesor);
+    }
 }

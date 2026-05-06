@@ -26,7 +26,7 @@ public class CuidadoRepository {
         AppDatabase db = AppDatabase.getInstance(application);
         dao = db.cuidadoDao();
 
-        executorService = Executors.newSingleThreadExecutor();
+        executorService = AppDatabase.getDatabaseExecutor();
     }
 
     public LiveData<String> getEstadoOperacion() {

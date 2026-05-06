@@ -21,7 +21,7 @@ public class ParticipacionRepository {
 
     public ParticipacionRepository(Application application) {
         dao = AppDatabase.getInstance(application).participacionDao();
-        executor = Executors.newSingleThreadExecutor();
+        executor = AppDatabase.getDatabaseExecutor();
     }
 
     public LiveData<String> getEstadoOperacion() {
