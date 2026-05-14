@@ -39,13 +39,11 @@ public class ParticipacionAdapter extends RecyclerView.Adapter<ParticipacionAdap
         notifyDataSetChanged();
     }
 
-    // Llamado desde la Activity cuando llegan los usuarios
     public void actualizarNombresAlumnos(Map<Integer, String> mapa) {
         this.nombresAlumnos = mapa;
         notifyDataSetChanged();
     }
 
-    // Llamado desde la Activity cuando llegan los equinos
     public void actualizarNombresEquinos(Map<Integer, String> mapa) {
         this.nombresEquinos = mapa;
         notifyDataSetChanged();
@@ -63,23 +61,18 @@ public class ParticipacionAdapter extends RecyclerView.Adapter<ParticipacionAdap
     public void onBindViewHolder(@NonNull VH h, int position) {
         Participacion p = lista.get(position);
 
-        // Número de dorsal
         h.txtOrden.setText(String.valueOf(p.ordenSalida));
 
-        // Nombre alumno
         String nombreAlumno = nombresAlumnos.containsKey(p.idAlumno)
                 ? nombresAlumnos.get(p.idAlumno)
                 : "Alumno #" + p.idAlumno;
 
-        // Nombre equino
         String nombreEquino = nombresEquinos.containsKey(p.idEquino)
-                ? nombresEquinos.get(p.idEquino)
-                : "Equino #" + p.idEquino;
+                ? "🐴 " + nombresEquinos.get(p.idEquino)
+                : "🐴 Equino #" + p.idEquino;
 
-        h.txtInfo.setText(nombreAlumno + " · " + nombreEquino);
-
-        // Nota final
-        h.txtNota.setText(String.format("Nota: %.2f%%", p.notaFinal));
+        h.txtJinete.setText(nombreAlumno);
+        h.txtInfo.setText(nombreEquino);
 
         h.btnEditar.setOnClickListener(v -> listener.editar(p));
         h.btnDelete.setOnClickListener(v -> listener.eliminar(p));
@@ -89,16 +82,16 @@ public class ParticipacionAdapter extends RecyclerView.Adapter<ParticipacionAdap
     public int getItemCount() { return lista.size(); }
 
     static class VH extends RecyclerView.ViewHolder {
-        TextView    txtOrden, txtInfo, txtNota;
-        ImageButton btnDelete, btnEditar;
+        TextView    txtOrden, txtJinete, txtInfo;
+        ImageButton btnEditar, btnDelete;
 
         VH(@NonNull View v) {
             super(v);
             txtOrden  = v.findViewById(R.id.txtOrdenSalida);
+            txtJinete = v.findViewById(R.id.txtNombreJinete);
             txtInfo   = v.findViewById(R.id.txtNombreBinomio);
-            txtNota   = v.findViewById(R.id.txtNotaFinal);
-            btnDelete = v.findViewById(R.id.btnEliminarParticipacion);
             btnEditar = v.findViewById(R.id.btnEditarParticipacion);
+            btnDelete = v.findViewById(R.id.btnEliminarParticipacion);
         }
     }
 }

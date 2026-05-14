@@ -34,6 +34,9 @@ public class ParticipacionFormActivity extends AppCompatActivity {
     private int     idParticipacion = -1;
     private boolean modoEdicion     = false;
 
+    // VARIABLE CLAVE: Guardamos el objeto original aquí para no perder la nota ni el ID
+    private Participacion participacionCargada;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +70,6 @@ public class ParticipacionFormActivity extends AppCompatActivity {
         findViewById(R.id.btnVolverParticipacion).setOnClickListener(v -> finish());
     }
 
-    // ─────────────────────────────────────────────────
     private void initViews() {
         layAlumno     = findViewById(R.id.layAlumnoParticipacion);
         layEquino     = findViewById(R.id.layEquinoParticipacion);
@@ -80,9 +82,7 @@ public class ParticipacionFormActivity extends AppCompatActivity {
         etOrden.setClickable(false);
     }
 
-    // ─────────────────────────────────────────────────
     private void observarDatos() {
-
         viewModel.obtenerAlumnosDomaConNombre().observe(this, alumnos -> {
             listaAlumnos = alumnos != null ? alumnos : new ArrayList<>();
             spinnerAlumno.setAdapter(new ArrayAdapter<>(
@@ -98,13 +98,15 @@ public class ParticipacionFormActivity extends AppCompatActivity {
         });
     }
 
-    // ─────────────────────────────────────────────────
-    // Precarga los datos solo cuando ambas listas han llegado (modo edición)
     private void intentarPrecargar() {
         if (!modoEdicion || listaAlumnos.isEmpty() || listaEquinos.isEmpty()) return;
 
+        // Cargamos la participación una sola vez al inicio
         viewModel.buscarPorId(idParticipacion).observe(this, p -> {
             if (p == null) return;
+
+            // Guardamos la referencia completa del objeto
+            this.participacionCargada = p;
 
             etOrden.setText(String.valueOf(p.ordenSalida));
 
@@ -124,10 +126,8 @@ public class ParticipacionFormActivity extends AppCompatActivity {
         });
     }
 
-    // ─────────────────────────────────────────────────
     private boolean validar() {
         boolean ok = true;
-
         if (spinnerAlumno.getText().toString().trim().isEmpty()) {
             layAlumno.setError("Selecciona un alumno");
             ok = false;
@@ -137,11 +137,9 @@ public class ParticipacionFormActivity extends AppCompatActivity {
             layEquino.setError("Selecciona un equino");
             ok = false;
         } else layEquino.setError(null);
-
         return ok;
     }
 
-    // ─────────────────────────────────────────────────
     private void guardar() {
         if (!validar()) return;
 
@@ -157,20 +155,26 @@ public class ParticipacionFormActivity extends AppCompatActivity {
         for (Equino e : listaEquinos)
             if (e.toString().equals(selEqui)) { idEqui = e.idEquino; break; }
 
-        int orden = Integer.parseInt(etOrden.getText().toString());
-
-        Participacion p = new Participacion(orden, idAlu, idEqui, idPrueba);
-
         if (modoEdicion) {
-            p.idParticipacion = idParticipacion;
-            viewModel.actualizar(p);
+            // SI ESTAMOS EDITANDO:
+            if (participacionCargada != null) {
+                // Modificamos solo lo que ha cambiado en la pantalla
+                participacionCargada.idAlumno = idAlu;
+                participacionCargada.idEquino = idEqui;
+                // notaFinal y porcentaje se quedan como estaban en el objeto cargado
+
+                viewModel.actualizar(participacionCargada);
+            }
         } else {
+            // SI ES NUEVO:
+            int orden = Integer.parseInt(etOrden.getText().toString());
+            Participacion p = new Participacion(orden, idAlu, idEqui, idPrueba);
             viewModel.insertar(p);
         }
     }
 
-    // ─────────────────────────────────────────────────
     private void observarEstado() {
+        // Importante: No ponemos observadores dentro de otros métodos para evitar duplicados
         viewModel.getEstadoOperacion().observe(this, estado -> {
             if (estado == null) return;
             switch (estado) {

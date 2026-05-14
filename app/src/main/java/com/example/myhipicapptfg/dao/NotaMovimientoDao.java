@@ -9,43 +9,59 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.example.myhipicapptfg.entities.NotaMovimiento;
+import com.example.myhipicapptfg.model.MovimientoConNota;
 
 import java.util.List;
 
 @Dao
 public interface NotaMovimientoDao {
 
-    // 🔹 INSERT
     @Insert(onConflict = OnConflictStrategy.ABORT)
     long insertarNotaMovimiento(NotaMovimiento notaMovimiento);
 
-    // 🔹 UPDATE
     @Update
     int actualizarNotaMovimiento(NotaMovimiento notaMovimiento);
 
-    // 🔹 DELETE
     @Delete
     int eliminarNotaMovimiento(NotaMovimiento notaMovimiento);
 
-    // 🔹 LISTADO GENERAL
     @Query("SELECT * FROM Nota_Movimiento")
     LiveData<List<NotaMovimiento>> obtenerTodasNotas();
 
-    // 🔹 POR PARTICIPACIÓN (resultado de un jinete + caballo)
-    @Query("SELECT * FROM Nota_Movimiento " +
-            "WHERE ID_Participacion = :idParticipacion")
+    @Query("SELECT * FROM Nota_Movimiento WHERE ID_Participacion = :idParticipacion")
     LiveData<List<NotaMovimiento>> obtenerPorParticipacion(int idParticipacion);
 
-    // 🔹 POR MOVIMIENTO (todos los jinetes en un ejercicio)
-    @Query("SELECT * FROM Nota_Movimiento " +
-            "WHERE ID_Movimiento = :idMovimiento")
+    @Query("SELECT * FROM Nota_Movimiento WHERE ID_Movimiento = :idMovimiento")
     LiveData<List<NotaMovimiento>> obtenerPorMovimiento(int idMovimiento);
 
-    // 🔹 POR JUEZ
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertOrUpdate(NotaMovimiento nota);
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertOrUpdateAll(List<NotaMovimiento> notas);
 
-    // ✔ calcular puntuación total de una participación
-    @Query("SELECT SUM(Nota) FROM Nota_Movimiento " +
-            "WHERE ID_Participacion = :idParticipacion")
+    @Query("SELECT SUM(Nota) FROM Nota_Movimiento WHERE ID_Participacion = :idParticipacion")
     double totalParticipacionSync(int idParticipacion);
+
+    @Query("SELECT * FROM Nota_Movimiento WHERE ID_Participacion = :idParticipacion")
+    LiveData<List<NotaMovimiento>> getNotasByParticipacion(int idParticipacion);
+
+    @Query("SELECT * FROM Nota_Movimiento WHERE ID_Participacion = :idParticipacion")
+    List<NotaMovimiento> getNotasByParticipacionSync(int idParticipacion);
+
+    @Query("SELECT " +
+            "  nm.ID_Movimiento    AS idMovimiento, " +
+            "  nm.ID_Participacion AS idParticipacion, " +
+            "  m.Letra             AS letra, " +
+            "  m.Ejercicio         AS ejercicio, " +
+            "  m.Coeficiente       AS coeficiente, " +
+            "  m.Directriz         AS directriz, " +
+            "  m.Orden             AS orden, " +
+            "  nm.Nota             AS nota, " +
+            "  nm.Observacion      AS observacion " +
+            "FROM Nota_Movimiento nm " +
+            "INNER JOIN Movimiento m ON nm.ID_Movimiento = m.ID_Movimiento " +
+            "WHERE nm.ID_Participacion = :idParticipacion " +
+            "ORDER BY m.Orden ASC")
+    LiveData<List<MovimientoConNota>> getHojaCalificaciones(int idParticipacion);
 }

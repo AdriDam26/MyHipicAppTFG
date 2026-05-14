@@ -10,6 +10,7 @@ import androidx.room.Update;
 
 import com.example.myhipicapptfg.entities.Movimiento;
 import com.example.myhipicapptfg.entities.Prueba;
+import com.example.myhipicapptfg.model.PruebaConCompeticion;
 
 import java.util.List;
 
@@ -34,8 +35,7 @@ public interface PruebaDao {
     @Query("SELECT * FROM Prueba WHERE ID_Competicion = :idCompeticion ORDER BY Nombre ASC")
     LiveData<List<Prueba>> obtenerPorCompeticion(int idCompeticion);
 
-    @Query("SELECT COUNT(*) > 0 FROM Prueba WHERE Nombre = :nombre")
-    boolean existeNombreSync(String nombre);
+
 
     @Query("SELECT COUNT(*) > 0 FROM Prueba WHERE Nombre = :nombre AND ID_Prueba != :idExcluir")
     boolean existeNombreExcluyendoSync(String nombre, int idExcluir);
@@ -78,4 +78,22 @@ public interface PruebaDao {
         }
         insertarMovimientos(movimientos);
     }
+
+    @Query("UPDATE Prueba SET Publicado = :publicado WHERE ID_Prueba = :idPrueba")
+    void actualizarPublicado(int idPrueba, boolean publicado);
+
+    @Query("SELECT Publicado FROM Prueba WHERE ID_Prueba = :idPrueba")
+    LiveData<Boolean> isPublicado(int idPrueba);
+
+    @Query("SELECT " +
+            "  p.ID_Prueba        AS idPrueba, " +
+            "  p.Nombre           AS nombrePrueba, " +
+            "  c.Nombre           AS nombreCompeticion, " +
+            "  p.Categoria        AS categoria, " +
+            "  p.Nivel            AS nivel " +
+            "FROM Prueba p " +
+            "INNER JOIN Competicion c ON p.ID_Competicion = c.ID_Competicion " +
+            "WHERE p.ID_Juez = :idJuez " +
+            "ORDER BY c.Fecha ASC, p.Nombre ASC")
+    LiveData<List<PruebaConCompeticion>> getPruebasByJuez(int idJuez);
 }

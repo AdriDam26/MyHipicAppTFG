@@ -23,148 +23,240 @@
             android:layout_marginBottom="32dp"
             android:textColor="@color/black"/>
 
+        <!-- Gestión y Administración -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardGestionAdmin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="4dp"
             android:clickable="true"
-            android:focusable="true">
-
+            android:focusable="true"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="24dp"
                 android:gravity="center">
-
                 <ImageView
                     android:layout_width="64dp"
                     android:layout_height="64dp"
                     android:src="@android:drawable/ic_menu_manage"
-                    app:tint="?attr/colorPrimary" />
-
+                    app:tint="?attr/colorPrimary"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Gestión y Administración"
                     android:textSize="18sp"
-                    android:layout_marginTop="8dp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    android:layout_marginTop="8dp"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Escáner AR / QR -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardRealidadAumentada"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="4dp"
             android:clickable="true"
-            android:focusable="true">
-
+            android:focusable="true"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="24dp"
                 android:gravity="center">
-
                 <ImageView
                     android:layout_width="64dp"
                     android:layout_height="64dp"
                     android:src="@android:drawable/ic_menu_camera"
-                    app:tint="?attr/colorSecondary" />
-
+                    app:tint="?attr/colorSecondary"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Escáner AR / QR"
                     android:textSize="18sp"
-                    android:layout_marginTop="8dp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    android:layout_marginTop="8dp"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- GPS / Rutas -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardGPS"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="4dp"
             android:clickable="true"
-            android:focusable="true">
-
+            android:focusable="true"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="24dp"
                 android:gravity="center">
-
                 <ImageView
                     android:layout_width="64dp"
                     android:layout_height="64dp"
                     android:src="@android:drawable/ic_dialog_map"
-                    app:tint="?attr/colorPrimary" />
-
+                    app:tint="?attr/colorPrimary"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="GPS / Rutas"
                     android:textSize="18sp"
-                    android:layout_marginTop="8dp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    android:layout_marginTop="8dp"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Reservar Clase -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardReservarClase"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="4dp"
             android:clickable="true"
-            android:focusable="true">
-
+            android:focusable="true"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="24dp"
                 android:gravity="center">
-
                 <ImageView
                     android:layout_width="64dp"
                     android:layout_height="64dp"
                     android:src="@android:drawable/ic_menu_my_calendar"
-                    app:tint="?attr/colorPrimary" />
-
+                    app:tint="?attr/colorPrimary"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Reservar Clase"
                     android:textSize="18sp"
-                    android:layout_marginTop="8dp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    android:layout_marginTop="8dp"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Mis Reservas -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardMisReservas"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="4dp"
+            android:layout_marginBottom="16dp"
             android:clickable="true"
             android:focusable="true"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
             app:rippleColor="?attr/colorSecondary">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="24dp"
+                android:gravity="center">
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@android:drawable/ic_menu_agenda"
+                    app:tint="?attr/colorSecondary"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mis Reservas"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="8dp"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Ver Mis Clases (Profesor) -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardVerClasesAsignadas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="#EFEBE9">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="24dp"
+                android:gravity="center">
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@android:drawable/ic_menu_view"
+                    app:tint="#5D4037"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ver Mis Clases (Profesor)"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#3E2723"
+                    android:layout_marginTop="8dp"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- ══════════════════════════════════════════════════════════════════ -->
+        <!-- Mis Pruebas (Juez) — NUEVA TARJETA                                -->
+        <!-- ══════════════════════════════════════════════════════════════════ -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardMisPruebas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="#E8EAF6">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="24dp"
+                android:gravity="center">
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@android:drawable/ic_menu_sort_by_size"
+                    app:tint="#283593"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mis Pruebas (Juez)"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#1A237E"
+                    android:layout_marginTop="8dp"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+        <!-- Mis Competiciones -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardMisCompeticiones"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="#E3F2FD">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -176,52 +268,20 @@
                 <ImageView
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:src="@android:drawable/ic_menu_agenda"
-                    app:tint="?attr/colorSecondary" />
+                    android:src="@android:drawable/ic_menu_compass"
+                    app:tint="#1565C0"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Mis Reservas"
+                    android:text="Ver Mis Competiciones"
                     android:textSize="18sp"
-                    android:layout_marginTop="8dp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    android:textColor="#0D47A1"
+                    android:layout_marginTop="8dp"/>
             </LinearLayout>
+
         </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardVerClasesAsignadas"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="4dp"
-            android:clickable="true"
-            android:focusable="true"
-            app:cardBackgroundColor="#EFEBE9"> <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="24dp"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:src="@android:drawable/ic_menu_view"
-                app:tint="#5D4037" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Ver Mis Clases (Profesor)"
-                android:textSize="18sp"
-                android:layout_marginTop="8dp"
-                android:textColor="#3E2723"
-                android:textStyle="bold"/>
-        </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
 
     </LinearLayout>
 </ScrollView>

@@ -7,10 +7,18 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.myhipicapptfg.dao.JuezDao;
+import com.example.myhipicapptfg.dao.MovimientoDao;
+import com.example.myhipicapptfg.dao.NotaMovimientoDao;
+import com.example.myhipicapptfg.dao.ParticipacionDao;
+import com.example.myhipicapptfg.dao.PruebaDao;
 import com.example.myhipicapptfg.dao.UsuarioDao;
 import com.example.myhipicapptfg.database.AppDatabase;
 import com.example.myhipicapptfg.entities.Juez;
+import com.example.myhipicapptfg.entities.Movimiento;
+import com.example.myhipicapptfg.entities.NotaMovimiento;
 import com.example.myhipicapptfg.entities.Usuario;
+import com.example.myhipicapptfg.model.ParticipacionDetalle;
+import com.example.myhipicapptfg.model.PruebaConCompeticion;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -20,6 +28,14 @@ public class JuezRepository {
 
     private final JuezDao juezDao;
     private final UsuarioDao usuarioDao;
+
+    private final PruebaDao pruebaDao;
+    private final ParticipacionDao participacionDao;
+
+    private final MovimientoDao movimientoDao;
+    private final NotaMovimientoDao notaMovimientoDao;
+
+
     private final ExecutorService executorService;
     private final MutableLiveData<String> estadoOperacion = new MutableLiveData<>();
 
@@ -29,6 +45,14 @@ public class JuezRepository {
 
         juezDao = db.juezDao();
         usuarioDao = db.usuarioDao();
+
+        pruebaDao         = db.pruebaDao();
+        participacionDao  = db.participacionDao();
+
+        movimientoDao      = db.movimientoDao();
+        notaMovimientoDao  = db.notaMovimientoDao();
+
+
 
         executorService = AppDatabase.getDatabaseExecutor();
     }
@@ -120,4 +144,46 @@ public class JuezRepository {
     public LiveData<List<Usuario>> obtenerJuecesActivosConNombre() {
         return juezDao.obtenerJuecesActivosConNombre();
     }
+
+
+    // ── Pruebas del juez ──────────────────────────────────────────────────────
+    public LiveData<List<PruebaConCompeticion>> getPruebasByJuez(int idJuez) {
+        return pruebaDao.getPruebasByJuez(idJuez);
+    }
+
+    // ── Participantes de una prueba ───────────────────────────────────────────
+    public LiveData<List<ParticipacionDetalle>> getParticipantesByPrueba(int idPrueba) {
+        return participacionDao.getParticipantesByPrueba(idPrueba);
+    }
+
+
+    /** Devuelve los movimientos de la prueba asociada a una participación */
+    public LiveData<List<Movimiento>> getMovimientosByPrueba(int idPrueba) {
+        return movimientoDao.getMovimientosByPrueba(idPrueba);
+    }
+
+    /** Notas ya guardadas para una participación */
+    public LiveData<List<NotaMovimiento>> getNotasByParticipacion(int idParticipacion) {
+        return notaMovimientoDao.getNotasByParticipacion(idParticipacion);
+    }
+
+    /**
+     * Guarda todas las notas + recalcula nota final, porcentaje
+     * y aplica la corrección. Todo en un solo hilo background.
+     */
+    public void guardarPuntuacion(int idParticipacion,
+                                  List<NotaMovimiento> notas,
+                                  double notaFinal,
+                                  double porcentaje,
+                                  double correccion,
+                                  boolean eliminado) {
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            notaMovimientoDao.insertOrUpdateAll(notas);
+            participacionDao.updateResultado(
+                    idParticipacion, notaFinal, porcentaje, correccion, eliminado);
+        });
+    }
+
+
+
 }

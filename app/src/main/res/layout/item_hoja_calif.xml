@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="12dp"
+    android:layout_marginVertical="4dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- CABECERA: orden · letra · ejercicio · coeficiente · nota -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="#EDE7F6"
+            android:padding="10dp">
+
+            <!-- Número de orden -->
+            <TextView
+                android:id="@+id/tvOrden"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:background="@drawable/bg_circle_purple"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"/>
+
+            <!-- Letra del movimiento -->
+            <TextView
+                android:id="@+id/tvLetra"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/bg_badge_letra"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="2dp"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:textColor="#4A148C"/>
+
+            <!-- Nombre del ejercicio -->
+            <TextView
+                android:id="@+id/tvEjercicio"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:textColor="#212121"/>
+
+            <!-- Coeficiente -->
+            <TextView
+                android:id="@+id/tvCoeficiente"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:background="@drawable/bg_badge_coef"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="2dp"
+                android:textSize="11sp"
+                android:textColor="#7B1FA2"/>
+
+            <!-- Nota -->
+            <TextView
+                android:id="@+id/tvNota"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_badge_nota"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="@android:color/white"/>
+        </LinearLayout>
+
+        <!-- CUERPO: directriz + observación -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <!-- Directriz -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Directriz"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textColor="#7B1FA2"
+                android:letterSpacing="0.05"/>
+
+            <TextView
+                android:id="@+id/tvDirectriz"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textSize="13sp"
+                android:textColor="#212121"/>
+
+            <!-- Separador -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginVertical="8dp"
+                android:background="#E0E0E0"/>
+
+            <!-- Observación -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Observación del juez"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textColor="#7B1FA2"
+                android:letterSpacing="0.05"/>
+
+            <TextView
+                android:id="@+id/tvObservacion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:paddingStart="8dp"
+                android:background="@drawable/bg_observacion_border"
+                android:textSize="13sp"
+                android:textColor="#555555"
+                android:textStyle="italic"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

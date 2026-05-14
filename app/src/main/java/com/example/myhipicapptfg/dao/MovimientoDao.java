@@ -9,6 +9,7 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.example.myhipicapptfg.entities.Movimiento;
+import com.example.myhipicapptfg.model.MovimientoConNota;
 
 import java.util.List;
 
@@ -51,4 +52,19 @@ public interface MovimientoDao {
     // ✔ contar movimientos
     @Query("SELECT COUNT(*) FROM Movimiento")
     int contarMovimientosSync();
+
+    // Para cargar los movimientos de una prueba de forma síncrona en el ViewModel
+
+
+
+    @Query("SELECT * FROM Movimiento WHERE ID_Prueba = :idPrueba ORDER BY Orden ASC")
+    LiveData<List<Movimiento>> getMovimientosByPrueba(int idPrueba);
+
+    // Versión síncrona para operaciones en background
+    @Query("SELECT * FROM Movimiento WHERE ID_Prueba = :idPrueba ORDER BY Orden ASC")
+    List<Movimiento> getMovimientosByPruebaSync(int idPrueba);
+
+
+
+
 }

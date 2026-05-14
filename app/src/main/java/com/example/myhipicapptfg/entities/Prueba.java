@@ -26,7 +26,7 @@ import androidx.room.PrimaryKey;
         },
         indices = {
                 @Index(value = {"ID_Competicion"}),
-                @Index(value = {"Nombre"}, unique = true)
+                @Index(value = {"ID_Juez"})
         }
 )
 public class Prueba {
@@ -51,6 +51,9 @@ public class Prueba {
 
     @ColumnInfo(name = "ID_Juez")
     public Integer idJuez;
+
+    @ColumnInfo(name = "Publicado")
+    public boolean publicado = false;
 
     // 🔹 Categorías RFHE (simplificadas)
     public static final String ALEVIN = "Alevin";

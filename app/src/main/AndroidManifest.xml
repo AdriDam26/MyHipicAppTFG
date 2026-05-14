@@ -122,8 +122,13 @@
         <activity android:name=".ui.gps.SeguirRutaActivity"
             android:exported="false"/>
 
+        <activity android:name=".ui.PruebasJuezActivity" />
+        <activity android:name=".ui.ParticipantesPruebaActivity" />
+        <activity android:name=".ui.PuntuacionActivity" />
 
-
+        <activity android:name=".ui.MisPruebasActivity" />
+        <activity android:name=".ui.RankingPruebaActivity" />
+        <activity android:name=".ui.HojaCalificacionesActivity" />
 
 
     </application>

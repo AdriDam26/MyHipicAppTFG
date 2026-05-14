@@ -22,7 +22,7 @@ import java.util.concurrent.Executors;
                 Competicion.class, Prueba.class, Participacion.class,
                 Movimiento.class, NotaMovimiento.class
         },
-        version = 21,
+        version = 24,
         exportSchema = false
 )
 public abstract class AppDatabase extends RoomDatabase {
@@ -103,4 +103,7 @@ public abstract class AppDatabase extends RoomDatabase {
                     .execSQL("DELETE FROM sqlite_sequence");
         });
     }
+
+    public static final ExecutorService databaseWriteExecutor =
+            Executors.newFixedThreadPool(4);
 }

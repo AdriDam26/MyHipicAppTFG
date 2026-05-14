@@ -58,4 +58,6 @@ public class GestionParticipacionesViewModel extends AndroidViewModel {
     public LiveData<String> getEstadoOperacion() {
         return participacionRepo.getEstadoOperacion();
     }
+
+
 }

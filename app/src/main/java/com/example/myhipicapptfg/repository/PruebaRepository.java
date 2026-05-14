@@ -44,12 +44,18 @@ public class PruebaRepository {
         return dao.obtenerMovimientosPorPrueba(idPrueba);
     }
 
+    public LiveData<Boolean> isPublicado(int idPrueba) {
+        return dao.isPublicado(idPrueba);
+    }
+
+    public void actualizarPublicado(int idPrueba, boolean publicado) {
+        executor.execute(() -> dao.actualizarPublicado(idPrueba, publicado));
+    }
+
+
     public void insertarPruebaConMovimientos(Prueba prueba, List<Movimiento> movimientos) {
         executor.execute(() -> {
-            if (dao.existeNombreSync(prueba.nombre)) {
-                estadoOperacion.postValue("ERROR_NOMBRE_DUPLICADO");
-                return;
-            }
+
             if (!dao.existeCompeticionSync(prueba.idCompeticion)) {
                 estadoOperacion.postValue("ERROR_COMPETICION_NO_EXISTE");
                 return;

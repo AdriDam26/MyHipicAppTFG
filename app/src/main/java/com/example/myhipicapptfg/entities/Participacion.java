@@ -61,6 +61,12 @@ public class Participacion {
     @ColumnInfo(name = "ID_Prueba")
     public int idPrueba;
 
+    @ColumnInfo(name = "Correccion")
+    public double correccion; // 0.0, 2.0 o 4.0
+
+    @ColumnInfo(name = "Eliminado")
+    public boolean eliminado;
+
     public Participacion() {}
 
     public Participacion(int ordenSalida, int idAlumno,

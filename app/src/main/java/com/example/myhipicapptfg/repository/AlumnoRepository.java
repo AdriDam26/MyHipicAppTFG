@@ -7,6 +7,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.myhipicapptfg.dao.AlumnoDao;
+import com.example.myhipicapptfg.dao.NotaMovimientoDao;
+import com.example.myhipicapptfg.dao.ParticipacionDao;
 import com.example.myhipicapptfg.dao.UsuarioDao;
 import com.example.myhipicapptfg.database.AppDatabase;
 import com.example.myhipicapptfg.entities.Alumno;
@@ -21,6 +23,11 @@ public class AlumnoRepository {
     private final AlumnoDao alumnoDao;
     private final UsuarioDao usuarioDao;
     private final ExecutorService executorService;
+
+    private final ParticipacionDao participacionDao;
+    private final NotaMovimientoDao notaDao;
+
+
     private final MutableLiveData<String> estadoOperacion = new MutableLiveData<>();
 
     public AlumnoRepository(@NonNull Application application) {
@@ -29,6 +36,9 @@ public class AlumnoRepository {
 
         alumnoDao = db.alumnoDao();
         usuarioDao = db.usuarioDao();
+        participacionDao = db.participacionDao();
+        notaDao          = db.notaMovimientoDao();
+
 
         executorService = AppDatabase.getDatabaseExecutor();
     }
@@ -109,4 +119,6 @@ public class AlumnoRepository {
     public LiveData<Alumno> buscarPorId(int id) {
         return alumnoDao.buscarPorId(id);
     }
+
+
 }
