@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
-    android:layout_marginVertical="8dp"
-    app:cardCornerRadius="20dp"
+    android:layout_marginVertical="6dp"
+    app:cardCornerRadius="16dp"
     app:cardElevation="2dp"
     app:strokeWidth="1dp"
     app:strokeColor="#F3F4F6">
@@ -15,17 +15,31 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="12dp">
 
-        <!-- Indicador -->
+        <!-- Indicador lateral -->
         <View
             android:id="@+id/viewIndicatorEquino"
             android:layout_width="4dp"
             android:layout_height="0dp"
             android:background="?attr/colorPrimary"
-            app:layout_constraintTop_toTopOf="@id/txtNombreEquino"
-            app:layout_constraintBottom_toBottomOf="@id/txtTemperamentoEquino"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <!-- FOTO -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/imgFotoEquino"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_marginStart="12dp"
+            android:scaleType="centerCrop"
+            app:shapeAppearanceOverlay="@style/CircleImageView"
+            app:layout_constraintStart_toEndOf="@id/viewIndicatorEquino"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:src="@drawable/ic_horse_placeholder"/>
 
         <!-- Nombre -->
         <TextView
@@ -33,14 +47,16 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="#1E293B"
             android:maxLines="1"
             android:ellipsize="end"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imgFotoEquino"
             app:layout_constraintEnd_toStartOf="@id/layoutActionsEquino"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/txtRazaEquino"
+            app:layout_constraintVertical_chainStyle="packed"
             tools:text="Tornado" />
 
         <!-- Raza -->
@@ -49,14 +65,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:layout_marginTop="4dp"
-            android:textSize="14sp"
+            android:layout_marginTop="2dp"
+            android:textSize="13sp"
             android:textColor="#64748B"
             android:maxLines="1"
             android:ellipsize="end"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imgFotoEquino"
             app:layout_constraintEnd_toStartOf="@id/layoutActionsEquino"
             app:layout_constraintTop_toBottomOf="@id/txtNombreEquino"
+            app:layout_constraintBottom_toTopOf="@id/txtMicrochipEquino"
             tools:text="Pura Sangre" />
 
         <!-- Microchip -->
@@ -66,48 +83,57 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginTop="2dp"
-            android:textSize="13sp"
+            android:textSize="12sp"
             android:textColor="#94A3B8"
             android:maxLines="1"
             android:ellipsize="end"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imgFotoEquino"
             app:layout_constraintEnd_toStartOf="@id/layoutActionsEquino"
             app:layout_constraintTop_toBottomOf="@id/txtRazaEquino"
-            tools:text="Chip: 123456" />
+            app:layout_constraintBottom_toTopOf="@id/layoutBadgesEquino"
+            tools:text="Chip: 981001234567890" />
 
-        <!-- DISCIPLINA -->
-        <TextView
-            android:id="@+id/txtDisciplinaEquino"
-            android:layout_width="wrap_content"
+        <!-- Badges: disciplina + temperamento en fila -->
+        <LinearLayout
+            android:id="@+id/layoutBadgesEquino"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_marginStart="12dp"
-            android:layout_marginTop="10dp"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="4dp"
-            android:textSize="11sp"
-            android:textStyle="bold"
-            android:textColor="#1D4ED8"
-            android:backgroundTint="#DBEAFE"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="6dp"
+            app:layout_constraintStart_toEndOf="@id/imgFotoEquino"
+            app:layout_constraintEnd_toStartOf="@id/layoutActionsEquino"
             app:layout_constraintTop_toBottomOf="@id/txtMicrochipEquino"
-            tools:text="DOMA + SALTO" />
+            app:layout_constraintBottom_toBottomOf="parent">
 
-        <!-- TEMPERAMENTO -->
-        <TextView
-            android:id="@+id/txtTemperamentoEquino"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="8dp"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="4dp"
-            android:textSize="11sp"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#D97706"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txtDisciplinaEquino"
-            tools:text="MANEJABLE" />
+            <!-- Disciplina -->
+            <TextView
+                android:id="@+id/txtDisciplinaEquino"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="3dp"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:textColor="#1D4ED8"
+                android:backgroundTint="#DBEAFE"
+                tools:text="DOMA + SALTO" />
+
+            <!-- Temperamento -->
+            <TextView
+                android:id="@+id/txtTemperamentoEquino"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="3dp"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#D97706"
+                tools:text="MANEJABLE" />
+
+        </LinearLayout>
 
         <!-- Acciones -->
         <LinearLayout
@@ -115,22 +141,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/txtNombreEquino"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent">
 
             <ImageButton
                 android:id="@+id/btnEditarEquino"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@android:drawable/ic_menu_edit"
                 app:tint="#94A3B8" />
 
             <ImageButton
                 android:id="@+id/btnEliminarEquino"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@android:drawable/ic_menu_delete"
                 app:tint="#F87171" />

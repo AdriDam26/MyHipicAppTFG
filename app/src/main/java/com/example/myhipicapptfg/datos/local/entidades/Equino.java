@@ -66,6 +66,9 @@ public class Equino {
     @ColumnInfo(name = "Numero_Cuadra")
     public int numeroCuadra;
 
+    @ColumnInfo(name = "Foto_Perfil")
+    public String fotoPerfil;
+
     // 🔹 Constantes
     public static final String SEXO_MACHO = "M";
     public static final String SEXO_HEMBRA = "H";
@@ -94,7 +97,8 @@ public class Equino {
                   boolean sabeSalto,
                   boolean sabeDoma,
                   Integer idUsuario,
-                  int numeroCuadra) {
+                  int numeroCuadra,
+                  String fotoPerfil) {
 
         this.nombre = nombre;
         this.raza = raza;
@@ -109,6 +113,7 @@ public class Equino {
         this.sabeDoma = sabeDoma;
         this.idUsuario = idUsuario;
         this.numeroCuadra = numeroCuadra;
+        this.fotoPerfil = fotoPerfil;
     }
 
     @Override

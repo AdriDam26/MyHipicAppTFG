@@ -52,7 +52,7 @@ import java.util.concurrent.Executors;
                 Competicion.class, Prueba.class, Participacion.class,
                 Movimiento.class, NotaMovimiento.class
         },
-        version = 24,
+        version = 26,
         exportSchema = false
 )
 public abstract class AppDatabase extends RoomDatabase {

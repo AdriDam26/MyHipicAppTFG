@@ -1,6 +1,7 @@
 package com.example.myhipicapptfg.ui.admin.equinos;
 
 import android.content.res.ColorStateList;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +11,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.myhipicapptfg.R;
 import com.example.myhipicapptfg.datos.local.entidades.Equino;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,24 +48,27 @@ public class EquinoAdapter extends RecyclerView.Adapter<EquinoAdapter.EquinoView
     }
 
     @Override
-    public void onBindViewHolder(@NonNull EquinoViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull EquinoViewHolder h, int position) {
 
         Equino e = lista.get(position);
 
-        holder.txtNombre.setText(e.nombre);
-        holder.txtRaza.setText(e.raza);
-        holder.txtMicrochip.setText("Chip: " + e.numeroMicrochip);
+        h.txtNombre.setText(e.nombre);
+        h.txtRaza.setText(e.raza);
+        h.txtMicrochip.setText("Chip: " + e.numeroMicrochip);
+        h.txtDisciplina.setText(getDisciplina(e));
+        h.txtTemperamento.setText(e.temperamento != null ? e.temperamento.toUpperCase() : "");
 
-        // 🧠 Disciplina
-        holder.txtDisciplina.setText(getDisciplina(e));
+        configurarColorTemperamento(h.txtTemperamento, e.temperamento);
 
-        // 🎯 Temperamento
-        holder.txtTemperamento.setText(e.temperamento != null ? e.temperamento.toUpperCase() : "");
+        Glide.with(h.itemView.getContext())
+                .load(e.fotoPerfil) // Carga el String o Uri
+                .placeholder(R.drawable.ic_horse_placeholder) // Imagen mientras carga
+                .error(R.drawable.ic_horse_placeholder)       // Imagen si la ruta falla o es nula
+                .centerCrop()                                 // Ajusta la imagen al círculo/cuadrado
+                .into(h.foto);
 
-        configurarColorTemperamento(holder.txtTemperamento, e.temperamento);
-
-        holder.btnEditar.setOnClickListener(v -> listener.editar(e));
-        holder.btnEliminar.setOnClickListener(v -> listener.eliminar(e));
+        h.btnEditar.setOnClickListener(v -> listener.editar(e));
+        h.btnEliminar.setOnClickListener(v -> listener.eliminar(e));
     }
 
     @Override
@@ -70,7 +76,6 @@ public class EquinoAdapter extends RecyclerView.Adapter<EquinoAdapter.EquinoView
         return lista != null ? lista.size() : 0;
     }
 
-    // 🔥 Disciplina calculada
     private String getDisciplina(Equino e) {
         if (e.sabeDoma && e.sabeSalto) return "DOMA + SALTO";
         if (e.sabeDoma) return "DOMA";
@@ -78,27 +83,18 @@ public class EquinoAdapter extends RecyclerView.Adapter<EquinoAdapter.EquinoView
         return "SIN DISCIPLINA";
     }
 
-    // 🎨 Color del temperamento
     private void configurarColorTemperamento(TextView view, String t) {
-
         if (t == null) return;
-
         switch (t) {
-
             case Equino.FACIL:
-                view.setBackgroundTintList(
-                        ColorStateList.valueOf(0xFF10B981)); // verde
+                view.setBackgroundTintList(ColorStateList.valueOf(0xFF10B981));
                 break;
-
             case Equino.DIFICIL:
-                view.setBackgroundTintList(
-                        ColorStateList.valueOf(0xFFEF4444)); // rojo
+                view.setBackgroundTintList(ColorStateList.valueOf(0xFFEF4444));
                 break;
-
             case Equino.MANEJABLE:
             default:
-                view.setBackgroundTintList(
-                        ColorStateList.valueOf(0xFFD97706)); // naranja
+                view.setBackgroundTintList(ColorStateList.valueOf(0xFFD97706));
                 break;
         }
     }
@@ -107,18 +103,18 @@ public class EquinoAdapter extends RecyclerView.Adapter<EquinoAdapter.EquinoView
 
         TextView txtNombre, txtRaza, txtMicrochip, txtDisciplina, txtTemperamento;
         ImageButton btnEditar, btnEliminar;
+        ShapeableImageView foto; // ✅
 
         public EquinoViewHolder(@NonNull View itemView) {
             super(itemView);
-
-            txtNombre = itemView.findViewById(R.id.txtNombreEquino);
-            txtRaza = itemView.findViewById(R.id.txtRazaEquino);
-            txtMicrochip = itemView.findViewById(R.id.txtMicrochipEquino);
-            txtDisciplina = itemView.findViewById(R.id.txtDisciplinaEquino);
+            txtNombre       = itemView.findViewById(R.id.txtNombreEquino);
+            txtRaza         = itemView.findViewById(R.id.txtRazaEquino);
+            txtMicrochip    = itemView.findViewById(R.id.txtMicrochipEquino);
+            txtDisciplina   = itemView.findViewById(R.id.txtDisciplinaEquino);
             txtTemperamento = itemView.findViewById(R.id.txtTemperamentoEquino);
-
-            btnEditar = itemView.findViewById(R.id.btnEditarEquino);
-            btnEliminar = itemView.findViewById(R.id.btnEliminarEquino);
+            btnEditar       = itemView.findViewById(R.id.btnEditarEquino);
+            btnEliminar     = itemView.findViewById(R.id.btnEliminarEquino);
+            foto            = itemView.findViewById(R.id.imgFotoEquino); // ✅
         }
     }
 }

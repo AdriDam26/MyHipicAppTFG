@@ -47,9 +47,13 @@ public class Usuario {
     @ColumnInfo(name = "Tipo")
     public String tipo;
 
+
+    @ColumnInfo(name = "Foto_Perfil")
+    public String fotoPerfil;
+
     // Valores permitidos para sexo
-    public static final String SEXO_MASCULINO = "M";
-    public static final String SEXO_FEMENINO = "F";
+    public static final String SEXO_MASCULINO = "MASCULINO";
+    public static final String SEXO_FEMENINO = "FEMENINO";
 
     // Valores permitidos para tipo
     public static final String TIPO_ADMIN = "admin";
@@ -58,6 +62,8 @@ public class Usuario {
     public static final String TIPO_PROPIETARIO = "propietario";
 
     public static final String TIPO_JUEZ = "juez";
+
+
 
     @Override
     public String toString() {
@@ -69,7 +75,7 @@ public class Usuario {
     public Usuario(String email, String telefono,
                    String apellido1, String apellido2, String dni,
                    String nombre, long fechaNacimiento,
-                   long fechaRegistro, String sexo, String tipo) {
+                   long fechaRegistro, String sexo, String tipo, String fotoPerfil) {
 
         this.email = email;
         this.telefono = telefono;
@@ -81,6 +87,7 @@ public class Usuario {
         this.fechaRegistro = fechaRegistro;
         this.sexo = sexo;
         this.tipo = tipo;
+        this.fotoPerfil = fotoPerfil;
     }
 
 

@@ -10,10 +10,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.myhipicapptfg.R;
 import com.example.myhipicapptfg.datos.local.entidades.Usuario;
 
 import java.util.List;
+
+import com.google.android.material.imageview.ShapeableImageView;
+import android.net.Uri;
+
 
 public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.ViewHolder> {
 
@@ -39,6 +44,7 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.ViewHold
 
         TextView nombre, email, tipo, telefono;
         ImageButton editar, eliminar;
+        ShapeableImageView foto;
 
         public ViewHolder(View v) {
             super(v);
@@ -48,7 +54,7 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.ViewHold
             email = v.findViewById(R.id.txtEmailUsuario);
             telefono = v.findViewById(R.id.txtTelefonoUsuario);
             tipo = v.findViewById(R.id.txtTipoUsuario);
-
+            foto     = v.findViewById(R.id.imgFotoUsuario);
             editar = v.findViewById(R.id.btnEditarUsuario);
             eliminar = v.findViewById(R.id.btnEliminarUsuario);
         }
@@ -111,6 +117,14 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.ViewHold
                 h.tipo.setTextColor(0xFF4338CA);
                 break;
         }
+
+        // Foto de perfil
+        Glide.with(h.itemView.getContext())
+                .load(u.fotoPerfil)
+                .placeholder(R.drawable.ic_person_placeholder)
+                .error(R.drawable.ic_person_placeholder)
+                .circleCrop() // Si quieres que sea redonda
+                .into(h.foto);
 
         h.editar.setOnClickListener(v -> listener.editar(u));
         h.eliminar.setOnClickListener(v -> listener.eliminar(u));

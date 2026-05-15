@@ -1,6 +1,7 @@
 package com.example.myhipicapptfg.ui.admin.equinos;
 
 import android.app.DatePickerDialog;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -8,12 +9,15 @@ import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.myhipicapptfg.R;
 import com.example.myhipicapptfg.datos.local.entidades.Equino;
 import com.example.myhipicapptfg.datos.local.entidades.Usuario;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -44,6 +48,16 @@ public class EquinoFormActivity extends AppCompatActivity {
     // Lista auxiliar para manejar los IDs de los propietarios
     private List<Usuario> listaPropietariosCargados = new ArrayList<>();
 
+
+    private ShapeableImageView imgFotoEquino;
+    private Uri fotoUri = null;
+    private Uri uriCamaraTemp = null;
+
+    private ActivityResultLauncher<Uri> tomarFotoLauncher;
+    private ActivityResultLauncher<String> seleccionarFotoLauncher;
+    private ActivityResultLauncher<String> permisoLauncher;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +65,7 @@ public class EquinoFormActivity extends AppCompatActivity {
 
         viewModel = new ViewModelProvider(this).get(GestionEquinoViewModel.class);
 
+        registrarLaunchers();
         initViews();
         setupSpinners();
         setupFechaNacimiento();
@@ -97,6 +112,11 @@ public class EquinoFormActivity extends AppCompatActivity {
                 layPropietario.setVisibility(View.VISIBLE);
                 // El observador de propietarios se encargará de marcar el seleccionado cuando cargue la lista
             }
+
+            if (equino.fotoPerfil != null && !equino.fotoPerfil.isEmpty()) {
+                fotoUri = Uri.parse(equino.fotoPerfil);
+                imgFotoEquino.setImageURI(fotoUri);
+            }
         });
     }
 
@@ -126,6 +146,22 @@ public class EquinoFormActivity extends AppCompatActivity {
         cbDoma = findViewById(R.id.cbDomaClasicaEquino);
         cbSalto = findViewById(R.id.cbSaltoEquino);
         layoutEspecialidades = findViewById(R.id.layoutEspecialidadesEquino);
+
+        imgFotoEquino = findViewById(R.id.imgFotoEquino);
+
+        findViewById(R.id.btnSeleccionarFotoEquino).setOnClickListener(v ->
+                seleccionarFotoLauncher.launch("image/*")
+        );
+
+        findViewById(R.id.btnTomarFotoEquino).setOnClickListener(v -> {
+            if (androidx.core.content.ContextCompat.checkSelfPermission(
+                    this, android.Manifest.permission.CAMERA)
+                    == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                abrirCamara();
+            } else {
+                permisoLauncher.launch(android.Manifest.permission.CAMERA);
+            }
+        });
     }
 
     private void setupSpinners() {
@@ -271,7 +307,8 @@ public class EquinoFormActivity extends AppCompatActivity {
                 cbSalto.isChecked(),
                 cbDoma.isChecked(),
                 idPropietario,
-                Integer.parseInt(etCuadra.getText().toString().trim())
+                Integer.parseInt(etCuadra.getText().toString().trim()),
+                fotoUri != null ? fotoUri.toString() : null  // ✅
         );
 
         if (modoEdicion) {
@@ -311,5 +348,57 @@ public class EquinoFormActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void registrarLaunchers() {
+
+        seleccionarFotoLauncher = registerForActivityResult(
+                new ActivityResultContracts.GetContent(),
+                uri -> {
+                    if (uri != null) {
+                        getContentResolver().takePersistableUriPermission(
+                                uri,
+                                android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
+                        );
+                        fotoUri = uri;
+                        imgFotoEquino.setImageURI(uri);
+                    }
+                }
+        );
+
+        tomarFotoLauncher = registerForActivityResult(
+                new ActivityResultContracts.TakePicture(),
+                success -> {
+                    if (success && uriCamaraTemp != null) {
+                        fotoUri = uriCamaraTemp;
+                        imgFotoEquino.setImageURI(fotoUri);
+                    }
+                }
+        );
+
+        permisoLauncher = registerForActivityResult(
+                new ActivityResultContracts.RequestPermission(),
+                granted -> {
+                    if (granted) abrirCamara();
+                    else Toast.makeText(this,
+                            "Permiso de cámara denegado", Toast.LENGTH_SHORT).show();
+                }
+        );
+    }
+
+    private void abrirCamara() {
+        try {
+            String ts = new java.text.SimpleDateFormat("yyyyMMdd_HHmmss", java.util.Locale.getDefault())
+                    .format(new java.util.Date());
+            java.io.File foto = java.io.File.createTempFile(
+                    "EQUINO_" + ts, ".jpg",
+                    getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES)
+            );
+            uriCamaraTemp = androidx.core.content.FileProvider.getUriForFile(
+                    this, getPackageName() + ".fileprovider", foto);
+            tomarFotoLauncher.launch(uriCamaraTemp);
+        } catch (java.io.IOException e) {
+            Toast.makeText(this, "Error al crear archivo de foto", Toast.LENGTH_SHORT).show();
+        }
     }
 }
