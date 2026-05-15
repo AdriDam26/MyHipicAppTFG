@@ -11,7 +11,6 @@ import com.example.myhipicapptfg.datos.local.dao.AlumnoDao;
 import com.example.myhipicapptfg.datos.local.dao.ClaseDao;
 import com.example.myhipicapptfg.datos.local.dao.CompeticionDao;
 import com.example.myhipicapptfg.datos.local.dao.CoordenadaRutaDao;
-import com.example.myhipicapptfg.datos.local.dao.CuidadoDao;
 import com.example.myhipicapptfg.datos.local.dao.EquinoDao;
 import com.example.myhipicapptfg.datos.local.dao.JuezDao;
 import com.example.myhipicapptfg.datos.local.dao.MovimientoDao;
@@ -46,13 +45,13 @@ import java.util.concurrent.Executors;
 @Database(
         entities = {
                 Usuario.class, Alumno.class, Profesor.class, Juez.class,
-                Equino.class, Cuidado.class,
+                Equino.class,
                 Pista.class, Clase.class, ReservaClase.class,
                 RutaPersonal.class, CoordenadaRuta.class,
                 Competicion.class, Prueba.class, Participacion.class,
                 Movimiento.class, NotaMovimiento.class
         },
-        version = 26,
+        version = 27,
         exportSchema = false
 )
 public abstract class AppDatabase extends RoomDatabase {
@@ -71,7 +70,6 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract ProfesorDao profesorDao();
     public abstract JuezDao juezDao();
     public abstract EquinoDao equinoDao();
-    public abstract CuidadoDao cuidadoDao();
     public abstract PistaDao pistaDao();
     public abstract ClaseDao claseDao();
     public abstract ReservaClaseDao reservaClaseDao();

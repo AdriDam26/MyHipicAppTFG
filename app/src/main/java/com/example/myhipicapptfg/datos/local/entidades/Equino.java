@@ -70,8 +70,8 @@ public class Equino {
     public String fotoPerfil;
 
     // 🔹 Constantes
-    public static final String SEXO_MACHO = "M";
-    public static final String SEXO_HEMBRA = "H";
+    public static final String SEXO_MACHO = "MACHO";
+    public static final String SEXO_HEMBRA = "HEMBRA";
 
     public static final String FACIL = "Facil";
     public static final String MANEJABLE = "Manejable";

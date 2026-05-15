@@ -9,7 +9,7 @@ import com.example.myhipicapptfg.datos.local.entidades.Alumno;
 import com.example.myhipicapptfg.datos.local.entidades.Juez;
 import com.example.myhipicapptfg.datos.local.entidades.Profesor;
 import com.example.myhipicapptfg.datos.local.entidades.Usuario;
-import com.example.myhipicapptfg.datos.repository.AlumnoRepository;
+import com.example.myhipicapptfg.datos.repositorios.AlumnoRepository;
 import com.example.myhipicapptfg.datos.repository.JuezRepository;
 import com.example.myhipicapptfg.datos.repository.ProfesorRepository;
 import com.example.myhipicapptfg.datos.repository.UsuarioRepository;

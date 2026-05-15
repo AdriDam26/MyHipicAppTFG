@@ -31,6 +31,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import android.content.Intent;
+import android.location.LocationManager;
+import android.provider.Settings;
+import android.content.Context;
+
+
 public class GrabarRutaActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final int REQUEST_LOCATION = 100;
@@ -45,6 +51,8 @@ public class GrabarRutaActivity extends AppCompatActivity implements OnMapReadyC
 
     private MaterialButton btnIniciarDetener, btnGuardar;
     private TextView tvDistancia, tvTiempo, tvEstado;
+
+    private boolean mapaCentradoInicialmente = false;
 
     private int idPropietarioActual = 1;
 
@@ -66,12 +74,17 @@ public class GrabarRutaActivity extends AppCompatActivity implements OnMapReadyC
         fusedClient = LocationServices.getFusedLocationProviderClient(this);
         configurarLocationCallback();
 
+        // En onCreate, reemplaza el bloque de permisos existente:
+
         if (!checkPermission()) {
             ActivityCompat.requestPermissions(
                     this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     REQUEST_LOCATION
             );
+        } else if (!isLocationEnabled()) {
+            // Tiene permiso pero el GPS del sistema está apagado
+            pedirActivarUbicacion();
         } else {
             iniciarMapa();
             iniciarActualizacionesGPS();
@@ -100,8 +113,12 @@ public class GrabarRutaActivity extends AppCompatActivity implements OnMapReadyC
                 grantResults.length > 0 &&
                 grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-            iniciarMapa();
-            iniciarActualizacionesGPS();
+            if (!isLocationEnabled()) {
+                pedirActivarUbicacion(); // Tiene permiso pero GPS apagado
+            } else {
+                iniciarMapa();
+                iniciarActualizacionesGPS();
+            }
 
         } else {
             Toast.makeText(this,
@@ -151,51 +168,75 @@ public class GrabarRutaActivity extends AppCompatActivity implements OnMapReadyC
     // =========================
 
     private void configurarLocationCallback() {
-
         locationCallback = new LocationCallback() {
-
             @Override
             public void onLocationResult(@NonNull LocationResult result) {
-
                 Location loc = result.getLastLocation();
                 if (loc == null || mMap == null) return;
 
-                if (!Boolean.TRUE.equals(viewModel.getGrabando().getValue())) return;
-
                 LatLng latLng = new LatLng(loc.getLatitude(), loc.getLongitude());
 
-                viewModel.agregarPunto(
-                        loc.getLatitude(),
-                        loc.getLongitude(),
-                        loc.getAltitude()
-                );
-
-                puntosMapa.add(latLng);
-
-                if (polylineActiva != null) {
-                    polylineActiva.setPoints(puntosMapa);
+                if (!mapaCentradoInicialmente) {
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17f));
+                    mapaCentradoInicialmente = true;
                 }
 
+                if (!Boolean.TRUE.equals(viewModel.getGrabando().getValue())) {
+                    tvEstado.setText("Listo para iniciar");
+                    return;
+                }
+
+                // Lógica de guardado de puntos...
+                viewModel.agregarPunto(loc.getLatitude(), loc.getLongitude(), loc.getAltitude());
+                puntosMapa.add(latLng);
+                if (polylineActiva != null) polylineActiva.setPoints(puntosMapa);
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            }
+
+            @Override
+            public void onLocationAvailability(@NonNull LocationAvailability availability) {
+                super.onLocationAvailability(availability);
+                if (!availability.isLocationAvailable()) {
+                    tvEstado.setText("🛰️ Buscando satélites...");
+                } else {
+                    if (Boolean.TRUE.equals(viewModel.getGrabando().getValue())) {
+                        tvEstado.setText("● Grabando");
+                    }
+                }
             }
         };
     }
 
     @SuppressLint("MissingPermission")
     private void iniciarActualizacionesGPS() {
-
+        // CAMBIO: Usar HIGH_ACCURACY para forzar el encendido del sensor GPS
         LocationRequest request = new LocationRequest.Builder(
-                Priority.PRIORITY_BALANCED_POWER_ACCURACY,
+                Priority.PRIORITY_HIGH_ACCURACY,
                 3000
         )
                 .setMinUpdateIntervalMillis(2000)
                 .build();
 
+        // Limpiamos peticiones anteriores por seguridad
+        fusedClient.removeLocationUpdates(locationCallback);
+
+        // Lanzamos la petición
         fusedClient.requestLocationUpdates(
                 request,
                 locationCallback,
                 Looper.getMainLooper()
         );
+
+        // Verificación de configuración del sistema
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(request);
+
+        SettingsClient client = LocationServices.getSettingsClient(this);
+        client.checkLocationSettings(builder.build())
+                .addOnFailureListener(this, e -> {
+                    tvEstado.setText("⚠️ SEÑAL DÉBIL");
+                    tvEstado.setTextColor(Color.RED);
+                });
     }
 
     // =========================
@@ -320,6 +361,48 @@ public class GrabarRutaActivity extends AppCompatActivity implements OnMapReadyC
 
         if (fusedClient != null && locationCallback != null) {
             fusedClient.removeLocationUpdates(locationCallback);
+        }
+    }
+
+    // =========================
+// 🔹 VERIFICAR GPS ACTIVADO
+// =========================
+
+    private boolean isLocationEnabled() {
+        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        return lm != null && (
+                lm.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                        lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+        );
+    }
+
+    private void pedirActivarUbicacion() {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle("Ubicación desactivada")
+                .setMessage("Para grabar una ruta necesitas tener la ubicación activada. ¿Quieres ir a Ajustes?")
+                .setPositiveButton("Ir a Ajustes", (d, w) -> {
+                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(intent);
+                })
+                .setNegativeButton("Cancelar", null)
+                .setCancelable(false)
+                .show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (checkPermission() && isLocationEnabled()) {
+            // Marcamos false para que el callback vuelva a centrar la cámara
+            // al recibir la primera posición fresca
+            mapaCentradoInicialmente = false;
+
+            if (mMap == null) {
+                iniciarMapa();
+            }
+            iniciarActualizacionesGPS();
+            tvEstado.setText("GPS Conectado");
         }
     }
 }
