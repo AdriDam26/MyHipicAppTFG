@@ -10,8 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.myhipicapptfg.R;
-import com.example.myhipicapptfg.entities.Equino;
-import com.example.myhipicapptfg.viewmodel.AREquinoViewModel;
+import com.example.myhipicapptfg.datos.local.entidades.Equino;
 import com.google.android.material.chip.Chip;
 import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.math.Vector3;

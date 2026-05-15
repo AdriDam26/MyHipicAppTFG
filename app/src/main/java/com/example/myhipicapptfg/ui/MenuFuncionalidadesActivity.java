@@ -5,8 +5,13 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myhipicapptfg.R;
-import com.example.myhipicapptfg.ui.PruebasJuezActivity;
+import com.example.myhipicapptfg.ui.admin.AdminMenuActivity;
 import com.example.myhipicapptfg.ui.ar.ARMenuActivity;
+import com.example.myhipicapptfg.ui.reservas.profesor.MisClasesProfesorActivity;
+import com.example.myhipicapptfg.ui.reservas.alumnos.MisReservasActivity;
+import com.example.myhipicapptfg.ui.reservas.alumnos.ReservaClaseActivity;
+import com.example.myhipicapptfg.ui.competiciones.participantes.MisPruebasActivity;
+import com.example.myhipicapptfg.ui.competiciones.juez.PruebasJuezActivity;
 import com.example.myhipicapptfg.ui.gps.RutasMenuActivity;
 import com.google.android.material.card.MaterialCardView;
 

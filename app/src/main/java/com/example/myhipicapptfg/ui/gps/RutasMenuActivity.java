@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.myhipicapptfg.ui.gps.grabar.GrabarRutaActivity;
+import com.example.myhipicapptfg.ui.gps.seguir.ListaRutasActivity;
 import com.google.android.material.card.MaterialCardView;
 import com.example.myhipicapptfg.R;
 

@@ -37,49 +37,49 @@
         </activity>
 
         <activity
-            android:name=".ui.GestionUsuariosActivity"
+            android:name=".ui.admin.usuarios.GestionUsuariosActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.UsuarioFormActivity"
+            android:name=".ui.admin.usuarios.UsuarioFormActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.GestionPistaActivity"
+            android:name=".ui.admin.pistas.GestionPistaActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.PistaFormActivity"
+            android:name=".ui.admin.pistas.PistaFormActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.GestionEquinosActivity"
+            android:name=".ui.admin.equinos.GestionEquinosActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.EquinoFormActivity"
+            android:name=".ui.admin.equinos.EquinoFormActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.GestionClasesActivity"
+            android:name=".ui.admin.clases.GestionClasesActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.ClaseFormActivity"
+            android:name=".ui.admin.clases.ClaseFormActivity"
             android:exported="false" />
 
-        <activity android:name=".ui.GestionCompeticionesActivity"
+        <activity android:name=".ui.admin.competiciones.GestionCompeticionesActivity"
             android:exported="false"/>
-        <activity android:name=".ui.GestionPruebasActivity"
+        <activity android:name=".ui.admin.competiciones.pruebas.GestionPruebasActivity"
             android:exported="false"/>
-        <activity android:name=".ui.PruebaFormActivity"
+        <activity android:name=".ui.admin.competiciones.pruebas.PruebaFormActivity"
             android:exported="false"/>
-        <activity android:name=".ui.CompeticionFormActivity"
+        <activity android:name=".ui.admin.competiciones.CompeticionFormActivity"
             android:exported="false"/>
 
-        <activity android:name=".ui.ParticipacionFormActivity"
+        <activity android:name=".ui.admin.competiciones.pruebas.participaciones.ParticipacionFormActivity"
             android:exported="false"/>
-        <activity android:name=".ui.GestionParticipacionesActivity"
+        <activity android:name=".ui.admin.competiciones.pruebas.participaciones.GestionParticipacionesActivity"
             android:exported="false"/>
 
         <activity android:name=".ui.ar.ARActivity"
@@ -91,22 +91,22 @@
         <activity android:name=".ui.ar.QRScannerActivity"
             android:exported="false"/>
 
-        <activity android:name=".ui.AdminMenuActivity"
+        <activity android:name=".ui.admin.AdminMenuActivity"
             android:exported="false"/>
 
 
         <activity
-            android:name=".ui.ReservaClaseActivity"
+            android:name=".ui.reservas.alumnos.ReservaClaseActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.MisReservasActivity"
+            android:name=".ui.reservas.alumnos.MisReservasActivity"
             android:exported="false" />
 
-        <activity android:name=".ui.MisClasesProfesorActivity"
+        <activity android:name=".ui.reservas.profesor.MisClasesProfesorActivity"
             android:label="Mis Clases" />
 
-        <activity android:name=".ui.AlumnosDeClaseActivity"
+        <activity android:name=".ui.reservas.profesor.AlumnosDeClaseActivity"
             android:label="Alumnos de Clase" />
 
         <meta-data
@@ -115,20 +115,20 @@
 
         <activity android:name=".ui.gps.RutasMenuActivity"
             android:exported="false"/>
-        <activity android:name=".ui.gps.GrabarRutaActivity"
+        <activity android:name=".ui.gps.grabar.GrabarRutaActivity"
             android:exported="false"/>
-        <activity android:name=".ui.gps.ListaRutasActivity"
+        <activity android:name=".ui.gps.seguir.ListaRutasActivity"
             android:exported="false"/>
-        <activity android:name=".ui.gps.SeguirRutaActivity"
+        <activity android:name=".ui.gps.seguir.SeguirRutaActivity"
             android:exported="false"/>
 
-        <activity android:name=".ui.PruebasJuezActivity" />
-        <activity android:name=".ui.ParticipantesPruebaActivity" />
-        <activity android:name=".ui.PuntuacionActivity" />
+        <activity android:name=".ui.competiciones.juez.PruebasJuezActivity" />
+        <activity android:name=".ui.competiciones.juez.ParticipantesPruebaActivity" />
+        <activity android:name=".ui.competiciones.juez.PuntuacionActivity" />
 
-        <activity android:name=".ui.MisPruebasActivity" />
-        <activity android:name=".ui.RankingPruebaActivity" />
-        <activity android:name=".ui.HojaCalificacionesActivity" />
+        <activity android:name=".ui.competiciones.participantes.MisPruebasActivity" />
+        <activity android:name=".ui.competiciones.participantes.RankingPruebaActivity" />
+        <activity android:name=".ui.competiciones.participantes.HojaCalificacionesActivity" />
 
 
     </application>
