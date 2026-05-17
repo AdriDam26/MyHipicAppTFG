@@ -56,14 +56,15 @@ public class ARActivity extends AppCompatActivity {
                 return;
             }
 
-            // Aquí el UpdateListener actualiza la posición en cada frame
-            arFragment.getArSceneView().getScene().addOnUpdateListener(frameTime -> {
-                if (!tarjetaCreada) {
-                    tarjetaCreada = true;
-                    crearTarjetaAR(equino);
-                } else {
-                    actualizarPosicion();
-                }
+            viewModel.getNombrePropietario().observe(this, nombreProp -> {
+                arFragment.getArSceneView().getScene().addOnUpdateListener(frameTime -> {
+                    if (!tarjetaCreada) {
+                        tarjetaCreada = true;
+                        crearTarjetaAR(equino, nombreProp != null ? nombreProp : "Hípica");
+                    } else {
+                        actualizarPosicion();
+                    }
+                });
             });
         });
     }
@@ -80,7 +81,7 @@ public class ARActivity extends AppCompatActivity {
         }
     }
 
-    private void crearTarjetaAR(Equino equino) {
+    private void crearTarjetaAR(Equino equino, String nombrePropietario) {
         ViewRenderable.builder()
                 .setView(this, R.layout.layout_tarjeta_ar)
                 .build()
@@ -109,7 +110,7 @@ public class ARActivity extends AppCompatActivity {
                     tvSexo.setText(equino.sexo.equals(Equino.SEXO_MACHO) ? "Macho" : "Hembra");
                     tvTemperamento.setText(equino.temperamento);
                     tvMicrochip.setText("SN: " + equino.numeroMicrochip);
-                    tvPropietario.setText(equino.idUsuario != null ? "Propietario: ID #" + equino.idUsuario : "Propietario: Hipica");
+                    tvPropietario.setText("Propietario: " + nombrePropietario);
 
                     // Color de salud
                     tvSalud.setText(equino.estadoSalud.toUpperCase());

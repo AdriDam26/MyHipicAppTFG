@@ -75,4 +75,8 @@ public interface EquinoDao {
 
     @Query("SELECT * FROM Equino WHERE Sabe_Doma = 1")
     LiveData<List<Equino>> obtenerEquinosDoma();
+
+    @Query("SELECT Usuario.Nombre || ' ' || Usuario.Apellido1 || ' ' || COALESCE(Usuario.Apellido2, '') " +
+            "FROM Usuario WHERE Usuario.ID_Usuario = :idUsuario LIMIT 1")
+    String obtenerNombrePropietarioSync(int idUsuario);
 }

@@ -131,5 +131,9 @@ public class EquinoRepository {
         return equinoDao.buscarPorMicrochipSync(microchip);
     }
 
+    public String obtenerNombrePropietarioSync(int idUsuario) {
+        return equinoDao.obtenerNombrePropietarioSync(idUsuario);
+    }
+
 
 }

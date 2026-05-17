@@ -16,9 +16,15 @@ public class AREquinoViewModel extends AndroidViewModel {
     private final EquinoRepository repository;
 
     private final MutableLiveData<Equino> equinoSeleccionado = new MutableLiveData<>();
+    private final MutableLiveData<String> nombrePropietario = new MutableLiveData<>();
+
+
     public LiveData<Equino> getEquinoSeleccionado() {
         return equinoSeleccionado;
     }
+
+    public LiveData<String> getNombrePropietario() { return nombrePropietario; }
+
 
     public AREquinoViewModel(@NonNull Application application) {
         super(application);
@@ -31,6 +37,13 @@ public class AREquinoViewModel extends AndroidViewModel {
         Executors.newSingleThreadExecutor().execute(() -> {
             Equino equino = repository.buscarPorMicrochipSync(microchip);
             equinoSeleccionado.postValue(equino);
+
+            if (equino != null && equino.idUsuario != null) {
+                String nombre = repository.obtenerNombrePropietarioSync(equino.idUsuario);
+                nombrePropietario.postValue(nombre != null ? nombre.trim() : "Hípica");
+            } else {
+                nombrePropietario.postValue("Hípica");
+            }
         });
     }
 }

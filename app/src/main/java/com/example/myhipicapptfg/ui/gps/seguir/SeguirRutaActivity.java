@@ -28,6 +28,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import android.content.Context;
+import android.content.Intent;
+import android.location.LocationManager;
+import android.provider.Settings;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import android.widget.Toast;
+
 public class SeguirRutaActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final int REQUEST_LOCATION = 100;
@@ -243,10 +250,19 @@ public class SeguirRutaActivity extends AppCompatActivity implements OnMapReadyC
             public void onLocationResult(@NonNull LocationResult result) {
                 Location loc = result.getLastLocation();
                 if (loc == null) return;
-                if (loc.getAccuracy() > 30) return; // descartamos lecturas imprecisas
+                if (loc.getAccuracy() > 30) return;
 
                 viewModel.actualizarUbicacion(loc.getLatitude(), loc.getLongitude());
                 actualizarMarcadorUsuario(loc);
+            }
+
+            @Override
+            public void onLocationAvailability(@NonNull LocationAvailability availability) {
+                super.onLocationAvailability(availability);
+                if (!availability.isLocationAvailable()) {
+                    tvAlPunto.setText("⚠️ Buscando señal GPS...");
+                    tvAlPunto.setTextColor(Color.RED);
+                }
             }
         };
     }
@@ -274,9 +290,11 @@ public class SeguirRutaActivity extends AppCompatActivity implements OnMapReadyC
         if (!checkPermission()) {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
-            return;
+        } else if (!isLocationEnabled()) {
+            pedirActivarUbicacion();
+        } else {
+            arrancarGPS();
         }
-        arrancarGPS();
     }
 
     @Override
@@ -324,6 +342,48 @@ public class SeguirRutaActivity extends AppCompatActivity implements OnMapReadyC
         super.onDestroy();
         if (fusedClient != null && locationCallback != null) {
             fusedClient.removeLocationUpdates(locationCallback);
+        }
+    }
+
+    // Verifica si el sensor GPS o de red están activos
+    private boolean isLocationEnabled() {
+        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        return lm != null && (
+                lm.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                        lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+        );
+    }
+
+    // Muestra el aviso para ir a ajustes
+    private void pedirActivarUbicacion() {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle("GPS Desactivado")
+                .setMessage("Para seguir la ruta correctamente es necesario activar la ubicación.")
+                .setPositiveButton("Configuración", (d, w) -> {
+                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(intent);
+                })
+                .setNegativeButton("Cancelar", (d, w) -> {
+                    Toast.makeText(this, "El seguimiento no funcionará sin GPS", Toast.LENGTH_SHORT).show();
+                })
+                .setCancelable(false)
+                .show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Si tenemos permisos pero el GPS está apagado, avisamos
+        if (checkPermission()) {
+            if (isLocationEnabled()) {
+                arrancarGPS();
+                // Opcional: avisar al usuario que se ha recuperado la señal
+                if (tvAlPunto != null && tvAlPunto.getText().toString().contains("Buscando")) {
+                    tvAlPunto.setText("Señal GPS recuperada");
+                }
+            } else {
+                pedirActivarUbicacion();
+            }
         }
     }
 }
