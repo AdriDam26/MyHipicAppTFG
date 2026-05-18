@@ -9,8 +9,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.myhipicapptfg.R;
 import com.example.myhipicapptfg.datos.local.entidades.Usuario;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,22 +43,21 @@ public class AlumnoClaseAdapter extends RecyclerView.Adapter<AlumnoClaseAdapter.
     public void onBindViewHolder(@NonNull AlumnoViewHolder holder, int position) {
         Usuario alumno = alumnos.get(position);
 
-        // Nombre y apellidos completos
-        String nombreCompleto = alumno.nombre + " " + alumno.apellido1;
-        holder.tvNombreCompleto.setText(nombreCompleto);
-
-        // Teléfono (si tu entidad Usuario tiene campo telefono)
+        holder.tvNombreCompleto.setText(alumno.nombre + " " + alumno.apellido1);
         holder.tvTelefono.setText(alumno.telefono != null ? alumno.telefono : "Sin teléfono");
 
-        // Avatar con iniciales
-        String iniciales = "";
-        if (alumno.nombre != null && !alumno.nombre.isEmpty()) {
-            iniciales += alumno.nombre.charAt(0);
+        ShapeableImageView ivFoto = holder.itemView.findViewById(R.id.iv_foto_alumno);
+
+        if (alumno.fotoPerfil != null && !alumno.fotoPerfil.isEmpty()) {
+            Glide.with(holder.itemView.getContext())
+                    .load(alumno.fotoPerfil)
+                    .placeholder(R.drawable.ic_person_placeholder)
+                    .error(R.drawable.ic_person_placeholder)
+                    .circleCrop()
+                    .into(ivFoto);
+        } else {
+            ivFoto.setImageResource(R.drawable.ic_person_placeholder);
         }
-        if (alumno.apellido1 != null && !alumno.apellido1.isEmpty()) {
-            iniciales += alumno.apellido1.charAt(0);
-        }
-        holder.tvIniciales.setText(iniciales.toUpperCase());
     }
 
     @Override
@@ -65,13 +66,12 @@ public class AlumnoClaseAdapter extends RecyclerView.Adapter<AlumnoClaseAdapter.
     }
 
     static class AlumnoViewHolder extends RecyclerView.ViewHolder {
-        TextView tvNombreCompleto, tvTelefono, tvIniciales;
+        TextView tvNombreCompleto, tvTelefono;
 
         AlumnoViewHolder(@NonNull View itemView) {
             super(itemView);
             tvNombreCompleto = itemView.findViewById(R.id.tv_nombre_completo);
             tvTelefono       = itemView.findViewById(R.id.tv_telefono);
-            tvIniciales      = itemView.findViewById(R.id.tv_iniciales);
         }
     }
 }

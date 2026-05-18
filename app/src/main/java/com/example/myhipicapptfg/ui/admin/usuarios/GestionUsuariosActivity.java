@@ -54,6 +54,15 @@ public class GestionUsuariosActivity extends AppCompatActivity {
 
                         .show();
             }
+
+            @Override
+            public void clickItem(Usuario u) {
+                android.widget.Toast.makeText(
+                        GestionUsuariosActivity.this,
+                        "ID Usuario: " + u.idUsuario,
+                        android.widget.Toast.LENGTH_SHORT
+                ).show();
+            }
         });
 
         rv.setLayoutManager(new LinearLayoutManager(this));

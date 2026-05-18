@@ -12,111 +12,151 @@
     app:strokeWidth="1dp"
     app:strokeColor="#EEF2F7">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:orientation="vertical">
 
-        <!-- Indicador lateral -->
-        <View
-            android:id="@+id/viewIndicatorPrueba"
-            android:layout_width="4dp"
-            android:layout_height="0dp"
-            android:background="?attr/colorPrimary"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
-
-        <!-- Nombre -->
-        <TextView
-            android:id="@+id/txtNombrePrueba"
-            android:layout_width="0dp"
+        <!-- CUERPO PRINCIPAL -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="#111827"
-            android:maxLines="1"
-            android:ellipsize="end"
-            app:layout_constraintStart_toEndOf="@id/viewIndicatorPrueba"
-            app:layout_constraintEnd_toStartOf="@id/layoutActionsPrueba"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Gran Premio Juvenil"/>
+            android:padding="16dp">
 
-        <!-- Categoría -->
-        <TextView
-            android:id="@+id/txtCategoriaPrueba"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textSize="14sp"
-            android:textColor="#6B7280"
-            app:layout_constraintStart_toStartOf="@id/txtNombrePrueba"
-            app:layout_constraintEnd_toStartOf="@id/layoutActionsPrueba"
-            app:layout_constraintTop_toBottomOf="@id/txtNombrePrueba"
-            tools:text="Categoría Alevín"/>
+            <!-- Indicador lateral -->
+            <View
+                android:id="@+id/viewIndicatorPrueba"
+                android:layout_width="4dp"
+                android:layout_height="0dp"
+                android:background="?attr/colorPrimary"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
 
-        <!-- Badge Nivel -->
-        <TextView
-            android:id="@+id/txtNivelPrueba"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="4dp"
-            android:textSize="11sp"
-            android:textStyle="bold"
-            android:textColor="#166534"
-            android:background="#DCFCE7"
-            app:layout_constraintStart_toStartOf="@id/txtNombrePrueba"
-            app:layout_constraintTop_toBottomOf="@id/txtCategoriaPrueba"
-            tools:text="NIVEL 2"/>
+            <!-- Nombre -->
+            <TextView
+                android:id="@+id/txtNombrePrueba"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#111827"
+                android:maxLines="1"
+                android:ellipsize="end"
+                app:layout_constraintStart_toEndOf="@id/viewIndicatorPrueba"
+                app:layout_constraintEnd_toStartOf="@id/layoutActionsPrueba"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Gran Premio Juvenil"/>
 
-        <!-- Badge Juez -->
-        <TextView
-            android:id="@+id/txtJuezPrueba"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="10dp"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="4dp"
-            android:textSize="11sp"
-            android:textStyle="bold"
-            android:textColor="#1D4ED8"
-            android:background="#DBEAFE"
-            android:maxLines="1"
-            android:ellipsize="end"
-            app:layout_constraintStart_toEndOf="@id/txtNivelPrueba"
-            app:layout_constraintTop_toBottomOf="@id/txtCategoriaPrueba"
-            tools:text="Juez: María López"/>
+            <!-- Categoría -->
+            <TextView
+                android:id="@+id/txtCategoriaPrueba"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textSize="14sp"
+                android:textColor="#6B7280"
+                app:layout_constraintStart_toStartOf="@id/txtNombrePrueba"
+                app:layout_constraintEnd_toStartOf="@id/layoutActionsPrueba"
+                app:layout_constraintTop_toBottomOf="@id/txtNombrePrueba"
+                tools:text="Categoría Alevín"/>
 
-        <!-- Acciones -->
+            <!-- Badge Nivel -->
+            <TextView
+                android:id="@+id/txtNivelPrueba"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="4dp"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textColor="#166534"
+                android:background="#DCFCE7"
+                app:layout_constraintStart_toStartOf="@id/txtNombrePrueba"
+                app:layout_constraintTop_toBottomOf="@id/txtCategoriaPrueba"
+                tools:text="NIVEL 2"/>
+
+            <!-- Badge Juez -->
+            <TextView
+                android:id="@+id/txtJuezPrueba"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="10dp"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="4dp"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textColor="#1D4ED8"
+                android:background="#DBEAFE"
+                android:maxLines="1"
+                android:ellipsize="end"
+                app:layout_constraintStart_toEndOf="@id/txtNivelPrueba"
+                app:layout_constraintTop_toBottomOf="@id/txtCategoriaPrueba"
+                tools:text="Juez: María López"/>
+
+            <!-- Acciones -->
+            <LinearLayout
+                android:id="@+id/layoutActionsPrueba"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageButton
+                    android:id="@+id/btnEditar"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@android:drawable/ic_menu_edit"
+                    app:tint="#64748B"/>
+
+                <ImageButton
+                    android:id="@+id/btnEliminar"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@android:drawable/ic_menu_delete"
+                    app:tint="#EF4444"/>
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- BANNER DE AVISO — se muestra solo si hay menos de 3 participantes -->
         <LinearLayout
-            android:id="@+id/layoutActionsPrueba"
-            android:layout_width="wrap_content"
+            android:id="@+id/layoutAvisoParticipantes"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="10dp"
+            android:background="#FFF7ED"
+            android:visibility="gone"
+            tools:visibility="visible">
 
-            <ImageButton
-                android:id="@+id/btnEditar"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@android:drawable/ic_menu_edit"
-                app:tint="#64748B"/>
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@android:drawable/ic_dialog_alert"
+                app:tint="#EA580C"
+                android:layout_marginEnd="8dp"/>
 
-            <ImageButton
-                android:id="@+id/btnEliminar"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@android:drawable/ic_menu_delete"
-                app:tint="#EF4444"/>
+            <TextView
+                android:id="@+id/tvAvisoParticipantes"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="12sp"
+                android:textColor="#C2410C"
+                android:textStyle="bold"
+                tools:text="Mínimo 3 participantes requeridos (1/3)"/>
+
         </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>

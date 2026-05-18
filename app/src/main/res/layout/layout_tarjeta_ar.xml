@@ -1,167 +1,186 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="250dp"
+    android:layout_width="260dp"
     android:layout_height="wrap_content"
     app:cardElevation="0dp"
-    app:cardBackgroundColor="@android:color/transparent">
+    app:cardCornerRadius="20dp"
+    app:cardBackgroundColor="#7012121E">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/card_background"
-        android:orientation="vertical"
-        android:padding="20dp">
+        android:orientation="vertical">
 
-        <RelativeLayout
+        <!-- BANDA SUPERIOR: FOTO -->
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="110dp">
 
-            <TextView
-                android:id="@+id/tvNombre"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="NOMBRE"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp"
-                android:fontFamily="sans-serif-black" />
+            <ImageView
+                android:id="@+id/ivFotoEquino"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_horse_placeholder"
+                android:background="#0D1117"/>
 
+            <!-- Degradado inferior -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="bottom"
+                android:background="@drawable/gradiente_foto_abajo"/>
+
+            <!-- Badge salud -->
             <TextView
                 android:id="@+id/tvSalud"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
+                android:layout_gravity="top|end"
+                android:layout_margin="10dp"
                 android:paddingHorizontal="10dp"
-                android:paddingVertical="2dp"
+                android:paddingVertical="3dp"
                 android:text="BUENO"
+                android:textSize="9sp"
+                android:textStyle="bold"
+                android:textColor="#81C784"/>
+
+        </FrameLayout>
+
+        <!-- LÍNEA DE ACENTO -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="@drawable/gradiente_acento"/>
+
+        <!-- CUERPO -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Nombre -->
+            <TextView
+                android:id="@+id/tvNombre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TRUENO"
                 android:textColor="#FFFFFF"
-                android:textSize="10sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
+                android:textSize="18sp"
+                android:textStyle="bold"/>
 
-        <TextView
-            android:id="@+id/tvRaza"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Raza del caballo"
-            android:textColor="#B3FFFFFF"
-            android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/tvPropietario"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Propietario: --"
-            android:textColor="#99FFFFFF"
-            android:textSize="11sp"
-            android:fontFamily="sans-serif-light"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="16dp"
-            android:fontStyle="italic"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:baselineAligned="false">
-
-            <LinearLayout
-                android:layout_width="0dp"
+            <!-- Raza -->
+            <TextView
+                android:id="@+id/tvRaza"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="EDAD" android:textColor="#80FFFFFF" android:textSize="9sp" android:textStyle="bold"/>
-                <TextView android:id="@+id/tvEdad" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="-- años" android:textColor="#FFFFFF" android:textSize="14sp" android:textStyle="bold"/>
+                android:text="Raza del caballo"
+                android:textColor="#73FFFFFF"
+                android:textSize="11sp"
+                android:layout_marginBottom="4dp"/>
+
+            <!-- Propietario -->
+            <TextView
+                android:id="@+id/tvPropietario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Propietario: --"
+                android:textColor="#8CFFFFFF"
+                android:textSize="11sp"
+                android:layout_marginBottom="14dp"/>
+
+            <!-- Separador -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#12FFFFFF"
+                android:layout_marginBottom="14dp"/>
+
+            <!-- Fila stats: EDAD / PESO / ALTURA -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp">
+
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="EDAD" android:textColor="#4DFFFFFF" android:textSize="8sp" android:textStyle="bold" android:letterSpacing="0.1"/>
+                    <TextView android:id="@+id/tvEdad" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="-- años" android:textColor="#FFFFFF" android:textSize="13sp" android:textStyle="bold"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="PESO" android:textColor="#4DFFFFFF" android:textSize="8sp" android:textStyle="bold" android:letterSpacing="0.1"/>
+                    <TextView android:id="@+id/tvPeso" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="-- kg" android:textColor="#FFFFFF" android:textSize="13sp" android:textStyle="bold"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ALTURA" android:textColor="#4DFFFFFF" android:textSize="8sp" android:textStyle="bold" android:letterSpacing="0.1"/>
+                    <TextView android:id="@+id/tvAltura" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="-- m" android:textColor="#FFFFFF" android:textSize="13sp" android:textStyle="bold"/>
+                </LinearLayout>
             </LinearLayout>
 
+            <!-- Fila stats: SEXO / TEMPERAMENTO -->
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="PESO" android:textColor="#80FFFFFF" android:textSize="9sp" android:textStyle="bold"/>
-                <TextView android:id="@+id/tvPeso" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="-- kg" android:textColor="#FFFFFF" android:textSize="14sp" android:textStyle="bold"/>
+                android:orientation="horizontal"
+                android:layout_marginBottom="14dp">
+
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="SEXO" android:textColor="#4DFFFFFF" android:textSize="8sp" android:textStyle="bold"/>
+                    <TextView android:id="@+id/tvSexo" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--" android:textColor="#FFFFFF" android:textSize="13sp" android:textStyle="bold"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="TEMPERAMENTO" android:textColor="#4DFFFFFF" android:textSize="8sp" android:textStyle="bold"/>
+                    <TextView android:id="@+id/tvTemperamento" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--" android:textColor="#FFFFFF" android:textSize="13sp" android:textStyle="bold"/>
+                </LinearLayout>
             </LinearLayout>
+
+            <!-- Chips -->
+            <com.google.android.material.chip.ChipGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp"
+                app:chipSpacingHorizontal="6dp">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipSalto"
+                    style="@style/Widget.Material3.Chip.Assist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="SALTO"
+                    android:textColor="#90CAF9"
+                    android:textSize="9sp"
+                    app:chipBackgroundColor="#1A2196F3"
+                    app:chipStrokeColor="#4D2196F3"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipDoma"
+                    style="@style/Widget.Material3.Chip.Assist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="DOMA"
+                    android:textColor="#E1BEE7"
+                    android:textSize="9sp"
+                    app:chipBackgroundColor="#1A9C27B0"
+                    app:chipStrokeColor="#4D9C27B0"/>
+            </com.google.android.material.chip.ChipGroup>
+
+            <!-- Microchip -->
+            <TextView
+                android:id="@+id/tvMicrochip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="SN: 000000000"
+                android:textColor="#33FFFFFF"
+                android:textSize="9sp"
+                android:fontFamily="monospace"/>
+
         </LinearLayout>
-
-        <View android:layout_width="match_parent" android:layout_height="12dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:baselineAligned="false">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="SEXO" android:textColor="#80FFFFFF" android:textSize="9sp" android:textStyle="bold"/>
-                <TextView android:id="@+id/tvSexo" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--" android:textColor="#FFFFFF" android:textSize="14sp" android:textStyle="bold"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ALTURA" android:textColor="#80FFFFFF" android:textSize="9sp" android:textStyle="bold"/>
-                <TextView android:id="@+id/tvAltura" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="-- m" android:textColor="#FFFFFF" android:textSize="14sp" android:textStyle="bold"/>
-            </LinearLayout>
-        </LinearLayout>
-
-        <View android:layout_width="match_parent" android:layout_height="12dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="TEMPERAMENTO" android:textColor="#80FFFFFF" android:textSize="9sp" android:textStyle="bold"/>
-            <TextView android:id="@+id/tvTemperamento" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--" android:textColor="#FFFFFF" android:textSize="14sp" android:textStyle="bold"/>
-        </LinearLayout>
-
-        <com.google.android.material.chip.ChipGroup
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:chipSpacingHorizontal="8dp">
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipSalto"
-                style="@style/Widget.Material3.Chip.Assist"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="SALTO"
-                android:textColor="#90CAF9"
-                app:chipBackgroundColor="#1A2196F3"
-                app:chipStrokeColor="#4D2196F3"
-                android:textSize="10sp" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipDoma"
-                style="@style/Widget.Material3.Chip.Assist"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="DOMA"
-                android:textColor="#E1BEE7"
-                app:chipBackgroundColor="#1A9C27B0"
-                app:chipStrokeColor="#4D9C27B0"
-                android:textSize="10sp" />
-        </com.google.android.material.chip.ChipGroup>
-
-        <TextView
-            android:id="@+id/tvMicrochip"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:text="ID: 000000000"
-            android:textColor="#4DFFFFFF"
-            android:textSize="9sp"
-            android:fontFamily="monospace" />
-
     </LinearLayout>
-</com.google.android.material.card.MaterialCardView>
+</androidx.cardview.widget.CardView>

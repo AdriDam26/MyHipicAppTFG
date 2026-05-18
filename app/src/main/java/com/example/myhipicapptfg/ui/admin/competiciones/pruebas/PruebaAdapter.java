@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myhipicapptfg.R;
 import com.example.myhipicapptfg.datos.local.entidades.Prueba;
+import com.example.myhipicapptfg.model.ConteoParticipantes;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +32,9 @@ public class PruebaAdapter extends RecyclerView.Adapter<PruebaAdapter.VH> {
     // Mapa idJuez → nombre completo para mostrar en el item
     private Map<Integer, String> nombresJueces = new HashMap<>();
 
+    private Map<Integer, Integer> conteosParticipantes = new HashMap<>();
+
+
     private final OnClick listener;
 
     public PruebaAdapter(OnClick listener) {
@@ -44,6 +49,16 @@ public class PruebaAdapter extends RecyclerView.Adapter<PruebaAdapter.VH> {
     // Se llama desde la Activity cuando llegan los jueces
     public void actualizarJueces(Map<Integer, String> mapa) {
         this.nombresJueces = mapa;
+        notifyDataSetChanged();
+    }
+
+    public void actualizarConteos(List<ConteoParticipantes> lista) {
+        conteosParticipantes.clear();
+        if (lista != null) {
+            for (ConteoParticipantes c : lista) {
+                conteosParticipantes.put(c.idPrueba, c.total);
+            }
+        }
         notifyDataSetChanged();
     }
 
@@ -72,6 +87,20 @@ public class PruebaAdapter extends RecyclerView.Adapter<PruebaAdapter.VH> {
             h.txtJuez.setVisibility(View.VISIBLE);
         }
 
+        LinearLayout layoutAviso = h.itemView.findViewById(R.id.layoutAvisoParticipantes);
+        TextView tvAviso         = h.itemView.findViewById(R.id.tvAvisoParticipantes);
+
+        int total = conteosParticipantes.getOrDefault(p.idPrueba, 0);
+
+        if (total < 3) {
+            layoutAviso.setVisibility(View.VISIBLE);
+            tvAviso.setText(total == 0
+                    ? "Sin participantes — se requieren mínimo 3"
+                    : "Mínimo 3 participantes requeridos (" + total + "/3)");
+        } else {
+            layoutAviso.setVisibility(View.GONE);
+        }
+
         h.btnEditar.setOnClickListener(v -> listener.editar(p));
         h.btnEliminar.setOnClickListener(v -> listener.eliminar(p));
         h.itemView.setOnClickListener(v -> listener.abrir(p));
@@ -94,4 +123,6 @@ public class PruebaAdapter extends RecyclerView.Adapter<PruebaAdapter.VH> {
             btnEliminar  = v.findViewById(R.id.btnEliminar);
         }
     }
+
+
 }

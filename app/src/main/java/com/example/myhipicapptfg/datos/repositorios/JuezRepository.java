@@ -1,4 +1,4 @@
-package com.example.myhipicapptfg.datos.repository;
+package com.example.myhipicapptfg.datos.repositorios;
 
 import android.app.Application;
 
@@ -176,10 +176,17 @@ public class JuezRepository {
                                   double porcentaje,
                                   double correccion,
                                   boolean eliminado) {
-        AppDatabase.databaseWriteExecutor.execute(() -> {
+
+        executorService.execute(() -> {
             notaMovimientoDao.insertOrUpdateAll(notas);
+
             participacionDao.updateResultado(
-                    idParticipacion, notaFinal, porcentaje, correccion, eliminado);
+                    idParticipacion,
+                    notaFinal,
+                    porcentaje,
+                    correccion,
+                    eliminado
+            );
         });
     }
 

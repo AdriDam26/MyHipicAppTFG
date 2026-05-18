@@ -1,4 +1,4 @@
-package com.example.myhipicapptfg.datos.repository;
+package com.example.myhipicapptfg.datos.repositorios;
 
 import android.app.Application;
 

@@ -1,4 +1,4 @@
-package com.example.myhipicapptfg.datos.repository;
+package com.example.myhipicapptfg.datos.repositorios;
 
 import android.app.Application;
 
@@ -18,35 +18,36 @@ import java.util.concurrent.ExecutorService;
 
 public class UsuarioRepository {
 
+    private final AppDatabase db;                                          // ✅ campo de instancia
     private final UsuarioDao usuarioDao;
     private final ExecutorService executorService;
     private final MutableLiveData<String> estadoOperacion = new MutableLiveData<>();
 
     public UsuarioRepository(@NonNull Application application) {
-
-        AppDatabase db = AppDatabase.getInstance(application);
+        db = AppDatabase.getInstance(application);                         // ✅ sin redeclarar como local
         usuarioDao = db.usuarioDao();
-
         executorService = AppDatabase.getDatabaseExecutor();
     }
+
+    // =====================================
+    // ESTADO
+    // =====================================
 
     public LiveData<String> getEstadoOperacion() {
         return estadoOperacion;
     }
 
     // =====================================
-    // 🔹 INSERTAR
+    // INSERTAR
     // =====================================
 
     public void insertarUsuario(Usuario usuario) {
         executorService.execute(() -> {
 
-            // Validaciones
             if (usuarioDao.buscarPorEmailSync(usuario.email) != null) {
                 estadoOperacion.postValue("ERROR_EMAIL_DUPLICADO");
                 return;
             }
-
             if (usuarioDao.buscarPorDNISync(usuario.dni) != null) {
                 estadoOperacion.postValue("ERROR_DNI_DUPLICADO");
                 return;
@@ -61,26 +62,27 @@ public class UsuarioRepository {
         });
     }
 
-    public void insertarUsuarioCompleto(
-            Usuario u,
-            Alumno a,
-            Profesor p,
-            Juez j
-    ) {
+    public void insertarUsuarioCompleto(Usuario u, Alumno a, Profesor p, Juez j) {
         executorService.execute(() -> {
 
             if (usuarioDao.buscarPorEmailSync(u.email) != null) {
                 estadoOperacion.postValue("ERROR_EMAIL_DUPLICADO");
                 return;
             }
-
             if (usuarioDao.buscarPorDNISync(u.dni) != null) {
                 estadoOperacion.postValue("ERROR_DNI_DUPLICADO");
                 return;
             }
 
             try {
-                usuarioDao.insertarUsuarioCompleto(u, a, p, j);
+                db.runInTransaction(() -> {                                // ✅ usa el campo db
+                    long id = usuarioDao.insertarUsuario(u);
+
+                    if (a != null) { a.idAlumno    = (int) id; usuarioDao.insertarAlumno(a); }
+                    if (p != null) { p.idProfesor  = (int) id; usuarioDao.insertarProfesor(p); }
+                    if (j != null) { j.idJuez      = (int) id; usuarioDao.insertarJuez(j); }
+                });
+
                 estadoOperacion.postValue("EXITO");
 
             } catch (Exception e) {
@@ -89,10 +91,8 @@ public class UsuarioRepository {
         });
     }
 
-
-
     // =====================================
-    // 🔹 UPDATE
+    // ACTUALIZAR
     // =====================================
 
     public void actualizarUsuario(Usuario usuario) {
@@ -106,8 +106,26 @@ public class UsuarioRepository {
         });
     }
 
+    public void actualizarUsuarioCompleto(Usuario u, Alumno a, Profesor p, Juez j) {
+        executorService.execute(() -> {
+            try {
+                db.runInTransaction(() -> {                                // ✅ usa el campo db
+                    usuarioDao.actualizarUsuario(u);
+                    if (a != null) usuarioDao.actualizarAlumno(a);
+                    if (p != null) usuarioDao.actualizarProfesor(p);
+                    if (j != null) usuarioDao.actualizarJuez(j);
+                });
+
+                estadoOperacion.postValue("EXITO");
+
+            } catch (Exception e) {
+                estadoOperacion.postValue("ERROR_BD");
+            }
+        });
+    }
+
     // =====================================
-    // 🔹 DELETE
+    // ELIMINAR
     // =====================================
 
     public void eliminarUsuario(Usuario usuario) {
@@ -122,7 +140,7 @@ public class UsuarioRepository {
     }
 
     // =====================================
-    // 🔹 LECTURA (LiveData)
+    // LECTURA (LiveData)
     // =====================================
 
     public LiveData<List<Usuario>> obtenerTodosUsuarios() {
@@ -155,38 +173,5 @@ public class UsuarioRepository {
 
     public LiveData<List<Usuario>> obtenerJuecesActivos() {
         return usuarioDao.obtenerJuecesActivos();
-    }
-
-    public void actualizarUsuarioCompleto(
-            Usuario u,
-            Alumno a,
-            Profesor p,
-            Juez j
-    ) {
-        executorService.execute(() -> {
-
-            try {
-                // 1. actualizar usuario base
-                usuarioDao.actualizarUsuario(u);
-
-                // 2. actualizar según tipo
-                if (a != null) {
-                    usuarioDao.actualizarAlumno(a);
-                }
-
-                if (p != null) {
-                    usuarioDao.actualizarProfesor(p);
-                }
-
-                if (j != null) {
-                    usuarioDao.actualizarJuez(j);
-                }
-
-                estadoOperacion.postValue("EXITO");
-
-            } catch (Exception e) {
-                estadoOperacion.postValue("ERROR_BD");
-            }
-        });
     }
 }

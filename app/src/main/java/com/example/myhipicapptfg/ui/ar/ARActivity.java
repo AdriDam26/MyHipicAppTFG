@@ -3,12 +3,14 @@ package com.example.myhipicapptfg.ui.ar;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
 import com.example.myhipicapptfg.R;
 import com.example.myhipicapptfg.datos.local.entidades.Equino;
 import com.google.android.material.chip.Chip;
@@ -122,6 +124,16 @@ public class ARActivity extends AppCompatActivity {
 
                     chipSalto.setVisibility(equino.sabeSalto ? View.VISIBLE : View.GONE);
                     chipDoma.setVisibility(equino.sabeDoma ? View.VISIBLE : View.GONE);
+
+                    ImageView ivFoto = v.findViewById(R.id.ivFotoEquino);
+                    if (equino.fotoPerfil != null && !equino.fotoPerfil.isEmpty()) {
+                        Glide.with(this)
+                                .load(equino.fotoPerfil)
+                                .centerCrop()
+                                .placeholder(R.drawable.ic_horse_placeholder)
+                                .error(R.drawable.ic_horse_placeholder)
+                                .into(ivFoto);
+                    }
 
                     // Nodo
                     nodoTarjeta = new Node();

@@ -10,7 +10,7 @@ import androidx.lifecycle.MediatorLiveData;
 import com.example.myhipicapptfg.datos.local.entidades.Movimiento;
 import com.example.myhipicapptfg.datos.local.entidades.NotaMovimiento;
 import com.example.myhipicapptfg.model.MovimientoConNota;
-import com.example.myhipicapptfg.datos.repository.JuezRepository;
+import com.example.myhipicapptfg.datos.repositorios.JuezRepository;
 
 import java.util.ArrayList;
 import java.util.HashMap;

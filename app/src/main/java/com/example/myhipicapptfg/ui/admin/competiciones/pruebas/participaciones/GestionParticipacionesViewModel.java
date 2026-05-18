@@ -10,8 +10,8 @@ import com.example.myhipicapptfg.datos.local.entidades.Equino;
 import com.example.myhipicapptfg.datos.local.entidades.Participacion;
 import com.example.myhipicapptfg.datos.local.entidades.Usuario;
 import com.example.myhipicapptfg.datos.repository.EquinoRepository;
-import com.example.myhipicapptfg.datos.repository.ParticipacionRepository;
-import com.example.myhipicapptfg.datos.repository.UsuarioRepository;
+import com.example.myhipicapptfg.datos.repositorios.ParticipacionRepository;
+import com.example.myhipicapptfg.datos.repositorios.UsuarioRepository;
 
 import java.util.List;
 
@@ -26,6 +26,7 @@ public class GestionParticipacionesViewModel extends AndroidViewModel {
         participacionRepo = new ParticipacionRepository(application);
         usuarioRepo       = new UsuarioRepository(application);
         equinoRepo        = new EquinoRepository(application);
+
     }
 
     // Alumnos que practican doma

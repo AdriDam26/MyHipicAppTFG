@@ -9,7 +9,7 @@ import androidx.lifecycle.LiveData;
 import com.example.myhipicapptfg.datos.local.entidades.Clase;
 import com.example.myhipicapptfg.datos.local.entidades.Usuario;
 import com.example.myhipicapptfg.datos.repository.ClaseRepository;
-import com.example.myhipicapptfg.datos.repository.ReservaClaseRepository;
+import com.example.myhipicapptfg.datos.repositorios.ReservaClaseRepository;
 
 import java.util.List;
 

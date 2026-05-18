@@ -6,7 +6,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.example.myhipicapptfg.datos.local.entidades.RutaPersonal;
-import com.example.myhipicapptfg.datos.repository.RutaPersonalRepository;
+import com.example.myhipicapptfg.datos.repositorios.RutaPersonalRepository;
 
 import java.util.List;
 

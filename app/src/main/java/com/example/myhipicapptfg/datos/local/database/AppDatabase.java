@@ -132,6 +132,5 @@ public abstract class AppDatabase extends RoomDatabase {
         });
     }
 
-    public static final ExecutorService databaseWriteExecutor =
-            Executors.newFixedThreadPool(4);
+
 }

@@ -28,6 +28,7 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.ViewHold
     public interface OnClick {
         void editar(Usuario u);
         void eliminar(Usuario u);
+        void clickItem(Usuario u);
     }
 
     public UsuarioAdapter(List<Usuario> lista, OnClick listener) {
@@ -128,6 +129,7 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.ViewHold
 
         h.editar.setOnClickListener(v -> listener.editar(u));
         h.eliminar.setOnClickListener(v -> listener.eliminar(u));
+        h.itemView.setOnClickListener(v -> listener.clickItem(u));
     }
 
     @Override

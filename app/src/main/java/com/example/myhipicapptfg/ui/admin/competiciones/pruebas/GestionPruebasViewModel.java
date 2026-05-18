@@ -9,8 +9,10 @@ import androidx.lifecycle.LiveData;
 import com.example.myhipicapptfg.datos.local.entidades.Movimiento;
 import com.example.myhipicapptfg.datos.local.entidades.Prueba;
 import com.example.myhipicapptfg.datos.local.entidades.Usuario;
-import com.example.myhipicapptfg.datos.repository.JuezRepository;
+import com.example.myhipicapptfg.datos.repositorios.ParticipacionRepository;
+import com.example.myhipicapptfg.datos.repositorios.JuezRepository;
 import com.example.myhipicapptfg.datos.repository.PruebaRepository;
+import com.example.myhipicapptfg.model.ConteoParticipantes;
 
 import java.util.List;
 
@@ -18,10 +20,14 @@ public class GestionPruebasViewModel extends AndroidViewModel {
 
     private final PruebaRepository repository;
     private final JuezRepository juezRepository;
+
+    private final ParticipacionRepository participacionRepo;
+
     public GestionPruebasViewModel(@NonNull Application application) {
         super(application);
         repository = new PruebaRepository(application);
         juezRepository = new JuezRepository(application);
+        participacionRepo  = new ParticipacionRepository(application);
     }
 
     public LiveData<String> getEstado() {
@@ -54,5 +60,9 @@ public class GestionPruebasViewModel extends AndroidViewModel {
 
     public void eliminarPrueba(Prueba p) {
         repository.eliminarPrueba(p);
+    }
+
+    public LiveData<List<ConteoParticipantes>> getConteosParticipantes() {
+        return participacionRepo.contarParticipantesPorTodasLasPruebas();
     }
 }

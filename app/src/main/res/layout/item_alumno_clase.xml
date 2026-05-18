@@ -16,29 +16,16 @@
         android:padding="16dp"
         android:gravity="center_vertical">
 
-        <FrameLayout
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_foto_alumno"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_marginEnd="14dp">
-
-            <View
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@android:drawable/btn_default"
-                android:backgroundTint="#E1BEE7" />
-
-            <TextView
-                android:id="@+id/tv_iniciales"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="AB"
-                android:textColor="#6A1B9A"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:fontFamily="serif" />
-
-        </FrameLayout>
+            android:layout_marginEnd="14dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_person_placeholder"
+            app:shapeAppearanceOverlay="@style/CircleImageView"
+            app:strokeColor="#E1BEE7"
+            app:strokeWidth="2dp" />
 
         <LinearLayout
             android:layout_width="match_parent"

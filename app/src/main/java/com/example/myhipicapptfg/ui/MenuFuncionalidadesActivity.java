@@ -54,7 +54,7 @@ public class MenuFuncionalidadesActivity extends AppCompatActivity {
 
         cardProfesor.setOnClickListener(v -> {
             Intent intent = new Intent(this, MisClasesProfesorActivity.class);
-            intent.putExtra(MisClasesProfesorActivity.EXTRA_ID_PROFESOR, 1);
+            intent.putExtra(MisClasesProfesorActivity.EXTRA_ID_PROFESOR, 7);
             startActivity(intent);
         });
 
@@ -62,7 +62,7 @@ public class MenuFuncionalidadesActivity extends AppCompatActivity {
         cardJuez.setOnClickListener(v -> {
             Intent intent = new Intent(this, PruebasJuezActivity.class);
             // Sustituye el valor hardcodeado por el ID real del juez logueado
-            intent.putExtra(PruebasJuezActivity.EXTRA_ID_JUEZ, 1);
+            intent.putExtra(PruebasJuezActivity.EXTRA_ID_JUEZ, 5);
             startActivity(intent);
         });
 

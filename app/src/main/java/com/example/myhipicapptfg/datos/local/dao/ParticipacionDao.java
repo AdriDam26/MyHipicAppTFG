@@ -10,6 +10,7 @@ import androidx.room.Update;
 
 import com.example.myhipicapptfg.datos.local.entidades.Participacion;
 
+import com.example.myhipicapptfg.model.ConteoParticipantes;
 import com.example.myhipicapptfg.model.ParticipacionDetalle;
 import com.example.myhipicapptfg.model.PruebaAlumno;
 import com.example.myhipicapptfg.model.RankingItem;
@@ -150,6 +151,11 @@ public interface ParticipacionDao {
                     "ORDER BY pa.Eliminado ASC, pa.Porcentaje DESC"
     )
     LiveData<List<RankingItem>> getRankingByPrueba(int idPrueba);
+
+
+
+    @Query("SELECT ID_Prueba, COUNT(*) AS total FROM Participacion GROUP BY ID_Prueba")
+    LiveData<List<ConteoParticipantes>> contarParticipantesPorTodasLasPruebas();
 
 
 }

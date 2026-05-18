@@ -93,6 +93,10 @@ public class GestionPruebasActivity extends AppCompatActivity {
             adapter.actualizarJueces(mapa);
         });
 
+        viewModel.getConteosParticipantes().observe(this, conteos -> {
+            adapter.actualizarConteos(conteos);
+        });
+
         fab.setOnClickListener(v -> {
             Intent i = new Intent(this, PruebaFormActivity.class);
             i.putExtra("ID_COMPETICION", idCompeticion);

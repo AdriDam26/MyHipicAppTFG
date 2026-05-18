@@ -12,7 +12,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.myhipicapptfg.datos.local.entidades.CoordenadaRuta;
 import com.example.myhipicapptfg.datos.local.entidades.RutaPersonal;
-import com.example.myhipicapptfg.datos.repository.RutaPersonalRepository;
+import com.example.myhipicapptfg.datos.repositorios.RutaPersonalRepository;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

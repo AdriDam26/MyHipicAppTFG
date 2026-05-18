@@ -1,4 +1,4 @@
-package com.example.myhipicapptfg.datos.repository;
+package com.example.myhipicapptfg.datos.repositorios;
 
 import android.app.Application;
 
@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.myhipicapptfg.datos.local.database.AppDatabase;
 import com.example.myhipicapptfg.datos.local.dao.ParticipacionDao;
 import com.example.myhipicapptfg.datos.local.entidades.Participacion;
+import com.example.myhipicapptfg.model.ConteoParticipantes;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -113,6 +114,10 @@ public class ParticipacionRepository {
     public LiveData<Integer> obtenerSiguienteOrden(int idPrueba) {
         return dao.obtenerSiguienteOrden(idPrueba);
     }
+    public LiveData<List<ConteoParticipantes>> contarParticipantesPorTodasLasPruebas() {
+        return dao.contarParticipantesPorTodasLasPruebas();
+    }
+
 
 
 

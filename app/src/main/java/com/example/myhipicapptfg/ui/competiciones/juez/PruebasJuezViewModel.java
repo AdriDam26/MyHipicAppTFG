@@ -8,7 +8,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.example.myhipicapptfg.model.PruebaConCompeticion;
-import com.example.myhipicapptfg.datos.repository.JuezRepository;
+import com.example.myhipicapptfg.datos.repositorios.JuezRepository;
 
 import java.util.List;
 

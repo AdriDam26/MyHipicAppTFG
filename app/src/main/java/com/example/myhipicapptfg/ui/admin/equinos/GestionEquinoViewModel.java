@@ -9,7 +9,8 @@ import androidx.lifecycle.LiveData;
 import com.example.myhipicapptfg.datos.local.entidades.Equino;
 import com.example.myhipicapptfg.datos.local.entidades.Usuario;
 import com.example.myhipicapptfg.datos.repository.EquinoRepository;
-import com.example.myhipicapptfg.datos.repository.UsuarioRepository;
+import com.example.myhipicapptfg.datos.repositorios
+        .UsuarioRepository;
 
 import java.util.List;
 
