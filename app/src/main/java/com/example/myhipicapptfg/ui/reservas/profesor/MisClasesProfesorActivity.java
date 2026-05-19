@@ -52,7 +52,6 @@ public class MisClasesProfesorActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(ProfesorClasesViewModel.class);
 
         viewModel.getClasesDelProfesor(idProfesor).observe(this, clases -> {
-            android.util.Log.d("Prueba", "Clases recibidas: " + (clases == null ? "null" : clases.size()));
             View tvVacio = findViewById(R.id.tv_sin_clases);
             if (clases == null || clases.isEmpty()) {
                 recyclerView.setVisibility(View.GONE);

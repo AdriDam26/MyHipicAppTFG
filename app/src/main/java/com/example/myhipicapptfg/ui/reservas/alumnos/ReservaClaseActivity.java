@@ -27,7 +27,9 @@ public class ReservaClaseActivity extends AppCompatActivity {
     private RecyclerView recyclerClases;
     private View layoutEmpty;
     private TextInputEditText etFecha;
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+
+    private final SimpleDateFormat dateFormat =
+            new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +48,14 @@ public class ReservaClaseActivity extends AppCompatActivity {
         setupRecyclerView();
         observarDatos();
 
-        android.util.Log.d("CADENA", "0. onCreate - idAlumno=" + idAlumno);
+        // 👇 IMPORTANTE: cargar alumno primero
         viewModel.cargarDatosAlumno(idAlumno);
-        android.util.Log.d("CADENA", "0b. cargarDatosAlumno llamado con " + idAlumno);
+
+        // FECHA POR DEFECTO (HOY)
+        long hoy = MaterialDatePicker.todayInUtcMilliseconds();
+
+        etFecha.setText(dateFormat.format(hoy)); // 👈 ESTO ES LO QUE TE FALTABA
+        viewModel.setFechaFiltro(hoy);
     }
 
     private void initViews() {
@@ -58,13 +65,12 @@ public class ReservaClaseActivity extends AppCompatActivity {
 
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
+        if (getSupportActionBar() != null)
             getSupportActionBar().setTitle("Reservar Clase");
-        }
+
         toolbar.setNavigationOnClickListener(v -> finish());
 
         etFecha.setOnClickListener(v -> abrirCalendario());
-        etFecha.setText(dateFormat.format(System.currentTimeMillis()));
     }
 
     private void initViewModel() {
@@ -72,9 +78,9 @@ public class ReservaClaseActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView() {
-        adapter = new ReservaClaseAdapter(false, clase -> {
-            viewModel.reservarClase(idAlumno, clase.idClase);
-        });
+        adapter = new ReservaClaseAdapter(false, clase ->
+                viewModel.reservarClase(idAlumno, clase.idClase)
+        );
 
         recyclerClases.setLayoutManager(new LinearLayoutManager(this));
         recyclerClases.setAdapter(adapter);
@@ -82,34 +88,15 @@ public class ReservaClaseActivity extends AppCompatActivity {
 
     private void observarDatos() {
 
-        android.util.Log.d("CADENA", "1. observarDatos() llamado");
-
-        viewModel.getPerfilAlumno().observe(this, alumno -> {
-            android.util.Log.d("CADENA", "2. perfilAlumno emitido: " +
-                    (alumno == null ? "NULL" : "ID=" + alumno.idAlumno +
-                            " doma=" + alumno.practicaDoma + " salto=" + alumno.practicaSalto));
-        });
-
-        viewModel.getClasesRecomendadas().observe(this, clases -> {
-            android.util.Log.d("CADENA", "3. clasesRecomendadas emitido: " +
-                    (clases == null ? "null" : clases.size() + " clases"));
+        viewModel.getClasesUI().observe(this, clases -> {
             if (clases != null) {
                 adapter.submitList(clases);
                 actualizarInterfazVacia(clases.isEmpty());
             }
         });
 
-        viewModel.getReservas().observe(this, reservas -> {
-            android.util.Log.d("CADENA", "4. reservas emitido: " +
-                    (reservas == null ? "null" : reservas.size()));
-            if (reservas != null) {
-                adapter.setDatosReferencia(null, null, reservas);
-            }
-        });
-
         viewModel.getEstadoOperacion().observe(this, estado -> {
             if (estado == null) return;
-            android.util.Log.d("CADENA", "5. estadoOperacion: " + estado);
             mostrarMensajeEstado(estado);
             viewModel.resetearEstado();
         });
@@ -135,6 +122,7 @@ public class ReservaClaseActivity extends AppCompatActivity {
                 mensaje = "Error al procesar la reserva";
                 break;
         }
+
         Snackbar.make(recyclerClases, mensaje, duracion).show();
     }
 
@@ -155,11 +143,5 @@ public class ReservaClaseActivity extends AppCompatActivity {
         });
 
         datePicker.show(getSupportFragmentManager(), "DATE_PICKER");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        viewModel.forzarActualizacion();
     }
 }

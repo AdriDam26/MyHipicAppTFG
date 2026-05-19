@@ -71,47 +71,28 @@ public class MisReservasActivity extends AppCompatActivity {
     }
 
     private void observarDatos() {
-        // Observar las clases que el alumno ya tiene reservadas
-        viewModel.getClasesReservadas().observe(this, clases -> {
+        // ✅ Un solo observer en lugar de los 3 anidados
+        viewModel.getClasesReservadasUI().observe(this, clases -> {
             if (clases != null) {
                 adapter.submitList(clases);
-
-                // Control de visibilidad si no hay reservas
                 boolean estaVacio = clases.isEmpty();
                 layoutEmpty.setVisibility(estaVacio ? View.VISIBLE : View.GONE);
                 recyclerMisReservas.setVisibility(estaVacio ? View.GONE : View.VISIBLE);
             }
         });
 
-        viewModel.getProfesores().observe(this, usuarios -> {
-            viewModel.getPistas().observe(this, pistas -> {
-                viewModel.getReservas().observe(this, reservas -> {
-
-                    // Pasamos las listas al adapter para que funcionen sus métodos de búsqueda
-                    if (usuarios != null && pistas != null && reservas != null) {
-                        adapter.setDatosReferencia(usuarios, pistas, reservas);
-                    }
-
-                });
-            });
-        });
-
-        // Observar el estado de las operaciones (en este caso, cancelación)
         viewModel.getEstadoOperacion().observe(this, estado -> {
             if (estado == null) return;
-
             if ("CANCELADA".equals(estado)) {
-                Snackbar.make(recyclerMisReservas, "Reserva cancelada correctamente", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(recyclerMisReservas, "Reserva cancelada correctamente",
+                        Snackbar.LENGTH_SHORT).show();
             } else if (estado.startsWith("ERROR")) {
-                Snackbar.make(recyclerMisReservas, "Error al procesar la cancelación", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(recyclerMisReservas, "Error al procesar la cancelación",
+                        Snackbar.LENGTH_LONG).show();
             }
+            viewModel.resetearEstado(); // ✅ Añadido para evitar que el Snackbar se repita al rotar
         });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // Cuando el usuario vuelve a esta pantalla (p.ej. tras reservar una nueva), forzamos recarga
-        viewModel.forzarActualizacion();
-    }
+
 }

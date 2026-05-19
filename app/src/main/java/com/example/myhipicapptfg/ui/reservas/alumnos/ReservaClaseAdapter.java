@@ -11,29 +11,25 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.myhipicapptfg.R;
-import com.example.myhipicapptfg.datos.local.entidades.Clase;
-import com.example.myhipicapptfg.datos.local.entidades.Usuario;
-import com.example.myhipicapptfg.datos.local.entidades.Pista;
-import com.example.myhipicapptfg.datos.local.entidades.ReservaClase;
+import com.example.myhipicapptfg.model.ClaseUIModel;
 import com.google.android.material.button.MaterialButton;
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-public class ReservaClaseAdapter extends ListAdapter<Clase, ReservaClaseAdapter.ViewHolder> {
+
+public class ReservaClaseAdapter
+        extends ListAdapter<ClaseUIModel, ReservaClaseAdapter.ViewHolder> {
 
     private final OnClaseClickListener listener;
     private final boolean esModoCancelacion;
-    private final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-
-    private List<Usuario> listaUsuarios;
-    private List<Pista> listaPistas;
-    private List<ReservaClase> todasLasReservas;
+    private final SimpleDateFormat timeFormat =
+            new SimpleDateFormat("HH:mm", Locale.getDefault());
+    private final SimpleDateFormat dateFormat =
+            new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
     public interface OnClaseClickListener {
-        void onAccionClick(Clase clase);
+        void onAccionClick(ClaseUIModel clase);
     }
 
     public ReservaClaseAdapter(boolean esModoCancelacion, OnClaseClickListener listener) {
@@ -42,138 +38,95 @@ public class ReservaClaseAdapter extends ListAdapter<Clase, ReservaClaseAdapter.
         this.listener = listener;
     }
 
-    public void setDatosReferencia(List<Usuario> usuarios, List<Pista> pistas, List<ReservaClase> reservas) {
-        this.listaUsuarios = usuarios;
-        this.listaPistas = pistas;
-        this.todasLasReservas = reservas;
-        // Importante: notifyDataSetChanged es necesario aquí porque cambian datos externos a la lista de Clases
-        notifyDataSetChanged();
-    }
+    // ── setDatosReferencia() ya no existe ─────────────────────────────────────
 
-    @NonNull
-    @Override
+    @NonNull @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
+        View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_clase_reserva, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Clase clase = getItem(position);
+        ClaseUIModel m = getItem(position);
 
-        // 1. Datos básicos
-        holder.tvDisciplina.setText(clase.disciplina != null ? clase.disciplina : "Clase");
-        holder.tvDia.setText(clase.fecha != 0 ? dateFormat.format(clase.fecha) : "Sin fecha");
+        holder.tvDisciplina.setText(m.disciplina != null ? m.disciplina : "Clase");
+        holder.tvNivel.setText(
+                m.nivel != null ? "Nivel: " + m.nivel : "Nivel no especificado"
+        );
+        holder.tvDia.setText(m.fecha != 0 ? dateFormat.format(m.fecha) : "Sin fecha");
+        holder.tvHora.setText(timeFormat.format(m.horaInicio)
+                + " - " + timeFormat.format(m.horaFin));
 
-        try {
-            String horaTexto = timeFormat.format(clase.horaInicio) + " - " + timeFormat.format(clase.horaFin);
-            holder.tvHora.setText(horaTexto);
-        } catch (Exception e) {
-            holder.tvHora.setText("--:--");
-        }
-
-        // 2. Lógica de Cupo (Cálculo dinámico)
-        int inscritos = obtenerNumeroInscritos(clase.idClase);
-        int maximo = 10;
-
-        // 3. Configuración según el modo (RESERVA vs CANCELACIÓN)
         if (esModoCancelacion) {
-            // --- MODO MIS RESERVAS ---
-            // Mostramos nombres, ocultamos cupo
             holder.tvProfesor.setVisibility(View.VISIBLE);
             holder.tvPista.setVisibility(View.VISIBLE);
             holder.tvCupo.setVisibility(View.GONE);
 
-            holder.tvProfesor.setText("Prof: " + obtenerNombreProfesor(clase.idProfesor));
-            holder.tvPista.setText("Pista: " + obtenerNombrePista(clase.idPista));
+            // ✅ Ya viene resuelto, sin bucles
+            holder.tvProfesor.setText("Prof: " + (m.nombreProfesor != null
+                    ? m.nombreProfesor : "No asignado"));
+            holder.tvPista.setText("Pista: " + (m.nombrePista != null
+                    ? m.nombrePista : "No asignada"));
 
             holder.btnAccion.setText("Cancelar");
-            holder.btnAccion.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#E57373")));
+            holder.btnAccion.setBackgroundTintList(
+                    ColorStateList.valueOf(Color.parseColor("#E57373")));
             holder.btnAccion.setEnabled(true);
         } else {
-            // --- MODO RESERVAR ---
-            // Ocultamos nombres (como solicitaste), mostramos cupo
             holder.tvProfesor.setVisibility(View.GONE);
             holder.tvPista.setVisibility(View.GONE);
             holder.tvCupo.setVisibility(View.VISIBLE);
 
             holder.btnAccion.setText("Reservar");
-            holder.tvCupo.setText("Inscritos: " + inscritos + "/" + maximo);
 
-            if (inscritos >= maximo) {
+            // ✅ inscritos viene del COUNT() del JOIN
+            if (m.inscritos >= ClaseUIModel.MAXIMO) {
                 holder.tvCupo.setTextColor(Color.RED);
-                holder.tvCupo.setText("¡LLENO! " + inscritos + "/" + maximo);
+                holder.tvCupo.setText("¡LLENO! " + m.inscritos + "/" + ClaseUIModel.MAXIMO);
                 holder.btnAccion.setEnabled(false);
-                holder.btnAccion.setBackgroundTintList(ColorStateList.valueOf(Color.LTGRAY));
+                holder.btnAccion.setBackgroundTintList(
+                        ColorStateList.valueOf(Color.LTGRAY));
             } else {
                 holder.tvCupo.setTextColor(Color.parseColor("#666666"));
+                holder.tvCupo.setText("Inscritos: " + m.inscritos + "/" + ClaseUIModel.MAXIMO);
                 holder.btnAccion.setEnabled(true);
-                holder.btnAccion.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#4CAF50")));
+                holder.btnAccion.setBackgroundTintList(
+                        ColorStateList.valueOf(Color.parseColor("#4CAF50")));
             }
         }
 
         holder.btnAccion.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onAccionClick(clase);
-            }
+            if (listener != null) listener.onAccionClick(m);
         });
     }
 
-    private String obtenerNombreProfesor(int idProfesor) {
-        if (listaUsuarios == null) return "Cargando...";
-        for (Usuario u : listaUsuarios) {
-            if (u.idUsuario == idProfesor) {
-                return u.nombre != null ? u.nombre : "Sin nombre";
-            }
-        }
-        return "No asignado";
-    }
+    private static final DiffUtil.ItemCallback<ClaseUIModel> DIFF_CALLBACK =
+            new DiffUtil.ItemCallback<>() {
+                @Override
+                public boolean areItemsTheSame(@NonNull ClaseUIModel o, @NonNull ClaseUIModel n) {
+                    return o.idClase == n.idClase;
+                }
+                @Override
+                public boolean areContentsTheSame(@NonNull ClaseUIModel o, @NonNull ClaseUIModel n) {
+                    return o.fecha == n.fecha && o.horaInicio == n.horaInicio
+                            && o.horaFin == n.horaFin && o.inscritos == n.inscritos
+                            && Objects.equals(o.disciplina, n.disciplina)
+                            && Objects.equals(o.nombreProfesor, n.nombreProfesor)
+                            && Objects.equals(o.nombrePista, n.nombrePista);
+                }
+            };
 
-    private String obtenerNombrePista(int idPista) {
-        if (listaPistas == null) return "Cargando...";
-        for (Pista p : listaPistas) {
-            if (p.idPista == idPista) return p.nombre;
-        }
-        return "No asignada";
-    }
-
-    private int obtenerNumeroInscritos(int idClase) {
-        if (todasLasReservas == null) return 0;
-        int contador = 0;
-        for (ReservaClase r : todasLasReservas) {
-            if (r.idClase == idClase) {
-                contador++;
-            }
-        }
-        return contador;
-    }
-
-    private static final DiffUtil.ItemCallback<Clase> DIFF_CALLBACK = new DiffUtil.ItemCallback<Clase>() {
-        @Override
-        public boolean areItemsTheSame(@NonNull Clase oldItem, @NonNull Clase newItem) {
-            return oldItem.idClase == newItem.idClase;
-        }
-
-        @Override
-        public boolean areContentsTheSame(@NonNull Clase oldItem, @NonNull Clase newItem) {
-            // Incluimos IDs de profesor y pista para que el DiffUtil detecte cambios si se reasignan
-            return oldItem.fecha == newItem.fecha &&
-                    oldItem.horaInicio == newItem.horaInicio &&
-                    oldItem.horaFin == newItem.horaFin &&
-                    oldItem.idProfesor == newItem.idProfesor &&
-                    oldItem.idPista == newItem.idPista &&
-                    Objects.equals(oldItem.disciplina, newItem.disciplina);
-        }
-    };
-
+    // ViewHolder sin cambios
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvDisciplina, tvDia, tvProfesor, tvPista, tvHora, tvCupo;
+        TextView tvDisciplina, tvDia, tvProfesor, tvPista, tvHora, tvCupo, tvNivel;;
         MaterialButton btnAccion;
 
         public ViewHolder(@NonNull View v) {
             super(v);
             tvDisciplina = v.findViewById(R.id.tvDisciplina);
+            tvNivel = v.findViewById(R.id.tvNivel);
             tvDia = v.findViewById(R.id.tvDia);
             tvProfesor = v.findViewById(R.id.tvProfesor);
             tvPista = v.findViewById(R.id.tvPista);

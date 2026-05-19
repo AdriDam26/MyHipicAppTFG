@@ -11,6 +11,7 @@ import androidx.room.Update;
 import com.example.myhipicapptfg.datos.local.entidades.Clase;
 import com.example.myhipicapptfg.datos.local.entidades.ReservaClase;
 import com.example.myhipicapptfg.datos.local.entidades.Usuario;
+import com.example.myhipicapptfg.model.ClaseUIModel;
 
 import java.util.List;
 
@@ -85,6 +86,49 @@ public interface ReservaClaseDao {
     // Para contar los inscritos en tiempo real
     @Query("SELECT * FROM ReservaClase")
     LiveData<List<ReservaClase>> obtenerTodasLasReservas();
+
+
+    @Query("SELECT " +
+            "c.ID_Clase AS idClase, c.Disciplina AS disciplina, c.Nivel AS nivel, " +
+            "c.Fecha AS fecha, c.Hora_Inicio AS horaInicio, c.Hora_Fin AS horaFin, " +
+            "u.Nombre AS nombreProfesor, p.Nombre AS nombrePista, " +
+            "COUNT(r.ID_Alumno) AS inscritos " +
+            "FROM Clase c " +
+            "LEFT JOIN Usuario u ON u.ID_Usuario = c.ID_Profesor " +
+            "LEFT JOIN Pista   p ON p.ID_Pista   = c.ID_Pista " +
+            "LEFT JOIN ReservaClase r ON r.ID_Clase = c.ID_Clase " +
+            "WHERE c.Fecha BETWEEN :inicioDia AND :finDia " +
+            "AND ( " +
+            "  (c.Disciplina = 'Doma'  AND c.Nivel = :nivelDoma  AND :practicaDoma  = 1) OR " +
+            "  (c.Disciplina = 'Salto' AND c.Nivel = :nivelSalto AND :practicaSalto = 1) " +
+            ") " +
+            "GROUP BY c.ID_Clase " +
+            "ORDER BY c.Hora_Inicio ASC")
+    LiveData<List<ClaseUIModel>> obtenerClasesUI(
+            long inicioDia, long finDia,
+            String nivelDoma, int practicaDoma,
+            String nivelSalto, int practicaSalto
+    );
+
+    // Variante para "Mis Reservas" (filtrado por alumno)
+    @Query("SELECT " +
+            "c.ID_Clase        AS idClase, " +
+            "c.Disciplina      AS disciplina, " +
+            "c.Nivel           AS nivel, " +
+            "c.Fecha           AS fecha, " +
+            "c.Hora_Inicio     AS horaInicio, " +
+            "c.Hora_Fin        AS horaFin, " +
+            "u.Nombre          AS nombreProfesor, " +
+            "p.Nombre          AS nombrePista, " +
+            "COUNT(r2.ID_Alumno) AS inscritos " +
+            "FROM Clase c " +
+            "INNER JOIN ReservaClase r ON r.ID_Clase = c.ID_Clase AND r.ID_Alumno = :idAlumno " +
+            "LEFT JOIN Usuario u  ON u.ID_Usuario = c.ID_Profesor " +
+            "LEFT JOIN Pista   p  ON p.ID_Pista   = c.ID_Pista " +
+            "LEFT JOIN ReservaClase r2 ON r2.ID_Clase = c.ID_Clase " +
+            "GROUP BY c.ID_Clase " +
+            "ORDER BY c.Fecha ASC")
+    LiveData<List<ClaseUIModel>> obtenerClasesReservadasUI(int idAlumno);
 
 
 

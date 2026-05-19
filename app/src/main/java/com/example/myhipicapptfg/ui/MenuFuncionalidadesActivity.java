@@ -42,13 +42,13 @@ public class MenuFuncionalidadesActivity extends AppCompatActivity {
 
         cardReservar.setOnClickListener(v -> {
             Intent intent = new Intent(this, ReservaClaseActivity.class);
-            intent.putExtra("ID_ALUMNO", 3);
+            intent.putExtra("ID_ALUMNO", 2);
             startActivity(intent);
         });
 
         cardMisReservas.setOnClickListener(v -> {
             Intent intent = new Intent(this, MisReservasActivity.class);
-            intent.putExtra("ID_ALUMNO", 3);
+            intent.putExtra("ID_ALUMNO", 2);
             startActivity(intent);
         });
 

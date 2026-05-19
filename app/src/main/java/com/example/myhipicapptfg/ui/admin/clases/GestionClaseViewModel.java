@@ -10,7 +10,7 @@ import com.example.myhipicapptfg.datos.local.entidades.Clase;
 import com.example.myhipicapptfg.datos.local.entidades.Pista;
 import com.example.myhipicapptfg.datos.local.entidades.Profesor;
 import com.example.myhipicapptfg.datos.local.entidades.Usuario;
-import com.example.myhipicapptfg.datos.repository.ClaseRepository;
+import com.example.myhipicapptfg.datos.repositorios.ClaseRepository;
 
 import java.util.List;
 

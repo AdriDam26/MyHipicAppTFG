@@ -37,6 +37,14 @@
                 android:textColor="?attr/colorOnSurface" />
 
             <TextView
+                android:id="@+id/tvNivel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:layout_marginTop="2dp" />
+
+            <TextView
                 android:id="@+id/tvProfesor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
