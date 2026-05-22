@@ -1,96 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F7F9FC"
-    android:fillViewport="true">
+    android:background="#F5F2EE">
 
-    <LinearLayout
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarParticipacionForm"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:layout_height="?attr/actionBarSize"
+        android:background="#5D3A1A"
+        android:elevation="4dp"
+        app:navigationIcon="@android:drawable/ic_menu_revert"
+        app:navigationIconTint="#FFFFFF"
+        app:title="Inscribir Binomio"
+        app:titleTextColor="#FFFFFF" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Inscribir Binomio"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="#111827"
-            android:layout_marginBottom="24dp"/>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:fillViewport="true">
 
-        <!-- ALUMNO -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layAlumnoParticipacion"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:hint="Alumno">
-            <AutoCompleteTextView
-                android:id="@+id/spinnerAlumno"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="none"
-                android:padding="16dp"/>
-        </com.google.android.material.textfield.TextInputLayout>
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp">
 
-        <!-- EQUINO -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layEquinoParticipacion"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:hint="Caballo">
-            <AutoCompleteTextView
-                android:id="@+id/spinnerEquino"
+                <View
+                    android:layout_width="4dp"
+                    android:layout_height="24dp"
+                    android:background="#8B1A2E"
+                    android:layout_marginEnd="10dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Detalles de Inscripción"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.12"
+                    android:textColor="#1E3D1E"
+                    android:textAllCaps="true"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="1dp"
+                    android:background="#C8860A"
+                    android:alpha="0.4"
+                    android:layout_marginStart="10dp"/>
+
+            </LinearLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layAlumnoParticipacion"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="none"
-                android:padding="16dp"/>
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_marginBottom="12dp"
+                android:hint="Alumno"
+                app:boxStrokeColor="#1E3D1E"
+                app:hintTextColor="#1E3D1E">
 
-        <!-- ORDEN (solo lectura) -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layOrdenParticipacion"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Orden de Salida (Dorsal)"
-            android:layout_marginBottom="32dp">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etOrdenSalida"
+                <AutoCompleteTextView
+                    android:id="@+id/spinnerAlumno"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:focusable="false"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layEquinoParticipacion"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:enabled="false"
-                android:focusable="false"
-                android:clickable="false"
-                android:textColor="#1F2937"/>
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_marginBottom="12dp"
+                android:hint="Caballo"
+                app:boxStrokeColor="#1E3D1E"
+                app:hintTextColor="#1E3D1E">
 
-        <!-- GUARDAR -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnGuardarParticipacion"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:text="GUARDAR INSCRIPCIÓN"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:cornerRadius="12dp"/>
+                <AutoCompleteTextView
+                    android:id="@+id/spinnerEquino"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:focusable="false"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- CANCELAR -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnVolverParticipacion"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="CANCELAR"
-            android:textColor="#6B7280"/>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layOrdenParticipacion"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:hint="Orden de Salida (Dorsal)"
+                app:boxStrokeColor="#A6B4A6"
+                app:hintTextColor="#5D3A1A">
 
-    </LinearLayout>
-</ScrollView>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etOrdenSalida"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:focusable="false"
+                    android:clickable="false"
+                    android:textColor="#5D3A1A"
+                    android:fontFamily="sans-serif-medium" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGuardarParticipacion"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="16dp"
+                android:text="GUARDAR INSCRIPCIÓN"
+                android:fontFamily="sans-serif-medium"
+                android:textStyle="bold"
+                android:letterSpacing="0.05"
+                android:textColor="#FFFFFF"
+                app:backgroundTint="#1E3D1E"
+                app:cornerRadius="12dp"/>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

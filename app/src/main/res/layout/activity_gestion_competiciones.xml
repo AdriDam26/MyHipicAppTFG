@@ -4,15 +4,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F3F4F6">
+    android:background="#F4F6F4">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#5D3A1A"
+        app:elevation="4dp">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbarCompeticiones"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:title="Competiciones"
+            app:titleTextColor="#FFFFFF"
+            app:navigationIcon="@android:drawable/ic_menu_revert"
+            app:navigationIconTint="#FFFFFF"
+            app:layout_scrollFlags="scroll|enterAlways"/>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerCompeticiones"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="12dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="88dp"
         android:clipToPadding="false"
-        android:paddingBottom="80dp"/>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddCompeticion"
@@ -20,10 +40,12 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="24dp"
-        android:src="@android:drawable/ic_input_add"
         android:contentDescription="Añadir competición"
-        app:backgroundTint="?attr/colorPrimary"
-        app:tint="@android:color/white"
-        app:elevation="8dp"/>
+        android:src="@android:drawable/ic_input_add"
+        app:backgroundTint="#1E3D1E"
+        app:tint="#FFFFFF"
+        app:elevation="4dp"
+        app:maxImageSize="28dp"
+        app:fabCustomSize="56dp"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

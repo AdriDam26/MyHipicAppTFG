@@ -80,7 +80,7 @@ public class EquinoFormActivity extends AppCompatActivity {
         }
 
         findViewById(R.id.btnGuardarEquino).setOnClickListener(v -> guardarEquino());
-        findViewById(R.id.btnVolverAltaEquino).setOnClickListener(v -> finish());
+
     }
 
     private void cargarEquino(int id) {

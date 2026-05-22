@@ -1,44 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F3E5F5">
+    android:background="#FAF8F5">
 
+    <!-- TOOLBAR -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="#6A1B9A"
-        android:titleTextColor="@android:color/white"
-        android:subtitleTextColor="#E1BEE7"/>
+        android:background="#5D3A1A"
+        android:elevation="0dp"
+        app:titleTextColor="@android:color/white"
+        app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        app:subtitleTextColor="#EAD9C9"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        app:navigationIconTint="@android:color/white" />
 
-    <TextView
-        android:id="@+id/tvResumen"
+    <!-- BANNER RESUMEN: con icono + puntuación destacada -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#6A1B9A"
-        android:textColor="@android:color/white"
-        android:textStyle="bold"
-        android:textSize="15sp"
-        android:gravity="center"
-        android:padding="10dp"/>
+        android:background="#8B1A2E"
+        android:orientation="horizontal"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="14dp"
+        android:gravity="center_vertical">
 
-    <TextView
-        android:id="@+id/tvCorreccion"
+        <!-- Icono de trofeo -->
+        <LinearLayout
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@drawable/bg_circle_white_12"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_trophy"
+                app:tint="@android:color/white" />
+        </LinearLayout>
+
+        <Space android:layout_width="14dp" android:layout_height="wrap_content" />
+
+        <!-- Texto de resumen -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Puntuación total"
+                android:textColor="#BFB0B8"
+                android:textSize="11sp"
+                android:letterSpacing="0.05" />
+            <TextView
+                android:id="@+id/tvResumen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:textSize="22sp"
+                android:fontFamily="sans-serif-medium" />
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+    <!-- BANNER PENALIZACIONES: con icono de alerta -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#4A148C"
-        android:textColor="@android:color/white"
-        android:textSize="13sp"
-        android:gravity="center"
-        android:padding="6dp"/>
+        android:background="#8A7B6E"
+        android:orientation="horizontal"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="10dp"
+        android:gravity="center_vertical">
 
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:src="@drawable/ic_alert_triangle"
+            app:tint="#CCBDB5"
+            android:layout_marginEnd="10dp" />
+
+        <TextView
+            android:id="@+id/tvCorreccion"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@android:color/white"
+            android:textSize="13sp"
+            android:fontFamily="sans-serif" />
+    </LinearLayout>
+
+    <!-- LISTADO DE EJERCICIOS -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvHoja"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:paddingVertical="8dp"
-        android:clipToPadding="false"/>
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
+        android:clipToPadding="false" />
+
 </LinearLayout>

@@ -1,4 +1,4 @@
-package com.example.myhipicapptfg.ui.ar;
+package com.example.myhipicapptfg.ui.ar.ar;
 
 import android.app.Application;
 import androidx.annotation.NonNull;

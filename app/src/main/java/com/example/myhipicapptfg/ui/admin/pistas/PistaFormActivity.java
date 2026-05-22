@@ -42,8 +42,7 @@ public class PistaFormActivity extends AppCompatActivity {
         findViewById(R.id.btnGuardarPista)
                 .setOnClickListener(v -> guardar());
 
-        findViewById(R.id.btnVolverPista)
-                .setOnClickListener(v -> finish());
+
     }
 
     private void initViews() {

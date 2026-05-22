@@ -2,12 +2,15 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
 
+    <!-- Borde perfilado en Bronce Herraje, ajustado a 2dp para estilo M3 limpio -->
     <stroke
-        android:width="3dp"
-        android:color="#6750A4"/>
+        android:width="2dp"
+        android:color="#7D5A2E"/>
 
+    <!-- Esquinas redondeadas de 16dp para calcar la línea de tus tarjetas y botones -->
     <corners android:radius="16dp"/>
 
+    <!-- Fondo transparente para que se vea la cámara por dentro -->
     <solid android:color="@android:color/transparent"/>
 
 </shape>

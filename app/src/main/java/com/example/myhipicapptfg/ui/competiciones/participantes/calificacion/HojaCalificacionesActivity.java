@@ -1,4 +1,4 @@
-package com.example.myhipicapptfg.ui.competiciones.participantes;
+package com.example.myhipicapptfg.ui.competiciones.participantes.calificacion;
 
 import android.os.Bundle;
 import android.widget.TextView;
@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myhipicapptfg.R;
+import com.example.myhipicapptfg.ui.competiciones.participantes.AlumnoResultadosViewModel;
 
 import java.util.Locale;
 
@@ -28,7 +29,6 @@ public class HojaCalificacionesActivity extends AppCompatActivity {
         setSupportActionBar(findViewById(R.id.toolbar));
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle("Hoja de calificaciones");
-            getSupportActionBar().setSubtitle(nombrePrueba);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 

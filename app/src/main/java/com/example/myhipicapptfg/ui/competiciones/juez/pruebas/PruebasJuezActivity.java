@@ -1,4 +1,4 @@
-package com.example.myhipicapptfg.ui.competiciones.juez;
+package com.example.myhipicapptfg.ui.competiciones.juez.pruebas;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myhipicapptfg.R;
+import com.example.myhipicapptfg.ui.competiciones.juez.participantes.ParticipantesPruebaActivity;
 
 public class PruebasJuezActivity extends AppCompatActivity {
 

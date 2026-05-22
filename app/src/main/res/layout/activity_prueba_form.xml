@@ -1,154 +1,214 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F3F4F6">
+    android:background="#F5F2EE">
 
-    <LinearLayout
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarPruebaForm"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_height="?attr/actionBarSize"
+        android:background="#5D3A1A"
+        android:elevation="4dp"
+        app:navigationIcon="@android:drawable/ic_menu_revert"
+        app:navigationIconTint="#FFFFFF"
+        app:title="Gestión de Prueba"
+        app:titleTextColor="#FFFFFF" />
 
-        <!-- DATOS DE LA PRUEBA -->
-        <com.google.android.material.card.MaterialCardView
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:fillViewport="true">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="4dp">
+            android:orientation="vertical"
+            android:padding="20dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp">
+
+                <View
+                    android:layout_width="4dp"
+                    android:layout_height="24dp"
+                    android:background="#8B1A2E"
+                    android:layout_marginEnd="10dp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Datos de la prueba"
-                    android:textSize="15sp"
+                    android:textSize="13sp"
                     android:textStyle="bold"
-                    android:textColor="#111827"
-                    android:layout_marginBottom="12dp"/>
+                    android:letterSpacing="0.12"
+                    android:textColor="#1E3D1E"
+                    android:textAllCaps="true"/>
 
-                <!-- NOMBRE -->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/layNombrePrueba"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Nombre de la prueba">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etNombrePrueba"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textCapSentences"/>
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <!-- CATEGORÍA -->
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:hint="Categoría">
-                    <AutoCompleteTextView
-                        android:id="@+id/spinnerCategoria"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:focusable="false"/>
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <!-- NIVEL -->
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:hint="Nivel técnico">
-                    <AutoCompleteTextView
-                        android:id="@+id/spinnerNivel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:focusable="false"/>
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <!-- JUEZ ← NUEVO -->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/layJuezPrueba"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:hint="Juez asignado">
-                    <AutoCompleteTextView
-                        android:id="@+id/spinnerJuezPrueba"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:focusable="false"/>
-                </com.google.android.material.textfield.TextInputLayout>
+                <View
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="1dp"
+                    android:background="#C8860A"
+                    android:alpha="0.4"
+                    android:layout_marginStart="10dp"/>
 
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
 
-        <!-- CABECERA MOVIMIENTOS -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="8dp">
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layNombrePrueba"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:hint="Nombre de la prueba"
+                app:boxStrokeColor="#1E3D1E"
+                app:hintTextColor="#1E3D1E">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etNombrePrueba"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textCapSentences"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layCategoriaPrueba"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:hint="Categoría"
+                app:boxStrokeColor="#1E3D1E"
+                app:hintTextColor="#1E3D1E">
+
+                <AutoCompleteTextView
+                    android:id="@+id/spinnerCategoria"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:focusable="false"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layNivelPrueba"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:hint="Nivel técnico"
+                app:boxStrokeColor="#1E3D1E"
+                app:hintTextColor="#1E3D1E">
+
+                <AutoCompleteTextView
+                    android:id="@+id/spinnerNivel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:focusable="false"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layJuezPrueba"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:hint="Juez asignado"
+                app:boxStrokeColor="#1E3D1E"
+                app:hintTextColor="#1E3D1E">
+
+                <AutoCompleteTextView
+                    android:id="@+id/spinnerJuezPrueba"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:focusable="false"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="16dp">
 
-                <TextView
+                <View
+                    android:layout_width="4dp"
+                    android:layout_height="24dp"
+                    android:background="#8B1A2E"
+                    android:layout_marginEnd="10dp"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Movimientos"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.12"
+                        android:textColor="#1E3D1E"
+                        android:textAllCaps="true"/>
+
+                    <TextView
+                        android:id="@+id/tvContadorMovimientos"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="11sp"
+                        android:fontFamily="sans-serif"
+                        android:textColor="#7A6855"
+                        tools:text="3 movimientos añadidos"/>
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnAnadirMovimiento"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Movimientos"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:textColor="#111827"/>
+                    android:text="+ Añadir"
+                    android:textColor="#7D5A2E"
+                    android:textSize="13sp"
+                    app:strokeColor="#7D5A2E"
+                    app:rippleColor="#1A7D5A2E" />
 
-                <TextView
-                    android:id="@+id/tvContadorMovimientos"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="12sp"
-                    android:textColor="#6B7280"/>
             </LinearLayout>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnAnadirMovimiento"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/containerMovimientos"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="+ Añadir"/>
+                android:orientation="vertical"
+                android:layout_marginBottom="8dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGuardarPrueba"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="16dp"
+                android:text="GUARDAR PRUEBA"
+                android:fontFamily="sans-serif-medium"
+                android:textStyle="bold"
+                android:letterSpacing="0.05"
+                android:textColor="#FFFFFF"
+                app:backgroundTint="#1E3D1E"
+                app:cornerRadius="12dp"/>
+
         </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
-        <!-- CONTAINER DINÁMICO -->
-        <LinearLayout
-            android:id="@+id/containerMovimientos"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"/>
-
-        <!-- BOTÓN GUARDAR -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnGuardarPrueba"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="24dp"
-            android:text="Guardar prueba"
-            android:enabled="false"/>
-
-    </LinearLayout>
-</ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -6,32 +6,35 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
-    android:layout_marginVertical="8dp"
+    android:layout_marginVertical="6dp"
     app:cardCornerRadius="20dp"
     app:cardElevation="2dp"
     app:strokeWidth="1dp"
-    app:strokeColor="#F3F4F6">
+    app:strokeColor="#EAF0EA"
+    app:cardBackgroundColor="#FFFFFF">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="14dp">
 
         <View
             android:id="@+id/viewIndicator"
             android:layout_width="4dp"
             android:layout_height="0dp"
-            android:background="?attr/colorPrimary"
-            app:layout_constraintBottom_toBottomOf="@id/txtDisciplinaClase"
+            android:background="#1E3D1E"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/txtDisciplinaClase" />
+            app:layout_constraintTop_toTopOf="@id/txtDisciplinaClase"
+            app:layout_constraintBottom_toBottomOf="@id/txtInfoProfesorPista" />
 
         <LinearLayout
             android:id="@+id/layoutTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#F8FAFC"
-            android:gravity="center"
+            android:background="@android:drawable/toast_frame"
+            android:backgroundTint="#1A1E3D1E"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingHorizontal="10dp"
             android:paddingVertical="4dp"
@@ -43,14 +46,15 @@
                 android:layout_height="14dp"
                 android:layout_marginEnd="6dp"
                 android:src="@android:drawable/ic_menu_recent_history"
-                app:tint="?attr/colorPrimary" />
+                app:tint="#1E3D1E" />
 
             <TextView
                 android:id="@+id/txtRangoHorarioClase"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="?attr/colorPrimary"
+                android:textColor="#1E3D1E"
                 android:textSize="12sp"
+                android:fontFamily="sans-serif-medium"
                 android:textStyle="bold"
                 tools:text="10:00 - 11:30" />
         </LinearLayout>
@@ -59,8 +63,9 @@
             android:id="@+id/txtFechaClase"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#64748B"
+            android:textColor="#7A6855"
             android:textSize="12sp"
+            android:fontFamily="sans-serif-medium"
             app:layout_constraintBottom_toBottomOf="@id/layoutTime"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/layoutTime"
@@ -71,12 +76,13 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:layout_marginStart="12dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="#1E293B"
-            android:textSize="18sp"
+            android:layout_marginStart="14dp"
+            android:textColor="#1A1C1E"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif-medium"
             android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end"
             app:layout_constraintEnd_toStartOf="@+id/layoutActions"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layoutTime"
@@ -86,39 +92,51 @@
             android:id="@+id/txtInfoProfesorPista"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="12dp"
-            android:textColor="#64748B"
-            android:textSize="14sp"
+            android:layout_marginTop="2dp"
+            android:layout_marginStart="14dp"
+            android:textColor="#5D3A1A"
+            android:textSize="13sp"
+            android:fontFamily="sans-serif"
+            android:maxLines="1"
+            android:ellipsize="end"
             app:layout_constraintEnd_toStartOf="@+id/layoutActions"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/txtDisciplinaClase"
             tools:text="Prof. Juan Pérez • Pista 2" />
 
-        <TextView
-            android:id="@+id/txtNivelClase"
+        <LinearLayout
+            android:id="@+id/layoutBadgeNivel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginStart="12dp"
-            android:backgroundTint="#EEF2FF"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="4dp"
-            android:textColor="#4338CA"
-            android:textSize="11sp"
-            android:textStyle="bold"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="14dp"
+            android:background="@android:drawable/toast_frame"
+            android:backgroundTint="#1A5D3A1A"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="2dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txtInfoProfesorPista"
-            tools:text="INTERMEDIO" />
+            app:layout_constraintTop_toBottomOf="@id/txtInfoProfesorPista">
+
+            <TextView
+                android:id="@+id/txtNivelClase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="11sp"
+                android:fontFamily="sans-serif-medium"
+                android:textStyle="bold"
+                android:textColor="#5D3A1A"
+                tools:text="INTERMEDIO" />
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/layoutActions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:orientation="horizontal"
+            android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/txtDisciplinaClase">
+            app:layout_constraintTop_toTopOf="@id/txtDisciplinaClase"
+            app:layout_constraintBottom_toBottomOf="parent">
 
             <ImageButton
                 android:id="@+id/btnEditarClase"
@@ -126,7 +144,7 @@
                 android:layout_height="40dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@android:drawable/ic_menu_edit"
-                app:tint="#94A3B8" />
+                app:tint="#7A6855" />
 
             <ImageButton
                 android:id="@+id/btnEliminarClase"
@@ -134,7 +152,7 @@
                 android:layout_height="40dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@android:drawable/ic_menu_delete"
-                app:tint="#F87171" />
+                app:tint="#8B1A2E" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

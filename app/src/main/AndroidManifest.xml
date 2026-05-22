@@ -87,13 +87,13 @@
         <activity android:name=".ui.admin.competiciones.pruebas.participaciones.GestionParticipacionesActivity"
             android:exported="false"/>
 
-        <activity android:name=".ui.ar.ARActivity"
+        <activity android:name=".ui.ar.ar.ARActivity"
             android:exported="false"/>
 
         <activity android:name=".ui.ar.ARMenuActivity"
             android:exported="false"/>
 
-        <activity android:name=".ui.ar.QRScannerActivity"
+        <activity android:name=".ui.ar.scanner.QRScannerActivity"
             android:exported="false"/>
 
         <activity android:name=".ui.admin.AdminMenuActivity"
@@ -127,13 +127,13 @@
         <activity android:name=".ui.gps.seguir.SeguirRutaActivity"
             android:exported="false"/>
 
-        <activity android:name=".ui.competiciones.juez.PruebasJuezActivity" />
-        <activity android:name=".ui.competiciones.juez.ParticipantesPruebaActivity" />
-        <activity android:name=".ui.competiciones.juez.PuntuacionActivity" />
+        <activity android:name=".ui.competiciones.juez.pruebas.PruebasJuezActivity" />
+        <activity android:name=".ui.competiciones.juez.participantes.ParticipantesPruebaActivity" />
+        <activity android:name=".ui.competiciones.juez.calificacion.PuntuacionActivity" />
 
-        <activity android:name=".ui.competiciones.participantes.MisPruebasActivity" />
-        <activity android:name=".ui.competiciones.participantes.RankingPruebaActivity" />
-        <activity android:name=".ui.competiciones.participantes.HojaCalificacionesActivity" />
+        <activity android:name=".ui.competiciones.participantes.pruebas.MisPruebasActivity" />
+        <activity android:name=".ui.competiciones.participantes.ranking.RankingPruebaActivity" />
+        <activity android:name=".ui.competiciones.participantes.calificacion.HojaCalificacionesActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

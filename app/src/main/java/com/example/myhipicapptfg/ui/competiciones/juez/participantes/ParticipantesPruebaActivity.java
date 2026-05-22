@@ -1,4 +1,4 @@
-package com.example.myhipicapptfg.ui.competiciones.juez;
+package com.example.myhipicapptfg.ui.competiciones.juez.participantes;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myhipicapptfg.R;
+import com.example.myhipicapptfg.ui.competiciones.juez.calificacion.PuntuacionActivity;
 import com.google.android.material.button.MaterialButton;
 
 public class ParticipantesPruebaActivity extends AppCompatActivity {
@@ -64,7 +65,7 @@ public class ParticipantesPruebaActivity extends AppCompatActivity {
             } else {
                 btnPublicar.setText("📢 Publicar resultados");
                 btnPublicar.setBackgroundTintList(
-                        ColorStateList.valueOf(Color.parseColor("#6A1B9A")));
+                        ColorStateList.valueOf(Color.parseColor("#8B1A2E"))); // ← burdeos
             }
         });
 

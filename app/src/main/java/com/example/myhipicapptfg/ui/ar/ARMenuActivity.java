@@ -12,6 +12,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.myhipicapptfg.R;
+import com.example.myhipicapptfg.ui.ar.scanner.QRScannerActivity;
 
 public class ARMenuActivity extends AppCompatActivity {
 

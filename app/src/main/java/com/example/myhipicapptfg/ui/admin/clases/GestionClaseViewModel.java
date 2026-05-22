@@ -5,6 +5,7 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.example.myhipicapptfg.datos.local.entidades.Clase;
 import com.example.myhipicapptfg.datos.local.entidades.Pista;
@@ -18,25 +19,70 @@ public class GestionClaseViewModel extends AndroidViewModel {
 
     private final ClaseRepository repository;
 
+    private final MutableLiveData<List<Usuario>>
+            profesoresDisponibles = new MutableLiveData<>();
+
+    private final MutableLiveData<List<Pista>>
+            pistasDisponibles = new MutableLiveData<>();
+
     public GestionClaseViewModel(@NonNull Application application) {
+
         super(application);
+
         repository = new ClaseRepository(application);
     }
 
-    // =====================================
-    // 🔹 MÉTODOS DE CONSULTA
-    // =====================================
+    // =========================================================
+    // LIVEDATA DISPONIBILIDAD
+    // =========================================================
 
-    /**
-     * Obtiene todas las clases programadas.
-     */
+    public LiveData<List<Usuario>> getProfesoresDisponibles() {
+        return profesoresDisponibles;
+    }
+
+    public LiveData<List<Pista>> getPistasDisponibles() {
+        return pistasDisponibles;
+    }
+
+    // =========================================================
+    // FILTRAR
+    // =========================================================
+
+    public void filtrarDisponibilidad(
+            long inicio,
+            long fin,
+            String disciplina,
+            String nivel,
+            List<Usuario> usuarios,
+            List<Profesor> profesores,
+            List<Pista> pistas,
+            List<Clase> clases,
+            int claseEditando
+    ) {
+
+        repository.filtrarDisponibilidad(
+                inicio,
+                fin,
+                disciplina,
+                nivel,
+                usuarios,
+                profesores,
+                pistas,
+                clases,
+                claseEditando,
+                profesoresDisponibles,
+                pistasDisponibles
+        );
+    }
+
+    // =========================================================
+    // CONSULTAS
+    // =========================================================
+
     public LiveData<List<Clase>> obtenerTodasLasClases() {
         return repository.obtenerTodasClases();
     }
 
-    /**
-     * Busca una clase específica por su ID.
-     */
     public LiveData<Clase> buscarPorId(int id) {
         return repository.buscarPorId(id);
     }
@@ -53,10 +99,9 @@ public class GestionClaseViewModel extends AndroidViewModel {
         return repository.obtenerTodosLosUsuarios();
     }
 
-
-    // =====================================
-    // 🔹 MÉTODOS DE OPERACIÓN (INSERT/UPDATE/DELETE)
-    // =====================================
+    // =========================================================
+    // CRUD
+    // =========================================================
 
     public void insertar(Clase clase) {
         repository.insertarClase(clase);
@@ -70,10 +115,6 @@ public class GestionClaseViewModel extends AndroidViewModel {
         repository.eliminarClase(clase);
     }
 
-    /**
-     * Observa el resultado de las operaciones (EXITO, ERROR_PISTA_OCUPADA,
-     * ERROR_PROFESOR_OCUPADO, etc.)
-     */
     public LiveData<String> getEstadoOperacion() {
         return repository.getEstadoOperacion();
     }

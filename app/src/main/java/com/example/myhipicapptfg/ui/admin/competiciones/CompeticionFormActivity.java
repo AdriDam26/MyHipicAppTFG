@@ -47,7 +47,7 @@ public class CompeticionFormActivity extends AppCompatActivity {
         }
 
         findViewById(R.id.btnGuardarCompeticion).setOnClickListener(v -> guardar());
-        findViewById(R.id.btnVolverCompeticion).setOnClickListener(v -> finish());
+
 
         observarEstado();
     }

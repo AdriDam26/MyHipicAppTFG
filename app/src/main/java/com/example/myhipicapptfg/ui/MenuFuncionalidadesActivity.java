@@ -10,8 +10,8 @@ import com.example.myhipicapptfg.ui.ar.ARMenuActivity;
 import com.example.myhipicapptfg.ui.reservas.profesor.MisClasesProfesorActivity;
 import com.example.myhipicapptfg.ui.reservas.alumnos.MisReservasActivity;
 import com.example.myhipicapptfg.ui.reservas.alumnos.ReservaClaseActivity;
-import com.example.myhipicapptfg.ui.competiciones.participantes.MisPruebasActivity;
-import com.example.myhipicapptfg.ui.competiciones.juez.PruebasJuezActivity;
+import com.example.myhipicapptfg.ui.competiciones.participantes.pruebas.MisPruebasActivity;
+import com.example.myhipicapptfg.ui.competiciones.juez.pruebas.PruebasJuezActivity;
 import com.example.myhipicapptfg.ui.gps.RutasMenuActivity;
 import com.google.android.material.card.MaterialCardView;
 

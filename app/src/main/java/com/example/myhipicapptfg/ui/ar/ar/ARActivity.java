@@ -1,4 +1,4 @@
-package com.example.myhipicapptfg.ui.ar;
+package com.example.myhipicapptfg.ui.ar.ar;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -143,7 +143,7 @@ public class ARActivity extends AppCompatActivity {
                     // ESCALA EQUILIBRADA
                     nodoTarjeta.setLocalScale(new Vector3(0.65f, 0.65f, 0.65f));
 
-                    Log.d(TAG, "Tarjeta AR creada (Modo Seguimiento)");
+                    Log.d(TAG, "Tarjeta AR creada");
                 })
                 .exceptionally(error -> {
                     Log.e(TAG, "Error al crear tarjeta AR", error);

@@ -66,7 +66,7 @@ public class ParticipacionFormActivity extends AppCompatActivity {
         }
 
         findViewById(R.id.btnGuardarParticipacion).setOnClickListener(v -> guardar());
-        findViewById(R.id.btnVolverParticipacion).setOnClickListener(v -> finish());
+
     }
 
     private void initViews() {

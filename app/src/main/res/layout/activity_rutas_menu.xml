@@ -1,137 +1,199 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F7F9FC">
+    android:orientation="vertical"
+    android:background="#F4F6F4">
 
-    <LinearLayout
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbarRutas"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:layout_height="?attr/actionBarSize"
+        android:background="#5D3A1A"
+        app:title="Exploración"
+        app:titleTextColor="#FFFFFF"
+        app:navigationIcon="@android:drawable/ic_menu_revert"
+        app:navigationIconTint="#FFFFFF"
+        app:elevation="4dp"/>
 
-        <!-- TÍTULO -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Rutas GPS"
-            android:textSize="32sp"
-            android:textStyle="bold"
-            android:textColor="#1A1C1E"
-            android:layout_marginTop="32dp"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Gestión de recorridos"
-            android:textSize="16sp"
-            android:textColor="#42474E"
-            android:layout_marginBottom="32dp"/>
-
-        <!-- GRABAR RUTA -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/btnGrabarRuta"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="28dp"
-            app:strokeColor="#DCE2E9"
-            app:strokeWidth="1dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?android:attr/selectableItemBackground">
+            android:orientation="vertical"
+            android:padding="24dp">
 
-            <LinearLayout
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rutas GPS"
+                android:textSize="32sp"
+                android:fontFamily="sans-serif-medium"
+                android:textStyle="bold"
+                android:textColor="#3A6B2E"
+                android:layout_marginTop="16dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gestión de recorridos por el campo"
+                android:textSize="16sp"
+                android:textColor="#5D3A1A"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginBottom="32dp"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btnGrabarRuta"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="24dp"
-                android:gravity="center_vertical">
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="20dp"
+                app:strokeColor="#E2EAE0"
+                app:strokeWidth="1dp"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardElevation="2dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
 
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@android:drawable/ic_menu_mylocation"
-                    app:tint="#0061A4"/>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginStart="20dp">
+                    android:padding="16dp">
 
-                    <TextView
+                    <LinearLayout
+                        android:id="@+id/iconContainerGrabar"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@android:drawable/toast_frame"
+                        android:backgroundTint="#1A3A6B2E"
+                        android:gravity="center"
+                        android:orientation="vertical">
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/ic_menu_mylocation"
+                            app:tint="#3A6B2E"/>
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Grabar Ruta"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:textColor="#1A1C1E"/>
+                        android:orientation="vertical"
+                        android:layout_toEndOf="@id/iconContainerGrabar"
+                        android:layout_toStartOf="@+id/arrowGrabar"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Registrar recorrido GPS"
-                        android:textSize="14sp"
-                        android:textColor="#42474E"/>
-                </LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Grabar Ruta"
+                            android:textSize="18sp"
+                            android:fontFamily="sans-serif-medium"
+                            android:textStyle="bold"
+                            android:textColor="#1A1C1E"/>
 
-            </LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Registrar recorrido GPS en tiempo real"
+                            android:textSize="14sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="#7A6855"
+                            android:layout_marginTop="2dp"/>
+                    </LinearLayout>
 
-        </com.google.android.material.card.MaterialCardView>
+                    <ImageView
+                        android:id="@+id/arrowGrabar"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:src="@android:drawable/ic_media_play"
+                        app:tint="#B0C2B0"/>
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-        <!-- SEGUIR RUTA -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/btnSeguirRuta"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="28dp"
-            app:strokeColor="#DCE2E9"
-            app:strokeWidth="1dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?android:attr/selectableItemBackground">
-
-            <LinearLayout
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btnSeguirRuta"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="24dp"
-                android:gravity="center_vertical">
+                android:layout_marginBottom="32dp"
+                app:cardCornerRadius="20dp"
+                app:strokeColor="#E2EAE0"
+                app:strokeWidth="1dp"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardElevation="2dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
 
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@android:drawable/ic_menu_mapmode"
-                    app:tint="#006D39"/>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginStart="20dp">
+                    android:padding="16dp">
 
-                    <TextView
+                    <LinearLayout
+                        android:id="@+id/iconContainerSeguir"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@android:drawable/toast_frame"
+                        android:backgroundTint="#1A3A6B2E"
+                        android:gravity="center"
+                        android:orientation="vertical">
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/ic_menu_mapmode"
+                            app:tint="#3A6B2E"/>
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Seguir Ruta"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:textColor="#1A1C1E"/>
+                        android:orientation="vertical"
+                        android:layout_toEndOf="@id/iconContainerSeguir"
+                        android:layout_toStartOf="@+id/arrowSeguir"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Ver rutas guardadas"
-                        android:textSize="14sp"
-                        android:textColor="#42474E"/>
-                </LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Seguir Ruta"
+                            android:textSize="18sp"
+                            android:fontFamily="sans-serif-medium"
+                            android:textStyle="bold"
+                            android:textColor="#1A1C1E"/>
 
-            </LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Ver senderos y rutas guardadas"
+                            android:textSize="14sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="#7A6855"
+                            android:layout_marginTop="2dp"/>
+                    </LinearLayout>
 
-        </com.google.android.material.card.MaterialCardView>
+                    <ImageView
+                        android:id="@+id/arrowSeguir"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:src="@android:drawable/ic_media_play"
+                        app:tint="#B0C2B0"/>
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-    </LinearLayout>
-</ScrollView>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

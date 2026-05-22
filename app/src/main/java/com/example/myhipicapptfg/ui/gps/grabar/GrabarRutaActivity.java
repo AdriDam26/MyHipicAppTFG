@@ -62,19 +62,16 @@ public class GrabarRutaActivity extends AppCompatActivity implements OnMapReadyC
         setContentView(R.layout.activity_grabar_ruta);
 
         btnIniciarDetener = findViewById(R.id.btnIniciarDetener);
-        btnGuardar = findViewById(R.id.btnGuardar);
-        tvDistancia = findViewById(R.id.tvDistancia);
-        tvTiempo = findViewById(R.id.tvTiempo);
-        tvEstado = findViewById(R.id.tvEstado);
+        btnGuardar        = findViewById(R.id.btnGuardar);
+        tvDistancia       = findViewById(R.id.tvDistancia);
+        tvTiempo          = findViewById(R.id.tvTiempo);
+        tvEstado          = findViewById(R.id.tvEstado);
 
         viewModel = new ViewModelProvider(this).get(GrabarRutaViewModel.class);
-
         configurarObservadores();
 
         fusedClient = LocationServices.getFusedLocationProviderClient(this);
         configurarLocationCallback();
-
-        // En onCreate, reemplaza el bloque de permisos existente:
 
         if (!checkPermission()) {
             ActivityCompat.requestPermissions(
@@ -83,7 +80,6 @@ public class GrabarRutaActivity extends AppCompatActivity implements OnMapReadyC
                     REQUEST_LOCATION
             );
         } else if (!isLocationEnabled()) {
-            // Tiene permiso pero el GPS del sistema está apagado
             pedirActivarUbicacion();
         } else {
             iniciarMapa();
@@ -106,31 +102,29 @@ public class GrabarRutaActivity extends AppCompatActivity implements OnMapReadyC
     // =========================
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode == REQUEST_LOCATION &&
-                grantResults.length > 0 &&
-                grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (requestCode == REQUEST_LOCATION
+                && grantResults.length > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
             if (!isLocationEnabled()) {
-                pedirActivarUbicacion(); // Tiene permiso pero GPS apagado
+                pedirActivarUbicacion();
             } else {
                 iniciarMapa();
                 iniciarActualizacionesGPS();
             }
-
         } else {
-            Toast.makeText(this,
-                    "Se necesita permiso de ubicación",
-                    Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Se necesita permiso de ubicación", Toast.LENGTH_LONG).show();
         }
     }
 
     private boolean checkPermission() {
         return ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
+                this, Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED;
     }
 
@@ -141,26 +135,22 @@ public class GrabarRutaActivity extends AppCompatActivity implements OnMapReadyC
     private void iniciarMapa() {
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-
         if (mapFragment != null) mapFragment.getMapAsync(this);
     }
 
     @Override
     @SuppressLint("MissingPermission")
     public void onMapReady(@NonNull GoogleMap googleMap) {
-
         mMap = googleMap;
-
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.setMyLocationEnabled(true);
 
-        fusedClient.getLastLocation()
-                .addOnSuccessListener(this, location -> {
-                    if (location != null) {
-                        LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 17f));
-                    }
-                });
+        fusedClient.getLastLocation().addOnSuccessListener(this, location -> {
+            if (location != null) {
+                LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 17f));
+            }
+        });
     }
 
     // =========================
@@ -169,28 +159,17 @@ public class GrabarRutaActivity extends AppCompatActivity implements OnMapReadyC
 
     private void configurarLocationCallback() {
         locationCallback = new LocationCallback() {
+
             @Override
             public void onLocationResult(@NonNull LocationResult result) {
-                Location loc = result.getLastLocation();
-                if (loc == null || mMap == null) return;
 
-                LatLng latLng = new LatLng(loc.getLatitude(), loc.getLongitude());
+                if (mMap == null) return;
 
-                if (!mapaCentradoInicialmente) {
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17f));
-                    mapaCentradoInicialmente = true;
+                // ✅ CORRECCIÓN: procesar TODAS las localizaciones del lote,
+                //    no solo la última. Así no se pierden puntos intermedios.
+                for (Location loc : result.getLocations()) {
+                    procesarLocalizacion(loc);
                 }
-
-                if (!Boolean.TRUE.equals(viewModel.getGrabando().getValue())) {
-                    tvEstado.setText("Listo para iniciar");
-                    return;
-                }
-
-                // Lógica de guardado de puntos...
-                viewModel.agregarPunto(loc.getLatitude(), loc.getLongitude(), loc.getAltitude());
-                puntosMapa.add(latLng);
-                if (polylineActiva != null) polylineActiva.setPoints(puntosMapa);
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             }
 
             @Override
@@ -207,69 +186,100 @@ public class GrabarRutaActivity extends AppCompatActivity implements OnMapReadyC
         };
     }
 
+    // ✅ NUEVO: lógica de cada punto extraída a su propio método
+    private void procesarLocalizacion(Location loc) {
+
+        // ✅ CORRECCIÓN: umbral subido de 20 → 35 metros.
+        //    En ciudad/exterior con árboles rara vez se baja de 20m.
+        if (loc.getAccuracy() > 35) return;
+
+        LatLng latLng = new LatLng(loc.getLatitude(), loc.getLongitude());
+
+        // Centrar cámara la primera vez
+        if (!mapaCentradoInicialmente) {
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17f));
+            mapaCentradoInicialmente = true;
+        }
+
+        if (!Boolean.TRUE.equals(viewModel.getGrabando().getValue())) {
+            tvEstado.setText("Listo para iniciar");
+            return;
+        }
+
+        // ✅ CORRECCIÓN: umbral de micro-movimientos bajado de 2.0 → 0.5 metros.
+        //    Con 2m + 6s de intervalo se perdían giros y pasos lentos.
+        if (!puntosMapa.isEmpty()) {
+            LatLng last = puntosMapa.get(puntosMapa.size() - 1);
+            float[] results = new float[1];
+            Location.distanceBetween(
+                    last.latitude, last.longitude,
+                    latLng.latitude, latLng.longitude,
+                    results
+            );
+            if (results[0] < 0.5f) return;
+        }
+
+        viewModel.agregarPunto(loc.getLatitude(), loc.getLongitude(), loc.getAltitude());
+        puntosMapa.add(latLng);
+
+        if (polylineActiva != null) {
+            polylineActiva.setPoints(puntosMapa);
+        }
+    }
+
     @SuppressLint("MissingPermission")
     private void iniciarActualizacionesGPS() {
-        // CAMBIO: Usar HIGH_ACCURACY para forzar el encendido del sensor GPS
+
+        // ✅ CORRECCIÓN: intervalo bajado de 6000/4000 → 2000/1500 ms.
+        //    A caballo se pueden recorrer 10-15m en 6 segundos.
         LocationRequest request = new LocationRequest.Builder(
                 Priority.PRIORITY_HIGH_ACCURACY,
-                3000
+                2000
         )
-                .setMinUpdateIntervalMillis(2000)
+                .setMinUpdateIntervalMillis(1500)
+                .setMaxUpdateDelayMillis(3000)   // ✅ NUEVO: máximo retardo de entrega del lote
                 .build();
 
-        // Limpiamos peticiones anteriores por seguridad
         fusedClient.removeLocationUpdates(locationCallback);
+        fusedClient.requestLocationUpdates(request, locationCallback, Looper.getMainLooper());
 
-        // Lanzamos la petición
-        fusedClient.requestLocationUpdates(
-                request,
-                locationCallback,
-                Looper.getMainLooper()
-        );
+        // Verificación de ajustes del sistema
+        LocationSettingsRequest.Builder builder =
+                new LocationSettingsRequest.Builder().addLocationRequest(request);
 
-        // Verificación de configuración del sistema
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
-                .addLocationRequest(request);
-
-        SettingsClient client = LocationServices.getSettingsClient(this);
-        client.checkLocationSettings(builder.build())
+        LocationServices.getSettingsClient(this)
+                .checkLocationSettings(builder.build())
                 .addOnFailureListener(this, e -> {
-                    tvEstado.setText("⚠️ SEÑAL DÉBIL");
+                    tvEstado.setText("⚠️ Señal débil");
                     tvEstado.setTextColor(Color.RED);
                 });
     }
 
     // =========================
-    // 🔹 UI
+    // 🔹 UI / OBSERVADORES
     // =========================
 
     private void configurarObservadores() {
 
         viewModel.getDistanciaKm().observe(this,
-                km -> tvDistancia.setText(String.format(Locale.getDefault(), "%.2f km", km)));
+                km -> tvDistancia.setText(
+                        String.format(Locale.getDefault(), "%.2f km", km)));
 
         viewModel.getTiempoTexto().observe(this,
                 t -> tvTiempo.setText(t));
 
         viewModel.getGrabando().observe(this, grabando -> {
-
             if (grabando) {
-
                 btnIniciarDetener.setText("Detener");
                 btnIniciarDetener.setBackgroundTintList(
                         android.content.res.ColorStateList.valueOf(Color.RED));
-
                 tvEstado.setText("● Grabando");
                 btnGuardar.setEnabled(false);
-
             } else {
-
                 btnIniciarDetener.setText("Iniciar");
                 btnIniciarDetener.setBackgroundTintList(
                         android.content.res.ColorStateList.valueOf(Color.parseColor("#018786")));
-
                 tvEstado.setText("Listo");
-
                 btnGuardar.setEnabled(!viewModel.getPuntosTemporales().isEmpty());
             }
         });
@@ -281,17 +291,12 @@ public class GrabarRutaActivity extends AppCompatActivity implements OnMapReadyC
             }
         });
 
-        // 🔥 CAMBIO IMPORTANTE: ahora viene del estadoOperacion
         viewModel.getEstadoOperacion().observe(this, estado -> {
-
             if (estado == null) return;
-
             switch (estado) {
-
                 case "ERROR_BD":
                     Toast.makeText(this, "Error al guardar ruta", Toast.LENGTH_LONG).show();
                     break;
-
                 case "ERROR_PROPIETARIO_NO_VALIDO":
                     Toast.makeText(this, "Propietario no válido", Toast.LENGTH_LONG).show();
                     break;
@@ -304,12 +309,9 @@ public class GrabarRutaActivity extends AppCompatActivity implements OnMapReadyC
     // =========================
 
     private void iniciar() {
-
         puntosMapa.clear();
 
-        if (polylineActiva != null) {
-            polylineActiva.remove();
-        }
+        if (polylineActiva != null) polylineActiva.remove();
 
         polylineActiva = mMap.addPolyline(
                 new PolylineOptions()
@@ -330,43 +332,54 @@ public class GrabarRutaActivity extends AppCompatActivity implements OnMapReadyC
 
     private void mostrarDialogoGuardar() {
 
-        View v = LayoutInflater.from(this)
-                .inflate(R.layout.dialog_nombre_ruta, null);
-
+        View v = LayoutInflater.from(this).inflate(R.layout.dialog_nombre_ruta, null);
         TextInputEditText et = v.findViewById(R.id.etNombreRuta);
 
         String fecha = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
                 .format(new Date());
-
         et.setText("Ruta " + fecha);
 
-        new MaterialAlertDialogBuilder(this)
+        new MaterialAlertDialogBuilder(this, R.style.Theme_MyHipicApp_Dialog_Rutas)
                 .setTitle("Guardar Ruta")
                 .setView(v)
                 .setPositiveButton("Guardar", (d, w) -> {
-
                     String nombre = et.getText() != null
+                            && !et.getText().toString().trim().isEmpty()
                             ? et.getText().toString()
                             : "Ruta " + fecha;
-
                     viewModel.guardar(nombre, idPropietarioActual);
                 })
                 .setNegativeButton("Cancelar", null)
                 .show();
     }
 
+    // =========================
+    // 🔹 CICLO DE VIDA
+    // =========================
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (checkPermission() && isLocationEnabled()) {
+            mapaCentradoInicialmente = false;
+            if (mMap == null) iniciarMapa();
+            iniciarActualizacionesGPS();
+            tvEstado.setText("GPS Conectado");
+        }
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
         if (fusedClient != null && locationCallback != null) {
             fusedClient.removeLocationUpdates(locationCallback);
         }
     }
 
     // =========================
-// 🔹 VERIFICAR GPS ACTIVADO
-// =========================
+    // 🔹 UBICACIÓN DEL SISTEMA
+    // =========================
 
     private boolean isLocationEnabled() {
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -381,28 +394,10 @@ public class GrabarRutaActivity extends AppCompatActivity implements OnMapReadyC
                 .setTitle("Ubicación desactivada")
                 .setMessage("Para grabar una ruta necesitas tener la ubicación activada. ¿Quieres ir a Ajustes?")
                 .setPositiveButton("Ir a Ajustes", (d, w) -> {
-                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(intent);
+                    startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                 })
                 .setNegativeButton("Cancelar", null)
                 .setCancelable(false)
                 .show();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (checkPermission() && isLocationEnabled()) {
-            // Marcamos false para que el callback vuelva a centrar la cámara
-            // al recibir la primera posición fresca
-            mapaCentradoInicialmente = false;
-
-            if (mMap == null) {
-                iniciarMapa();
-            }
-            iniciarActualizacionesGPS();
-            tvEstado.setText("GPS Conectado");
-        }
     }
 }

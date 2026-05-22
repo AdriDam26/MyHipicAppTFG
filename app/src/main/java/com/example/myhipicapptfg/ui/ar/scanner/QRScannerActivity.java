@@ -1,4 +1,4 @@
-package com.example.myhipicapptfg.ui.ar;
+package com.example.myhipicapptfg.ui.ar.scanner;
 
 
 import android.Manifest;
@@ -17,6 +17,7 @@ import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 
 import com.example.myhipicapptfg.R;
+import com.example.myhipicapptfg.ui.ar.ar.ARActivity;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.mlkit.vision.barcode.BarcodeScanner;
 import com.google.mlkit.vision.barcode.BarcodeScanning;

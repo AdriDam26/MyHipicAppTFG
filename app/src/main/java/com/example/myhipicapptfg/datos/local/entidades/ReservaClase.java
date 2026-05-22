@@ -45,4 +45,6 @@ public class ReservaClase {
         this.idClase = idClase;
         this.fechaReserva = fechaReserva;
     }
+
+
 }

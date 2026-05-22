@@ -1,51 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
+<com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="12dp"
-    android:layout_marginVertical="4dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="2dp">
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="6dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="#EAD9C9"
+    app:cardBackgroundColor="#FFFFFF">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- CABECERA: orden · letra · ejercicio · coeficiente · nota -->
+        <!-- CABECERA: Fondo Crema Suave Integrado -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:background="#EDE7F6"
-            android:padding="10dp">
+            android:background="#FAF4EE"
+            android:padding="12dp">
 
-            <!-- Número de orden -->
+            <!-- Número de orden (Usa el círculo Burdeos que tienes o hereda el tinte) -->
             <TextView
                 android:id="@+id/tvOrden"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:background="@drawable/bg_circle_purple"
+                android:backgroundTint="#8B1A2E"
                 android:gravity="center"
-                android:textStyle="bold"
+                android:fontFamily="sans-serif-bold"
                 android:textColor="@android:color/white"
                 android:textSize="12sp"/>
 
-            <!-- Letra del movimiento -->
+            <!-- Letra del movimiento (ej. A) -->
             <TextView
                 android:id="@+id/tvLetra"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:background="@drawable/bg_badge_letra"
+                android:backgroundTint="#8B1A2E"
                 android:paddingHorizontal="8dp"
                 android:paddingVertical="2dp"
                 android:textSize="13sp"
-                android:textStyle="bold"
-                android:textColor="#4A148C"/>
+                android:fontFamily="sans-serif-bold"
+                android:textColor="#FFFFFF"/>
 
             <!-- Nombre del ejercicio -->
             <TextView
@@ -53,89 +58,93 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:textSize="13sp"
-                android:textStyle="bold"
-                android:textColor="#212121"/>
+                android:layout_marginStart="10dp"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="#5D3A1A"/>
 
-            <!-- Coeficiente -->
+            <!-- Coeficiente x2 (Tono Tierra) -->
             <TextView
                 android:id="@+id/tvCoeficiente"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="6dp"
+                android:layout_marginEnd="8dp"
                 android:background="@drawable/bg_badge_coef"
+                android:backgroundTint="#8A7B6E"
                 android:paddingHorizontal="6dp"
                 android:paddingVertical="2dp"
                 android:textSize="11sp"
-                android:textColor="#7B1FA2"/>
+                android:textColor="#FFFFFF"/>
 
-            <!-- Nota -->
+            <!-- Nota final del ejercicio (ej. 7.5) -->
             <TextView
                 android:id="@+id/tvNota"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_badge_nota"
+                android:backgroundTint="#5D3A1A"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="4dp"
-                android:textStyle="bold"
+                android:fontFamily="sans-serif-bold"
                 android:textSize="16sp"
                 android:textColor="@android:color/white"/>
         </LinearLayout>
 
-        <!-- CUERPO: directriz + observación -->
+        <!-- CUERPO: Directrices + Observación del Juez -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="12dp">
+            android:padding="16dp">
 
-            <!-- Directriz -->
+            <!-- Rótulo Directriz -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Directriz"
                 android:textSize="11sp"
-                android:textStyle="bold"
-                android:textColor="#7B1FA2"
+                android:fontFamily="sans-serif-bold"
+                android:textColor="#8A7B6E"
                 android:letterSpacing="0.05"/>
 
             <TextView
                 android:id="@+id/tvDirectriz"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="4dp"
                 android:textSize="13sp"
-                android:textColor="#212121"/>
+                android:textColor="#212121"
+                android:fontFamily="sans-serif"/>
 
-            <!-- Separador -->
+            <!-- Separador sutil Arena -->
             <View
                 android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginVertical="8dp"
-                android:background="#E0E0E0"/>
+                android:layout_height="1dp"
+                android:layout_marginVertical="12dp"
+                android:background="#EAD9C9"/>
 
-            <!-- Observación -->
+            <!-- Rótulo Observación -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Observación del juez"
                 android:textSize="11sp"
-                android:textStyle="bold"
-                android:textColor="#7B1FA2"
+                android:fontFamily="sans-serif-bold"
+                android:textColor="#8A7B6E"
                 android:letterSpacing="0.05"/>
 
             <TextView
                 android:id="@+id/tvObservacion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="4dp"
                 android:paddingStart="8dp"
                 android:background="@drawable/bg_observacion_border"
                 android:textSize="13sp"
                 android:textColor="#555555"
-                android:textStyle="italic"/>
+                android:textStyle="italic"
+                android:fontFamily="sans-serif"/>
         </LinearLayout>
 
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

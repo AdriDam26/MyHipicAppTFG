@@ -73,12 +73,13 @@
                 android:textStyle="bold"/>
 
             <!-- Raza -->
+            <!-- Raza -->
             <TextView
                 android:id="@+id/tvRaza"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Raza del caballo"
-                android:textColor="#73FFFFFF"
+                android:textColor="#FFFFFF"
                 android:textSize="11sp"
                 android:layout_marginBottom="4dp"/>
 
@@ -88,7 +89,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Propietario: --"
-                android:textColor="#8CFFFFFF"
+                android:textColor="#FFFFFF"
                 android:textSize="11sp"
                 android:layout_marginBottom="14dp"/>
 
@@ -141,33 +142,46 @@
             </LinearLayout>
 
             <!-- Chips -->
+            <!-- Chips -->
             <com.google.android.material.chip.ChipGroup
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="14dp"
-                app:chipSpacingHorizontal="6dp">
+                app:chipSpacingHorizontal="8dp"
+                app:chipSpacingVertical="4dp">
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipSalto"
                     style="@style/Widget.Material3.Chip.Assist"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="SALTO"
-                    android:textColor="#90CAF9"
-                    android:textSize="9sp"
-                    app:chipBackgroundColor="#1A2196F3"
-                    app:chipStrokeColor="#4D2196F3"/>
+                    android:text="🏇 SALTO"
+                    android:textColor="#FFFFFF"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    app:chipBackgroundColor="#CC0D47A1"
+                    app:chipStrokeColor="#FF29B6F6"
+                    app:chipStrokeWidth="1.5dp"
+                    app:chipMinHeight="30dp"/>
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipDoma"
                     style="@style/Widget.Material3.Chip.Assist"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="DOMA"
-                    android:textColor="#E1BEE7"
-                    android:textSize="9sp"
-                    app:chipBackgroundColor="#1A9C27B0"
-                    app:chipStrokeColor="#4D9C27B0"/>
+                    android:text="🏇 DOMA"
+                    android:textColor="#FFFFFF"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    app:chipBackgroundColor="#CC6A0080"
+                    app:chipStrokeColor="#FFCE93D8"
+                    app:chipStrokeWidth="1.5dp"
+                    app:chipMinHeight="30dp"/>
+
             </com.google.android.material.chip.ChipGroup>
 
             <!-- Microchip -->

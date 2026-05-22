@@ -1,4 +1,4 @@
-package com.example.myhipicapptfg.ui.competiciones.juez;
+package com.example.myhipicapptfg.ui.competiciones.juez.participantes;
 
 import android.app.Application;
 

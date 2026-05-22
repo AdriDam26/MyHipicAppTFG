@@ -1,4 +1,4 @@
-package com.example.myhipicapptfg.ui.competiciones.participantes;
+package com.example.myhipicapptfg.ui.competiciones.participantes.ranking;
 
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -54,7 +54,7 @@ public class RankingAdapter extends ListAdapter<RankingItem, RankingAdapter.VH> 
             h.tvPorcentaje.setTextColor(Color.parseColor("#B71C1C"));
         } else {
             h.tvPosicion.setText(item.posicion + "º");  // viene de la query
-            h.tvPosicion.setTextColor(Color.parseColor("#6A1B9A"));
+            h.tvPosicion.setTextColor(Color.parseColor("#8B1A2E"));
             h.tvPorcentaje.setText(String.format(Locale.getDefault(),
                     "%.3f%%", item.porcentaje));
             h.tvPorcentaje.setTextColor(Color.parseColor("#212121"));

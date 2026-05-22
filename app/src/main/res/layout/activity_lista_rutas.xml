@@ -1,32 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="?attr/colorSurface">
+    android:background="#F4F9F3"> <!-- CAMBIO: Fondo neutral con un levísimo tinte verde pradera M3 (Surfacetonewash) -->
 
+    <!-- TOOLBAR GLOBAL: Fiel a la regla constante de Cuero Oscuro -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:title="Mis Rutas"/>
+        android:background="#5D3A1A"
+        app:title="Mis Rutas"
+        app:titleTextColor="#FFFFFF"
+        app:navigationIconTint="#FFFFFF" />
 
-    <TextView
-        android:id="@+id/tvSinRutas"
+    <!-- ESTADO VACÍO: Dominado rigurosamente por el Verde Pradera (#3A6B2E) -->
+    <LinearLayout
+        android:id="@+id/layoutSinRutas"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="No tienes rutas guardadas"
+        android:orientation="vertical"
         android:gravity="center"
-        android:textAppearance="?attr/textAppearanceTitleMedium"
-        android:alpha="0.5"
-        android:visibility="gone"/>
+        android:padding="32dp"
+        android:visibility="gone">
 
-    <ListView
-        android:id="@+id/listViewRutas"
+        <!-- Icono principal con el Verde Pradera puro del módulo -->
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@android:drawable/ic_menu_mapmode"
+            android:layout_marginBottom="20dp"
+            app:tint="#3A6B2E" />
+
+        <TextView
+            android:id="@+id/tvSinRutas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No tienes rutas guardadas"
+            android:textAppearance="?attr/textAppearanceTitleLarge"
+            android:textColor="#1A1C1E"
+            android:fontFamily="sans-serif-medium"
+            />
+
+        <!-- CAMBIO: El texto explicativo pasa de gris a una variante oscura/sutil del Verde Pradera para mantener la atmósfera de campo -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Los senderos que grabes a caballo aparecerán en esta lista para poder repetirlos."
+            android:textAppearance="?attr/textAppearanceBodyMedium"
+            android:textColor="#2A4D21"
+            android:alpha="0.8"
+            android:gravity="center"
+            android:layout_marginTop="12dp"/>
+    </LinearLayout>
+
+    <!-- LISTA DE RUTAS: Las tarjetas se elevarán limpiamente sobre el fondo lavado -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewRutas"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@null"
-        android:padding="8dp" />
+        android:clipToPadding="false"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 </LinearLayout>

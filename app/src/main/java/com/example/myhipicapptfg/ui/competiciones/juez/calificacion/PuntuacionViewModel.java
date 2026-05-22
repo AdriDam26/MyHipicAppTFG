@@ -1,4 +1,4 @@
-package com.example.myhipicapptfg.ui.competiciones.juez;
+package com.example.myhipicapptfg.ui.competiciones.juez.calificacion;
 
 import android.app.Application;
 
@@ -94,7 +94,9 @@ public class PuntuacionViewModel extends AndroidViewModel {
      * Si correccion == -1.0 (eliminado), devuelve {0, 0}.
      */
     public double[] calcular(List<MovimientoConNota> items, double correccion) {
-        if (correccion < 0) return new double[]{0.0, 0.0};
+        if (correccion < 0) {
+            return new double[]{0.0, 0.0};
+        }
 
         double sumaN = 0, sumaD = 0;
         for (MovimientoConNota m : items) {

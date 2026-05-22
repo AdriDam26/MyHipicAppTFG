@@ -4,94 +4,88 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="6dp"
+    android:layout_marginStart="4dp"
+    android:layout_marginEnd="4dp"
+    android:layout_marginTop="6dp"
+    android:layout_marginBottom="6dp"
     app:cardCornerRadius="16dp"
-    app:cardElevation="2dp">
+    app:cardElevation="0dp"
+    app:strokeColor="#E2EAE0"
+    app:strokeWidth="1dp"
+    app:cardBackgroundColor="#FFFFFF"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical">
 
-        <TextView
-            android:id="@+id/tvNombreRuta"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Nombre ruta"
-            android:textAppearance="?attr/textAppearanceTitleMedium"
-            android:layout_marginBottom="8dp"/>
+        <!-- BANDA LATERAL: Resaltada en Verde Pradera (#3A6B2E) -->
+        <View
+            android:id="@+id/view_banda"
+            android:layout_width="6dp"
+            android:layout_height="72dp"
+            android:background="#3A6B2E"
+            android:layout_marginEnd="14dp" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-            <!-- Fecha -->
-            <LinearLayout
-                android:layout_width="0dp"
+            <!-- Nombre del recorrido en Verde Pradera -->
+            <TextView
+                android:id="@+id/tvNombreRuta"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:text="Ruta del Encinar"
+                android:textColor="#3A6B2E"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Fecha"
-                    android:textAppearance="?attr/textAppearanceLabelSmall"
-                    android:alpha="0.6"/>
-
-                <TextView
-                    android:id="@+id/tvFechaRuta"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="--"
-                    android:textAppearance="?attr/textAppearanceBodyMedium"/>
-            </LinearLayout>
-
-            <!-- Distancia -->
-            <LinearLayout
-                android:layout_width="0dp"
+            <!-- Fecha de realización en Cuero Oscuro -->
+            <TextView
+                android:id="@+id/tvFechaRuta"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:text="14 May 2026"
+                android:textColor="#5D3A1A"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginTop="2dp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Distancia"
-                    android:textAppearance="?attr/textAppearanceLabelSmall"
-                    android:alpha="0.6"/>
-
-                <TextView
-                    android:id="@+id/tvDistanciaRuta"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="-- km"
-                    android:textAppearance="?attr/textAppearanceBodyMedium"/>
-            </LinearLayout>
-
-            <!-- Duración -->
-            <LinearLayout
-                android:layout_width="0dp"
+            <!-- Métrica de Distancia con icono de localización/ruta -->
+            <TextView
+                android:id="@+id/tvDistanciaRuta"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:text="12.40 km"
+                android:textColor="#6E7B6C"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif"
+                android:layout_marginTop="6dp"
+                android:drawablePadding="6dp"
+                android:drawableStart="@android:drawable/ic_menu_directions"
+                app:drawableTint="#6E7B6C" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Duración"
-                    android:textAppearance="?attr/textAppearanceLabelSmall"
-                    android:alpha="0.6"/>
-
-                <TextView
-                    android:id="@+id/tvDuracionRuta"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="--"
-                    android:textAppearance="?attr/textAppearanceBodyMedium"/>
-            </LinearLayout>
+            <!-- Métrica de Duración con icono de reloj -->
+            <TextView
+                android:id="@+id/tvDuracionRuta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="01:45:20"
+                android:textColor="#6E7B6C"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif"
+                android:layout_marginTop="4dp"
+                android:drawablePadding="6dp"
+                android:drawableStart="@android:drawable/ic_menu_recent_history"
+                app:drawableTint="#6E7B6C" />
 
         </LinearLayout>
 

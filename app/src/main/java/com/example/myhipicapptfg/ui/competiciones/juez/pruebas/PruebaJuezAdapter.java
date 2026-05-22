@@ -1,5 +1,5 @@
 // com/example/myhipicapptfg/adapters/PruebaJuezAdapter.java
-package com.example.myhipicapptfg.ui.competiciones.juez;
+package com.example.myhipicapptfg.ui.competiciones.juez.pruebas;
 
 import android.view.LayoutInflater;
 import android.view.View;

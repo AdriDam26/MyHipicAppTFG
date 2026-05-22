@@ -1,59 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F3E5F5"> <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:background="#6A1B9A" android:padding="16dp"
-    android:gravity="center_vertical">
+    android:background="#FAF8F5"> <!-- Fondo M3 Surface: Crema/Arena limpio -->
 
-    <ImageButton
-        android:id="@+id/btn_volver_mis_clases"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@android:drawable/ic_menu_revert"
-        android:contentDescription="Volver" />
-
-    <TextView
-        android:id="@+id/tv_titulo_mis_clases"
-        android:layout_width="0dp"
+    <!-- TOOLBAR FIJA: Cuero Oscuro (#5D3A1A) -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="Mis Clases Asignadas"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:fontFamily="serif"
-        android:paddingStart="12dp" />
+        android:orientation="horizontal"
+        android:background="#5D3A1A"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
+        android:gravity="center_vertical"
+        android:elevation="4dp">
 
+        <ImageButton
+            android:id="@+id/btn_volver_mis_clases"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_menu_revert"
+            app:tint="#FFFFFF"
+            android:contentDescription="Volver" />
 
+        <TextView
+            android:id="@+id/tv_titulo_mis_clases"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Mis Clases Asignadas"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:fontFamily="sans-serif-medium"
+            android:paddingStart="8dp" />
 
-</LinearLayout>
+    </LinearLayout>
 
+    <!-- INSTRUCCIÓN DE USO: Resaltada sutilmente en Dorado Cuero (#C8860A) -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Toca una clase para ver los alumnos inscritos"
-        android:textColor="#7B1FA2" android:textSize="13sp"
-        android:paddingHorizontal="20dp"
-        android:paddingTop="14dp"
-        android:paddingBottom="6dp" />
+        android:textColor="#C8860A"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-medium"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="8dp" />
 
+    <!-- ESTADO VACÍO: Integrado cromáticamente con tonos tierra suaves -->
     <TextView
         android:id="@+id/tv_sin_clases"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:text="No tienes clases asignadas"
-        android:textColor="#9575CD" android:textSize="16sp"
+        android:textColor="#8A7B6E"
+        android:textSize="16sp"
+        android:fontFamily="sans-serif"
         android:gravity="center"
+        android:paddingHorizontal="32dp"
         android:visibility="gone" />
 
+    <!-- LISTA DE CLASES ASIGNADAS (RECYCLERVIEW) -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_mis_clases"
         android:layout_width="match_parent"
@@ -61,6 +74,6 @@
         android:layout_weight="1"
         android:clipToPadding="false"
         android:paddingHorizontal="16dp"
-        android:paddingVertical="10dp" />
+        android:paddingVertical="8dp" />
 
 </LinearLayout>

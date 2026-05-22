@@ -5,10 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginVertical="6dp"
-    app:cardCornerRadius="14dp"
-    app:cardElevation="3dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="2dp"
     app:strokeWidth="1dp"
-    app:strokeColor="#E5E7EB">
+    app:strokeColor="#EAF0EA"
+    app:cardBackgroundColor="#FFFFFF">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,7 +17,6 @@
         android:orientation="vertical"
         android:padding="14dp">
 
-        <!-- CABECERA: número + botón eliminar -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -30,8 +30,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textSize="13sp"
+                android:fontFamily="sans-serif-medium"
                 android:textStyle="bold"
-                android:textColor="?attr/colorPrimary"/>
+                android:textColor="#5D3A1A"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnEliminarMovimiento"
@@ -39,17 +40,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Eliminar"
-                android:textColor="#EF4444"
-                android:textSize="12sp"/>
+                android:textColor="#8B1A2E"
+                android:textSize="12sp"
+                android:fontFamily="sans-serif-medium"
+                app:rippleColor="#1A8B1A2E"/>
 
         </LinearLayout>
 
-        <!-- EJERCICIO -->
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Ejercicio *">
+            android:hint="Ejercicio *"
+            app:boxStrokeColor="#1E3D1E"
+            app:hintTextColor="#1E3D1E">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etEjercicioMovimiento"
@@ -58,7 +62,6 @@
                 android:inputType="textCapSentences"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- LETRA + COEFICIENTE -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -70,13 +73,16 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginEnd="8dp"
-                android:hint="Letra (ej: A-C)">
+                android:layout_marginEnd="6dp"
+                android:hint="Letra (ej: A-C)"
+                app:boxStrokeColor="#1E3D1E"
+                app:hintTextColor="#1E3D1E">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etLetraMovimiento"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:inputType="textCapCharacters"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -84,7 +90,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Coeficiente">
+                android:layout_marginStart="6dp"
+                android:hint="Coeficiente"
+                app:boxStrokeColor="#1E3D1E"
+                app:hintTextColor="#1E3D1E">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etCoeficienteMovimiento"
@@ -95,13 +104,14 @@
 
         </LinearLayout>
 
-        <!-- DIRECTRIZ -->
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:hint="Directriz">
+            android:hint="Directriz"
+            app:boxStrokeColor="#1E3D1E"
+            app:hintTextColor="#1E3D1E">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etDirectrizMovimiento"

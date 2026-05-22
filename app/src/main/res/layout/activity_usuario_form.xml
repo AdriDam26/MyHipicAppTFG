@@ -1,442 +1,727 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F7F9FC">
+    android:background="#F5F2EE">
 
-    <LinearLayout
+    <!-- TOOLBAR -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:layout_height="?attr/actionBarSize"
+        android:background="#5D3A1A"
+        android:elevation="4dp"
+        app:navigationIconTint="#FFFFFF"
+        app:title="Formulario Usuario"
+        app:titleTextColor="#FFFFFF"
+        app:subtitleTextColor="#E8D5A3"/>
 
-        <!-- VOLVER -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnVolver"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="VOLVER"
-            app:icon="@android:drawable/ic_menu_revert"/>
+    <!-- ═══════════════════════════════════════════════════
+         CONTENIDO PRINCIPAL
+    ═══════════════════════════════════════════════════ -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:fillViewport="true">
 
-        <!-- TITULO -->
-        <TextView
-            android:id="@+id/tvTituloFormulario"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Usuario"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="20dp"/>
-
-        <!-- NOMBRE -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layNombre"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Nombre">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etNombre"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- APELLIDOS -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:id="@+id/layApellido1"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="4dp"
-                android:layout_height="wrap_content"
-                android:hint="1º Apellido">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etApellido1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:id="@+id/layApellido2"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_marginStart="4dp"
-                android:layout_height="wrap_content"
-                android:hint="2º Apellido">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etApellido2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-        </LinearLayout>
-
-        <!-- DNI -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layDni"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="DNI">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etDni"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- EMAIL -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layEmail"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Email">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etEmail"
-                android:inputType="textEmailAddress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- FECHA NACIMIENTO -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layFechaNacimiento"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Fecha de nacimiento">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etFechaNacimiento"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:clickable="true"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- PREFIJO PAIS -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layPrefijo"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Prefijo país">
-
-            <AutoCompleteTextView
-                android:id="@+id/spinnerPrefijo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="none"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- TELEFONO -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layTelefono"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Teléfono">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etTelefono"
-                android:inputType="phone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- SEXO -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/laySexo"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Sexo">
-
-            <AutoCompleteTextView
-                android:id="@+id/spinnerSexo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="none"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- FOTO DE PERFIL -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:gravity="center"
-            android:layout_marginBottom="20dp">
+            android:padding="20dp">
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/imgFotoPerfil"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:scaleType="centerCrop"
-                app:shapeAppearanceOverlay="@style/CircleImageView"
-                android:src="@drawable/ic_person_placeholder"/>
-
+            <!-- ─────────────────────────────────────── -->
+            <!-- CABECERA DE SECCIÓN — Datos Personales  -->
+            <!-- ─────────────────────────────────────── -->
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="8dp">
+                android:gravity="center_vertical"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnSeleccionarFoto"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:text="Galería"
-                    app:icon="@android:drawable/ic_menu_gallery"/>
+                <!-- Acento burdeos izquierda -->
+                <View
+                    android:layout_width="4dp"
+                    android:layout_height="24dp"
+                    android:background="#8B1A2E"
+                    android:layout_marginEnd="10dp"/>
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnTomarFoto"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="wrap_content"
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text="Cámara"
-                    app:icon="@android:drawable/ic_menu_camera"/>
+                    android:text="Datos Personales"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.12"
+                    android:textColor="#1E3D1E"
+                    android:textAllCaps="true"/>
+
+                <!-- Línea separadora -->
+                <View
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="1dp"
+                    android:background="#C8860A"
+                    android:alpha="0.4"
+                    android:layout_marginStart="10dp"/>
 
             </LinearLayout>
-        </LinearLayout>
 
-        <!-- TIPO -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layTipo"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Tipo de Usuario">
-
-            <AutoCompleteTextView
-                android:id="@+id/spinnerTipo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="none"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- SECCIÓN ALUMNO -->
-        <LinearLayout
-            android:id="@+id/layoutAlumno"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone"
-            android:layout_marginTop="12dp">
-
-            <!-- DOMA CLÁSICA -->
-            <CheckBox
-                android:id="@+id/cbDoma"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Doma Clásica"/>
-
+            <!-- NOMBRE -->
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/layNivelDoma"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Nivel Doma Clásica"
-                android:visibility="gone">
-
-                <AutoCompleteTextView
-                    android:id="@+id/spinnerNivelDoma"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="none"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-            <!-- SALTO -->
-            <CheckBox
-                android:id="@+id/cbSalto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Salto"/>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/layNivelSalto"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Nivel Salto"
-                android:visibility="gone">
-
-                <AutoCompleteTextView
-                    android:id="@+id/spinnerNivelSalto"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="none"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-        </LinearLayout>
-
-        <!-- ========================= -->
-        <!-- PROFESOR -->
-        <!-- ========================= -->
-
-        <LinearLayout
-            android:id="@+id/layoutProfesor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone"
-            android:paddingTop="16dp">
-
-            <!-- Puede dar Doma -->
-            <CheckBox
-                android:id="@+id/cbProfesorDoma"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Puede dar Doma Clásica" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/layNivelMaximoDoma"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:endIconMode="dropdown_menu">
-
-                <AutoCompleteTextView
-                    android:id="@+id/spinnerNivelMaximoDoma"
-                    android:layout_width="match_parent"
-                    android:hint="Nivel máximo Doma"
-                    android:layout_height="wrap_content"
-                    android:inputType="none"
-                    style="@style/Widget.MaterialComponents.AutoCompleteTextView.OutlinedBox"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Puede dar Salto -->
-            <CheckBox
-                android:id="@+id/cbProfesorSalto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Puede dar Salto" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/layNivelMaximoSalto"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:endIconMode="dropdown_menu">
-
-                <AutoCompleteTextView
-                    android:id="@+id/spinnerNivelMaximoSalto"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Nivel máximo Salto"
-                    android:inputType="none"
-                    style="@style/Widget.MaterialComponents.AutoCompleteTextView.OutlinedBox"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Años experiencia -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/layAniosExperiencia"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Años de experiencia">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etAniosExperiencia"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Activo -->
-            <CheckBox
-                android:id="@+id/cbProfesorActivo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Profesor activo"
-                android:checked="true" />
-
-        </LinearLayout>
-
-        <!-- ========================= -->
-        <!-- JUEZ -->
-        <!-- ========================= -->
-
-        <LinearLayout
-            android:id="@+id/layoutJuez"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone"
-            android:paddingTop="16dp">
-
-            <!-- NÚMERO DE LICENCIA -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/layNumeroLicencia"
+                android:id="@+id/layNombre"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Número de licencia">
+                android:layout_marginBottom="12dp"
+                android:hint="Nombre"
+                app:boxStrokeColor="#1E3D1E"
+                app:hintTextColor="#1E3D1E">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etNumeroLicencia"
+                    android:id="@+id/etNombre"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- FEDERACIÓN -->
+            <!-- APELLIDOS en fila -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layApellido1"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="6dp"
+                    android:hint="1º Apellido"
+                    app:boxStrokeColor="#1E3D1E"
+                    app:hintTextColor="#1E3D1E">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etApellido1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layApellido2"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:hint="2º Apellido"
+                    app:boxStrokeColor="#1E3D1E"
+                    app:hintTextColor="#1E3D1E">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etApellido2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <!-- DNI -->
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/layFederacion"
+                android:id="@+id/layDni"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:hint="DNI"
+                app:boxStrokeColor="#1E3D1E"
+                app:hintTextColor="#1E3D1E">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etDni"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textVisiblePassword"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- EMAIL -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layEmail"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:hint="Email"
+                app:startIconTint="#7D5A2E"
+                app:boxStrokeColor="#1E3D1E"
+                app:hintTextColor="#1E3D1E">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- FECHA NACIMIENTO -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layFechaNacimiento"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:hint="Fecha de nacimiento"
+                app:startIconTint="#7D5A2E"
+                app:boxStrokeColor="#1E3D1E"
+                app:hintTextColor="#1E3D1E">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etFechaNacimiento"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:clickable="true"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- PREFIJO PAÍS -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layPrefijo"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:endIconMode="dropdown_menu"
-                android:hint="Federación">
+                android:layout_marginBottom="12dp"
+                android:hint="Prefijo país"
+                app:boxStrokeColor="#1E3D1E"
+                app:hintTextColor="#1E3D1E">
 
                 <AutoCompleteTextView
-                    android:id="@+id/spinnerFederacion"
+                    android:id="@+id/spinnerPrefijo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="none"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- ACTIVO -->
-            <CheckBox
-                android:id="@+id/cbJuezActivo"
+            <!-- TELÉFONO -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layTelefono"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:hint="Teléfono"
+                app:startIconTint="#7D5A2E"
+                app:boxStrokeColor="#1E3D1E"
+                app:hintTextColor="#1E3D1E">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etTelefono"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="phone"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- SEXO -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/laySexo"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:hint="Sexo"
+                app:boxStrokeColor="#1E3D1E"
+                app:hintTextColor="#1E3D1E">
+
+                <AutoCompleteTextView
+                    android:id="@+id/spinnerSexo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- ─────────────────────────────────────── -->
+            <!-- FOTO DE PERFIL — Card con acento bronce -->
+            <!-- ─────────────────────────────────────── -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:strokeColor="#C8860A"
+                app:strokeWidth="1dp"
+                app:cardBackgroundColor="#FDFAF5">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="20dp">
+
+                    <!-- Etiqueta interna -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="FOTO DE PERFIL"
+                        android:textSize="11sp"
+                        android:letterSpacing="0.15"
+                        android:textColor="#7D5A2E"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="14dp"/>
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/imgFotoPerfil"
+                        android:layout_width="96dp"
+                        android:layout_height="96dp"
+                        android:scaleType="centerCrop"
+                        app:shapeAppearanceOverlay="@style/CircleImageView"
+                        app:strokeColor="#C8860A"
+                        app:strokeWidth="2dp"
+                        android:src="@drawable/ic_person_placeholder"
+                        android:layout_marginBottom="14dp"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnSeleccionarFoto"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:text="Galería"
+                            app:strokeColor="#7D5A2E"
+                            app:iconTint="#7D5A2E"
+                            android:textColor="#7D5A2E"
+                            app:icon="@android:drawable/ic_menu_gallery"/>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnTomarFoto"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Cámara"
+                            app:strokeColor="#7D5A2E"
+                            app:iconTint="#7D5A2E"
+                            android:textColor="#7D5A2E"
+                            app:icon="@android:drawable/ic_menu_camera"/>
+
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ─────────────────────────────────────── -->
+            <!-- SEPARADOR — Configuración de Rol        -->
+            <!-- ─────────────────────────────────────── -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="16dp">
+
+                <View
+                    android:layout_width="4dp"
+                    android:layout_height="24dp"
+                    android:background="#8B1A2E"
+                    android:layout_marginEnd="10dp"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Configuración de Rol"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.12"
+                    android:textColor="#1E3D1E"
+                    android:textAllCaps="true"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="1dp"
+                    android:background="#C8860A"
+                    android:alpha="0.4"
+                    android:layout_marginStart="10dp"/>
+
+            </LinearLayout>
+
+            <!-- TIPO DE USUARIO -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layTipo"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:hint="Tipo de Usuario"
+                app:boxStrokeColor="#1E3D1E"
+                app:hintTextColor="#1E3D1E">
+
+                <AutoCompleteTextView
+                    android:id="@+id/spinnerTipo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- ═══════════════════════════════════════ -->
+            <!-- SECCIÓN ALUMNO                          -->
+            <!-- ═══════════════════════════════════════ -->
+            <LinearLayout
+                android:id="@+id/layoutAlumno"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="1dp"
+                    app:strokeColor="#1E3D1E"
+                    app:strokeWidth="1dp"
+                    app:cardBackgroundColor="#F0F5F0">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🐴  Disciplinas del alumno"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.1"
+                            android:textColor="#1E3D1E"
+                            android:textAllCaps="true"
+                            android:layout_marginBottom="12dp"/>
+
+                        <!-- DOMA CLÁSICA -->
+                        <CheckBox
+                            android:id="@+id/cbDoma"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Doma Clásica"
+                            android:textColor="#2C2C2C"
+                            android:buttonTint="#1E3D1E"/>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/layNivelDoma"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginBottom="12dp"
+                            android:hint="Nivel Doma Clásica"
+                            android:visibility="gone"
+                            app:boxStrokeColor="#1E3D1E"
+                            app:hintTextColor="#1E3D1E">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/spinnerNivelDoma"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="none"/>
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- SALTO -->
+                        <CheckBox
+                            android:id="@+id/cbSalto"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Salto"
+                            android:textColor="#2C2C2C"
+                            android:buttonTint="#1E3D1E"/>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/layNivelSalto"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:hint="Nivel Salto"
+                            android:visibility="gone"
+                            app:boxStrokeColor="#1E3D1E"
+                            app:hintTextColor="#1E3D1E">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/spinnerNivelSalto"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="none"/>
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+            <!-- ═══════════════════════════════════════ -->
+            <!-- SECCIÓN PROFESOR                        -->
+            <!-- ═══════════════════════════════════════ -->
+            <LinearLayout
+                android:id="@+id/layoutProfesor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="1dp"
+                    app:strokeColor="#1E3D1E"
+                    app:strokeWidth="1dp"
+                    app:cardBackgroundColor="#F0F5F0">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🎓  Capacidades del Profesor"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.1"
+                            android:textColor="#1E3D1E"
+                            android:textAllCaps="true"
+                            android:layout_marginBottom="12dp"/>
+
+                        <!-- Puede dar Doma -->
+                        <CheckBox
+                            android:id="@+id/cbProfesorDoma"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Puede dar Doma Clásica"
+                            android:textColor="#2C2C2C"
+                            android:buttonTint="#1E3D1E"/>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/layNivelMaximoDoma"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginBottom="12dp"
+                            android:hint="Nivel máximo Doma"
+                            android:visibility="gone"
+                            app:endIconMode="dropdown_menu"
+                            app:boxStrokeColor="#1E3D1E"
+                            app:hintTextColor="#1E3D1E">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/spinnerNivelMaximoDoma"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="none"
+                                style="@style/Widget.MaterialComponents.AutoCompleteTextView.OutlinedBox"/>
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- Puede dar Salto -->
+                        <CheckBox
+                            android:id="@+id/cbProfesorSalto"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Puede dar Salto"
+                            android:textColor="#2C2C2C"
+                            android:buttonTint="#1E3D1E"/>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/layNivelMaximoSalto"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginBottom="12dp"
+                            android:hint="Nivel máximo Salto"
+                            android:visibility="gone"
+                            app:endIconMode="dropdown_menu"
+                            app:boxStrokeColor="#1E3D1E"
+                            app:hintTextColor="#1E3D1E">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/spinnerNivelMaximoSalto"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="none"
+                                style="@style/Widget.MaterialComponents.AutoCompleteTextView.OutlinedBox"/>
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- Años de experiencia -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/layAniosExperiencia"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="12dp"
+                            android:hint="Años de experiencia"
+                            app:boxStrokeColor="#1E3D1E"
+                            app:hintTextColor="#1E3D1E">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etAniosExperiencia"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="number"/>
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- Activo -->
+                        <CheckBox
+                            android:id="@+id/cbProfesorActivo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Profesor activo"
+                            android:checked="true"
+                            android:textColor="#2C2C2C"
+                            android:buttonTint="#1E3D1E"/>
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+            <!-- ═══════════════════════════════════════ -->
+            <!-- SECCIÓN JUEZ                            -->
+            <!-- ═══════════════════════════════════════ -->
+            <LinearLayout
+                android:id="@+id/layoutJuez"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="1dp"
+                    app:strokeColor="#8B1A2E"
+                    app:strokeWidth="1dp"
+                    app:cardBackgroundColor="#FDF5F5">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="⚖️  Datos del Juez"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.1"
+                            android:textColor="#8B1A2E"
+                            android:textAllCaps="true"
+                            android:layout_marginBottom="12dp"/>
+
+                        <!-- Número de licencia -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/layNumeroLicencia"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="12dp"
+                            android:hint="Número de licencia"
+                            app:boxStrokeColor="#1E3D1E"
+                            app:hintTextColor="#1E3D1E">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etNumeroLicencia"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"/>
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- Federación -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/layFederacion"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="12dp"
+                            android:hint="Federación"
+                            app:endIconMode="dropdown_menu"
+                            app:boxStrokeColor="#1E3D1E"
+                            app:hintTextColor="#1E3D1E">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/spinnerFederacion"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="none"/>
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- Activo -->
+                        <CheckBox
+                            android:id="@+id/cbJuezActivo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Juez activo"
+                            android:checked="true"
+                            android:textColor="#2C2C2C"
+                            android:buttonTint="#8B1A2E"/>
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+            <!-- ─────────────────────────────────────── -->
+            <!-- BOTÓN GUARDAR — Estilo Admin            -->
+            <!-- ─────────────────────────────────────── -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGuardar"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="8dp"
+                android:text="GUARDAR USUARIO"
+                android:textStyle="bold"
+                android:letterSpacing="0.08"
+                android:backgroundTint="#1E3D1E"
+                android:textColor="#E8D5A3"
+                app:cornerRadius="8dp"
+                app:iconTint="#E8D5A3"
+                app:iconGravity="textStart"/>
+
+            <!-- PROGRESS -->
+            <ProgressBar
+                android:id="@+id/progressBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Juez activo"
-                android:checked="true"/>
+                android:layout_gravity="center"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="24dp"
+                android:indeterminateTint="#C8860A"
+                android:visibility="gone"/>
 
         </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
-        <!-- GUARDAR -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnGuardar"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginTop="24dp"
-            android:text="GUARDAR"/>
-
-        <!-- PROGRESS -->
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="16dp"
-            android:visibility="gone"/>
-
-    </LinearLayout>
-</ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

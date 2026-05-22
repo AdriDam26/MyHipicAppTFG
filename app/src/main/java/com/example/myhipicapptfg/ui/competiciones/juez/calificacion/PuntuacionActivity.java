@@ -1,4 +1,4 @@
-package com.example.myhipicapptfg.ui.competiciones.juez;
+package com.example.myhipicapptfg.ui.competiciones.juez.calificacion;
 
 import android.os.Bundle;
 import android.widget.RadioGroup;
@@ -27,7 +27,7 @@ public class PuntuacionActivity extends AppCompatActivity {
     public static final String EXTRA_NOMBRE_CABALLO    = "nombre_caballo";
     public static final String EXTRA_CORRECCION_PREVIA = "correccion_previa";
 
-    private PuntuacionViewModel   vm;
+    private PuntuacionViewModel vm;
     private MovimientoNotaAdapter adapter;
 
     private TextView   tvNotaFinal, tvPorcentaje;
@@ -130,6 +130,30 @@ public class PuntuacionActivity extends AppCompatActivity {
         return 0.0;
     }
 
+    private boolean validarNotas() {
+
+        List<MovimientoConNota> items = adapter.getItems();
+
+        for (MovimientoConNota m : items) {
+
+            if (m.nota < 0 || m.nota > 10) {
+                Toast.makeText(this,
+                        "❌ La nota de \"" + m.ejercicio + "\" debe estar entre 0 y 10",
+                        Toast.LENGTH_LONG).show();
+                return false;
+            }
+
+            if (m.observacion == null || m.observacion.trim().isEmpty()) {
+                Toast.makeText(this,
+                        "❌ Falta observación en: " + m.ejercicio,
+                        Toast.LENGTH_LONG).show();
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     private void guardar(int idParticipacion) {
         List<MovimientoConNota> items = adapter.getItems();
 
@@ -146,19 +170,8 @@ public class PuntuacionActivity extends AppCompatActivity {
 
         // 2. Validar notas y observaciones (solo si no está eliminado)
         if (!eliminado) {
-            for (MovimientoConNota m : items) {
-                if (m.nota <= 0 || m.nota > 10) {
-                    Toast.makeText(this,
-                            "Falta nota o está fuera de rango en: " + m.ejercicio,
-                            Toast.LENGTH_LONG).show();
-                    return;
-                }
-                if (m.observacion == null || m.observacion.trim().isEmpty()) {
-                    Toast.makeText(this,
-                            "Falta observación en: " + m.ejercicio,
-                            Toast.LENGTH_LONG).show();
-                    return;
-                }
+            if (!validarNotas()) {
+                return;
             }
         }
 

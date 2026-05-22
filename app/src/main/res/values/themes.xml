@@ -12,4 +12,21 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
     </style>
+
+    <!-- Estilo base para el Diálogo de Rutas -->
+    <style name="Theme.MyHipicApp.Dialog.Rutas" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <!-- Color del título y acentos principales (Verde Pradera) -->
+        <item name="colorPrimary">#3A6B2E</item>
+        <!-- Color de los botones de texto (Seguir ruta, Eliminar, Cancelar) -->
+        <item name="colorAccent">#3A6B2E</item>
+        <!-- Color del texto del cuerpo del mensaje -->
+        <item name="colorOnSurfaceVariant">#5D3A1A</item> <!-- Cuero oscuro para las métricas -->
+    </style>
+
+    <!-- Estilo específico si deseas que el botón de "Eliminar" tenga un tinte destructivo/aviso -->
+    <style name="Theme.MyHipicApp.Dialog.Rutas.Eliminar" parent="Theme.MyHipicApp.Dialog.Rutas">
+        <!-- Usamos el burdeos de competiciones o un rojo sutil para avisar de la eliminación -->
+        <item name="colorPrimary">#8B1A2E</item>
+        <item name="colorAccent">#8B1A2E</item>
+    </style>
 </resources>

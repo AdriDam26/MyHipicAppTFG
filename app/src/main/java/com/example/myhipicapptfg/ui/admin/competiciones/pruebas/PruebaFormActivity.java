@@ -321,6 +321,21 @@ public class PruebaFormActivity extends AppCompatActivity {
             }
         }
 
+        for (int i = 0; i < listLetra.size(); i++) {
+            String letra = listLetra.get(i).getText().toString().trim().toUpperCase();
+
+            if (!letra.isEmpty()) {
+                if (!validarFormatoLetras(letra)) {
+                    Toast.makeText(this,
+                            "Formato de letras inválido en el movimiento " + (i + 1)
+                                    + " (ej: E-B-M)",
+                            Toast.LENGTH_SHORT).show();
+                    ok = false;
+                    break;
+                }
+            }
+        }
+
         return ok;
     }
 
@@ -352,7 +367,10 @@ public class PruebaFormActivity extends AppCompatActivity {
             double coef    = coefStr.isEmpty() ? 1.0 : Double.parseDouble(coefStr);
             movimientos.add(new Movimiento(
                     listEjercicio.get(i).getText().toString().trim(),
-                    listLetra.get(i).getText().toString().trim(),
+                    listLetra.get(i).getText().toString()
+                            .trim()
+                            .toUpperCase()
+                            .replace(" ", ""),
                     i + 1, coef,
                     listDirectriz.get(i).getText().toString().trim(),
                     0
@@ -388,6 +406,39 @@ public class PruebaFormActivity extends AppCompatActivity {
                     break;
             }
         });
+    }
+
+
+    private boolean validarFormatoLetras(String input) {
+        if (input == null) return false;
+
+        input = input.trim().toUpperCase();
+
+        // Solo letras y guiones
+        if (!input.matches("[A-Z\\-]+")) return false;
+
+        // No empezar ni terminar con guion
+        if (input.startsWith("-") || input.endsWith("-")) return false;
+
+        // No dobles guiones
+        if (input.contains("--")) return false;
+
+        String letrasValidas = "ABCDEFGHKMPRSVWX";
+
+        // Si NO hay guion → es una sola letra
+        if (!input.contains("-")) {
+            return input.length() == 1 && letrasValidas.contains(input);
+        }
+
+        // Si hay guiones → secuencia
+        String[] partes = input.split("-");
+
+        for (String p : partes) {
+            if (p.isEmpty()) return false;
+            if (!letrasValidas.contains(p)) return false;
+        }
+
+        return true;
     }
 
     @Override

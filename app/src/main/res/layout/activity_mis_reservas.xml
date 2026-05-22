@@ -5,23 +5,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5">
+    android:background="#FAF8F5"> <!-- Fondo Crema/Arena limpio hípico -->
 
+    <!-- ─── APP BAR ─── -->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:elevation="4dp"
+        app:liftOnScroll="true">
 
+        <!-- COLOR CUERO OSCURO (#5D3A1A) APLICADO DIRECTAMENTE AQUÍ -->
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:background="#5D3A1A"
             app:title="Mis Reservas"
-            app:titleTextColor="@android:color/black"
-            android:background="@android:color/white"
-            app:elevation="4dp" />
+            app:titleTextColor="#FFFFFF" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <!-- ─── SCROLLABLE CONTENT ─── -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -30,53 +34,106 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:orientation="vertical">
 
+            <!-- Subtítulo informativo en Dorado Cuero -->
             <TextView
-                android:id="@+id/tvTituloSeccion"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Tus próximas clases"
-                android:textAppearance="?attr/textAppearanceTitleLarge"
-                android:layout_marginBottom="16dp"
-                android:textColor="@android:color/black"
-                android:textStyle="bold"/>
+                android:text="Gestiona y consulta tus clases reservadas"
+                android:textColor="#C8860A"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-medium"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="6dp" />
 
+            <!-- ─── SECTION HEADER CARD ─── -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="4dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:strokeColor="#EAD9C9"
+                app:strokeWidth="1dp"
+                app:cardBackgroundColor="#FFFFFF">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="16dp">
+
+                    <!-- Texto de sección con la identidad de Cuero Oscuro -->
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="🗓️  Tus próximas clases"
+                        android:textColor="#5D3A1A"
+                        android:textSize="16sp"
+                        android:fontFamily="sans-serif-medium" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ─── RECYCLER ─── -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerMisReservas"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:clipToPadding="false"
+                android:paddingHorizontal="16dp"
+                android:paddingBottom="16dp"
                 android:nestedScrollingEnabled="false"
                 tools:listitem="@layout/item_clase_reserva" />
 
+            <!-- ─── EMPTY STATE (ESTADO VACÍO) ─── -->
             <LinearLayout
                 android:id="@+id/layoutEmptyReservas"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:padding="60dp"
+                android:padding="40dp"
                 android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="📭"
+                    android:textSize="48sp"
+                    android:layout_marginBottom="16dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="No tienes reservas activas"
-                    android:textAppearance="?attr/textAppearanceBodyLarge"
-                    android:textStyle="bold"
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    android:textColor="#5D3A1A"
+                    android:textSize="16sp"
+                    android:fontFamily="sans-serif-medium" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="Tus clases reservadas aparecerán aquí."
-                    android:textAppearance="?attr/textAppearanceBodyMedium"
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    android:textColor="#8A7B6E"
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif" />
+
             </LinearLayout>
 
         </LinearLayout>
+
     </androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

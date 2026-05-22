@@ -1,4 +1,4 @@
-package com.example.myhipicapptfg.ui.competiciones.participantes;
+package com.example.myhipicapptfg.ui.competiciones.participantes.calificacion;
 
 import android.view.LayoutInflater;
 import android.view.View;

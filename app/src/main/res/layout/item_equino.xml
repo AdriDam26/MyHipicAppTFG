@@ -3,166 +3,159 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:flexbox="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
     android:layout_marginVertical="6dp"
-    app:cardCornerRadius="16dp"
+    app:cardCornerRadius="20dp"
     app:cardElevation="2dp"
     app:strokeWidth="1dp"
-    app:strokeColor="#F3F4F6">
+    app:strokeColor="#EAF0EA"
+    app:cardBackgroundColor="#FFFFFF">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:paddingHorizontal="12dp"
-        android:paddingVertical="12dp">
+        android:paddingVertical="14dp"
+        android:gravity="center_vertical">
 
-        <!-- Indicador lateral -->
         <View
             android:id="@+id/viewIndicatorEquino"
             android:layout_width="4dp"
-            android:layout_height="0dp"
-            android:background="?attr/colorPrimary"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:layout_height="72dp"
+            android:background="#1E3D1E" />
 
-        <!-- FOTO -->
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/imgFotoEquino"
-            android:layout_width="52dp"
-            android:layout_height="52dp"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
             android:layout_marginStart="12dp"
             android:scaleType="centerCrop"
             app:shapeAppearanceOverlay="@style/CircleImageView"
-            app:layout_constraintStart_toEndOf="@id/viewIndicatorEquino"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:src="@drawable/ic_horse_placeholder"/>
+            android:src="@drawable/ic_horse_placeholder" />
 
-        <!-- Nombre -->
-        <TextView
-            android:id="@+id/txtNombreEquino"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="#1E293B"
-            android:maxLines="1"
-            android:ellipsize="end"
-            app:layout_constraintStart_toEndOf="@id/imgFotoEquino"
-            app:layout_constraintEnd_toStartOf="@id/layoutActionsEquino"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/txtRazaEquino"
-            app:layout_constraintVertical_chainStyle="packed"
-            tools:text="Tornado" />
-
-        <!-- Raza -->
-        <TextView
-            android:id="@+id/txtRazaEquino"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="2dp"
-            android:textSize="13sp"
-            android:textColor="#64748B"
-            android:maxLines="1"
-            android:ellipsize="end"
-            app:layout_constraintStart_toEndOf="@id/imgFotoEquino"
-            app:layout_constraintEnd_toStartOf="@id/layoutActionsEquino"
-            app:layout_constraintTop_toBottomOf="@id/txtNombreEquino"
-            app:layout_constraintBottom_toTopOf="@id/txtMicrochipEquino"
-            tools:text="Pura Sangre" />
-
-        <!-- Microchip -->
-        <TextView
-            android:id="@+id/txtMicrochipEquino"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="2dp"
-            android:textSize="12sp"
-            android:textColor="#94A3B8"
-            android:maxLines="1"
-            android:ellipsize="end"
-            app:layout_constraintStart_toEndOf="@id/imgFotoEquino"
-            app:layout_constraintEnd_toStartOf="@id/layoutActionsEquino"
-            app:layout_constraintTop_toBottomOf="@id/txtRazaEquino"
-            app:layout_constraintBottom_toTopOf="@id/layoutBadgesEquino"
-            tools:text="Chip: 981001234567890" />
-
-        <!-- Badges: disciplina + temperamento en fila -->
+        <!-- CONTENIDO -->
         <LinearLayout
-            android:id="@+id/layoutBadgesEquino"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="6dp"
-            app:layout_constraintStart_toEndOf="@id/imgFotoEquino"
-            app:layout_constraintEnd_toStartOf="@id/layoutActionsEquino"
-            app:layout_constraintTop_toBottomOf="@id/txtMicrochipEquino"
-            app:layout_constraintBottom_toBottomOf="parent">
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="8dp">
 
-            <!-- Disciplina -->
             <TextView
-                android:id="@+id/txtDisciplinaEquino"
-                android:layout_width="wrap_content"
+                android:id="@+id/txtNombreEquino"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="6dp"
-                android:paddingHorizontal="10dp"
-                android:paddingVertical="3dp"
-                android:textSize="10sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
-                android:textColor="#1D4ED8"
-                android:backgroundTint="#DBEAFE"
-                tools:text="DOMA + SALTO" />
+                android:fontFamily="sans-serif-medium"
+                android:textColor="#1A1C1E"
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:text="Tornado del Valle Imperial" />
 
-            <!-- Temperamento -->
             <TextView
-                android:id="@+id/txtTemperamentoEquino"
-                android:layout_width="wrap_content"
+                android:id="@+id/txtRazaEquino"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="10dp"
-                android:paddingVertical="3dp"
-                android:textSize="10sp"
-                android:textStyle="bold"
-                android:textColor="#FFFFFF"
-                android:backgroundTint="#D97706"
-                tools:text="MANEJABLE" />
+                android:layout_marginTop="2dp"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif"
+                android:textColor="#5D3A1A"
+                android:maxLines="2"
+                android:ellipsize="end"
+                tools:text="Pura Sangre Inglés de Competición Internacional" />
+
+            <TextView
+                android:id="@+id/txtMicrochipEquino"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textSize="12sp"
+                android:fontFamily="sans-serif"
+                android:textColor="#7A6855"
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:text="Chip: 981001234567890" />
+
+            <!-- BADGES FLEXIBLES -->
+            <com.google.android.flexbox.FlexboxLayout
+                android:id="@+id/layoutBadgesEquino"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                flexbox:flexWrap="wrap"
+                flexbox:alignItems="center">
+
+                <TextView
+                    android:id="@+id/txtDisciplinaEquino"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="6dp"
+                    android:layout_marginBottom="6dp"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="4dp"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:fontFamily="sans-serif-medium"
+                    android:textColor="#1E3D1E"
+                    android:background="@drawable/bg_badge_rounded"
+                    android:backgroundTint="#1A1E3D1E"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    tools:text="DOMA + SALTO" />
+
+                <TextView
+                    android:id="@+id/txtTemperamentoEquino"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="6dp"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="4dp"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:fontFamily="sans-serif-medium"
+                    android:textColor="#5D3A1A"
+                    android:background="@drawable/bg_badge_rounded"
+                    android:backgroundTint="#1F5D3A1A"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    tools:text="MUY ENÉRGICO Y MANEJABLE" />
+
+            </com.google.android.flexbox.FlexboxLayout>
 
         </LinearLayout>
 
-        <!-- Acciones -->
+        <!-- ACCIONES -->
         <LinearLayout
             android:id="@+id/layoutActionsEquino"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:gravity="center"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
+            android:gravity="center">
 
             <ImageButton
                 android:id="@+id/btnEditarEquino"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@android:drawable/ic_menu_edit"
-                app:tint="#94A3B8" />
+                app:tint="#7A6855" />
 
             <ImageButton
                 android:id="@+id/btnEliminarEquino"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@android:drawable/ic_menu_delete"
-                app:tint="#F87171" />
+                app:tint="#8B1A2E" />
+
         </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>

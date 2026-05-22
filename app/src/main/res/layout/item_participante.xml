@@ -6,10 +6,10 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
     android:layout_marginVertical="6dp"
-    app:cardCornerRadius="12dp"
+    app:cardCornerRadius="16dp"
     app:cardElevation="0dp"
     app:strokeWidth="1dp"
-    app:strokeColor="#E1BEE7"
+    app:strokeColor="#EAD9C9"
     app:cardBackgroundColor="@android:color/white"
     android:clickable="true"
     android:focusable="true"
@@ -22,12 +22,13 @@
         android:padding="12dp"
         android:gravity="center_vertical">
 
+        <!-- CÍRCULO DE ORDEN DE SALIDA -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="44dp"
             android:layout_height="44dp"
             app:cardCornerRadius="22dp"
             app:cardElevation="0dp"
-            app:cardBackgroundColor="#F3E5F5"
+            app:cardBackgroundColor="#F5EAEA"
             app:strokeWidth="0dp">
 
             <TextView
@@ -36,12 +37,12 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="1"
-                android:textColor="#6A1B9A"
+                android:textColor="#8B1A2E"
                 android:textSize="16sp"
-                android:textStyle="bold"
                 android:fontFamily="sans-serif-medium" />
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- INFORMACIÓN DEL BINOMIO (JINETE Y CABALLO) -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -54,9 +55,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Nombre Jinete"
-                android:textColor="#212121"
+                android:textColor="#5D3A1A"
                 android:textSize="16sp"
-                android:textStyle="bold"
                 android:fontFamily="sans-serif-medium" />
 
             <LinearLayout
@@ -70,7 +70,7 @@
                     android:layout_width="14dp"
                     android:layout_height="14dp"
                     android:src="@android:drawable/btn_star_big_on"
-                    app:tint="#9575CD"
+                    app:tint="#8A7B6E"
                     android:layout_marginEnd="4dp"/>
 
                 <TextView
@@ -78,18 +78,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Nombre Caballo"
-                    android:textColor="#757575"
+                    android:textColor="#8A7B6E"
                     android:textSize="13sp"
                     android:fontFamily="sans-serif" />
             </LinearLayout>
         </LinearLayout>
 
+        <!-- Flecha de navegación final -->
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@android:drawable/ic_media_play"
-            android:alpha="0.3"
-            app:tint="#6A1B9A" />
+            android:alpha="0.4"
+            app:tint="#8A7B6E" />
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

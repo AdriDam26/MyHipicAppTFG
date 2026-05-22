@@ -1,4 +1,4 @@
-package com.example.myhipicapptfg.ui.competiciones.juez;
+package com.example.myhipicapptfg.ui.competiciones.juez.calificacion;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -77,8 +77,6 @@ public class MovimientoNotaAdapter
                 int pos = (int) h.etNota.getTag();
                 try {
                     double v = Double.parseDouble(s.toString());
-                    if (v < 0)  v = 0;
-                    if (v > 10) v = 10;
                     items.get(pos).nota = v;
                 } catch (NumberFormatException ignored) {
                     items.get(pos).nota = 0;

@@ -65,27 +65,8 @@ public interface ReservaClaseDao {
     @Query("SELECT EXISTS(SELECT 1 FROM ReservaClase WHERE ID_Alumno = :idAlu AND ID_Clase = :idCla)")
     boolean yaEstaReservado(int idAlu, int idCla);
 
-    // --- FILTRADO DE CLASES RECOMENDADAS ---
-
-    @Query("SELECT * FROM Clase WHERE " +
-            "( (Disciplina = 'Doma' AND Nivel = :nivelDoma AND :practicaDoma = 1) OR " +
-            "  (Disciplina = 'Salto' AND Nivel = :nivelSalto AND :practicaSalto = 1) ) " +
-            "AND Fecha BETWEEN :inicioDia AND :finDia " +
-            "ORDER BY Hora_Inicio ASC")
-    LiveData<List<Clase>> obtenerClases(
-            String nivelDoma,
-            int practicaDoma,
-            String nivelSalto,
-            int practicaSalto,
-            long inicioDia,
-            long finDia
-    );
 
 
-
-    // Para contar los inscritos en tiempo real
-    @Query("SELECT * FROM ReservaClase")
-    LiveData<List<ReservaClase>> obtenerTodasLasReservas();
 
 
     @Query("SELECT " +

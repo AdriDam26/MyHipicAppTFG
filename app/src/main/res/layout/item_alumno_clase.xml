@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
+<com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="10dp"
-    app:cardCornerRadius="14dp"
-    app:cardElevation="3dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="0dp"
+    app:strokeColor="#EAD9C9"
+    app:strokeWidth="1dp"
     app:cardBackgroundColor="#FFFFFF">
 
     <LinearLayout
@@ -16,6 +18,7 @@
         android:padding="16dp"
         android:gravity="center_vertical">
 
+        <!-- AVATAR DEL ALUMNO: Borde perimetral en Dorado Cuero (#C8860A) -->
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_foto_alumno"
             android:layout_width="48dp"
@@ -24,7 +27,7 @@
             android:scaleType="centerCrop"
             android:src="@drawable/ic_person_placeholder"
             app:shapeAppearanceOverlay="@style/CircleImageView"
-            app:strokeColor="#E1BEE7"
+            app:strokeColor="#C8860A"
             app:strokeWidth="2dp" />
 
         <LinearLayout
@@ -32,28 +35,31 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <!-- Nombre completo con la fuerza del Cuero Oscuro -->
             <TextView
                 android:id="@+id/tv_nombre_completo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Ana García López"
-                android:textColor="#4A148C"
+                android:textColor="#5D3A1A"
                 android:textSize="15sp"
-                android:textStyle="bold" />
+                android:fontFamily="sans-serif-medium" />
 
+            <!-- Teléfono en tono tierra secundario con app:drawableTint seguro -->
             <TextView
                 android:id="@+id/tv_telefono"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="612 345 678"
-                android:textColor="#7B1FA2"
+                android:textColor="#8A7B6E"
                 android:textSize="13sp"
+                android:fontFamily="sans-serif"
                 android:layout_marginTop="3dp"
                 android:drawablePadding="5dp"
-                android:drawableTint="#9C27B0" />
+                app:drawableTint="#8A7B6E" />
 
         </LinearLayout>
 
     </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

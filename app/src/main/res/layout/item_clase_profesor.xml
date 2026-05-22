@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
+<com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
-    app:cardCornerRadius="14dp"
-    app:cardElevation="4dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="0dp"
+    app:strokeColor="#EAD9C9"
+    app:strokeWidth="1dp"
     app:cardBackgroundColor="#FFFFFF"
     android:foreground="?attr/selectableItemBackground">
 
@@ -17,11 +19,12 @@
         android:padding="16dp"
         android:gravity="center_vertical">
 
+        <!-- BANDA LATERAL: Resaltada en Dorado Cuero (#C8860A) -->
         <View
             android:id="@+id/view_banda"
-            android:layout_width="5dp"
-            android:layout_height="56dp"
-            android:background="#7B1FA2"
+            android:layout_width="6dp"
+            android:layout_height="60dp"
+            android:background="#C8860A"
             android:layout_marginEnd="14dp" />
 
         <LinearLayout
@@ -30,49 +33,55 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
+            <!-- Disciplina / Título principal en Dorado Cuero -->
             <TextView
                 android:id="@+id/tv_disciplina"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Doma"
-                android:textColor="#4A148C"
-                android:textSize="17sp"
-                android:textStyle="bold"
-                android:fontFamily="serif" />
+                android:textColor="#C8860A"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium" />
 
+            <!-- Nivel de la clase en Cuero Oscuro -->
             <TextView
                 android:id="@+id/tv_nivel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Principiante"
-                android:textColor="#7B1FA2"
+                android:textColor="#5D3A1A"
                 android:textSize="13sp"
+                android:fontFamily="sans-serif-medium"
                 android:layout_marginTop="2dp" />
 
+            <!-- Fecha en un tono tierra secundario muy legible -->
             <TextView
                 android:id="@+id/tv_fecha"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Lunes, 5 May 2025"
-                android:textColor="#6A5177"
+                android:text="Lunes, 5 May 2026"
+                android:textColor="#8A7B6E"
                 android:textSize="13sp"
+                android:fontFamily="sans-serif"
                 android:layout_marginTop="6dp"
-                android:drawablePadding="4dp"
-                android:drawableTint="#9C27B0" />
+                android:drawablePadding="6dp"
+                app:drawableTint="#8A7B6E" /> <!-- Tint de icono corregido con app: para evitar fallos -->
 
+            <!-- Horario de la clase -->
             <TextView
                 android:id="@+id/tv_horario"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="09:00 – 10:00"
-                android:textColor="#6A5177"
+                android:textColor="#8A7B6E"
                 android:textSize="13sp"
-                android:layout_marginTop="3dp"
-                android:drawablePadding="4dp"
-                android:drawableTint="#9C27B0" />
+                android:fontFamily="sans-serif"
+                android:layout_marginTop="4dp"
+                android:drawablePadding="6dp"
+                app:drawableTint="#8A7B6E" />
 
         </LinearLayout>
 
     </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

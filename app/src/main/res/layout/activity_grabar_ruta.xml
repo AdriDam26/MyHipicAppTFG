@@ -12,106 +12,161 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!-- Card superior con estadísticas -->
+    <!-- Card superior con estadísticas (Estilo Hípico Integrado) -->
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardEstadisticas"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="12dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         app:cardCornerRadius="16dp"
-        app:cardElevation="6dp">
+        app:cardElevation="0dp"
+        app:strokeColor="#E2EAE0"
+        app:strokeWidth="1dp"
+        app:cardBackgroundColor="#FFFFFF">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:gravity="center_vertical">
 
-            <TextView
-                android:id="@+id/tvEstado"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Listo para grabar"
-                android:textAppearance="?attr/textAppearanceTitleMedium"
-                android:layout_marginBottom="12dp"/>
+            <!-- BANDA LATERAL: Resaltada en Verde Pradera (#3A6B2E) -->
+            <View
+                android:id="@+id/view_banda_est"
+                android:layout_width="6dp"
+                android:layout_height="64dp"
+                android:background="#3A6B2E"
+                android:layout_marginEnd="14dp" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-                <!-- Distancia -->
-                <LinearLayout
-                    android:layout_width="0dp"
+                <!-- Estado del GPS / Grabación -->
+                <TextView
+                    android:id="@+id/tvEstado"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:text="Listo para grabar"
+                    android:textColor="#3A6B2E"
+                    android:textSize="16sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:layout_marginBottom="10dp"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Distancia"
-                        android:textAppearance="?attr/textAppearanceLabelSmall"/>
-
-                    <TextView
-                        android:id="@+id/tvDistancia"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0.00 km"
-                        android:textAppearance="?attr/textAppearanceHeadlineSmall"/>
-                </LinearLayout>
-
-                <!-- Tiempo -->
+                <!-- Contenedor Métricas de Salida -->
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <!-- Distancia Recorrida -->
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Tiempo"
-                        android:textAppearance="?attr/textAppearanceLabelSmall"/>
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/tvTiempo"
-                        android:layout_width="wrap_content"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="DISTANCIA"
+                            android:textSize="11sp"
+                            android:fontFamily="sans-serif-medium"
+                            android:textColor="#5D3A1A"
+                            android:alpha="0.8"/>
+
+                        <TextView
+                            android:id="@+id/tvDistancia"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0.00 km"
+                            android:textColor="#1A1C1E"
+                            android:textSize="22sp"
+                            android:fontFamily="sans-serif-medium"
+                            android:layout_marginTop="2dp"/>
+                    </LinearLayout>
+
+                    <!-- Tiempo de marcha -->
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="00:00"
-                        android:textAppearance="?attr/textAppearanceHeadlineSmall"/>
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="TIEMPO"
+                            android:textSize="11sp"
+                            android:fontFamily="sans-serif-medium"
+                            android:textColor="#5D3A1A"
+                            android:alpha="0.8"/>
+
+                        <TextView
+                            android:id="@+id/tvTiempo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="00:00"
+                            android:textColor="#1A1C1E"
+                            android:textSize="22sp"
+                            android:fontFamily="sans-serif-medium"
+                            android:layout_marginTop="2dp"/>
+                    </LinearLayout>
+
                 </LinearLayout>
-
             </LinearLayout>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Botones inferiores -->
+    <!-- Panel de Control Inferior -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:orientation="horizontal"
-        android:padding="16dp"
+        android:padding="20dp"
         android:gravity="center">
 
+        <!-- Botón Iniciar/Detener: Color Verde Pradera para la marcha -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnIniciarDetener"
+            style="@style/Widget.Material3.Button"
             android:layout_width="0dp"
             android:layout_height="56dp"
             android:layout_weight="1"
             android:text="Iniciar"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif-medium"
             android:layout_marginEnd="8dp"
-            app:icon="@android:drawable/ic_media_play"/>
+            app:backgroundTint="#3A6B2E"
+            android:textColor="#FFFFFF"
+            app:icon="@android:drawable/ic_media_play"
+            app:iconTint="#FFFFFF"
+            app:cornerRadius="16dp"/>
 
+        <!-- Botón Guardar: Estilo perfilado con la identidad Cuero Oscuro -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnGuardar"
+            style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="56dp"
             android:layout_weight="1"
             android:text="Guardar"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif-medium"
             android:layout_marginStart="8dp"
+            android:textColor="#5D3A1A"
+            app:strokeColor="#5D3A1A"
+            app:strokeWidth="1.5dp"
             app:icon="@android:drawable/ic_menu_save"
-            style="@style/Widget.Material3.Button.OutlinedButton"/>
+            app:iconTint="#5D3A1A"
+            app:cornerRadius="16dp"/>
 
     </LinearLayout>
 

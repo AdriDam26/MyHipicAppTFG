@@ -1,5 +1,5 @@
 // com/example/myhipicapptfg/viewmodel/PruebasJuezViewModel.java
-package com.example.myhipicapptfg.ui.competiciones.juez;
+package com.example.myhipicapptfg.ui.competiciones.juez.pruebas;
 
 import android.app.Application;
 
