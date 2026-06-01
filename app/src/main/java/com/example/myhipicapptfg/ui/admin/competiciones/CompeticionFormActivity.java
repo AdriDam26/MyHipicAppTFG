@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.myhipicapptfg.R;
 import com.example.myhipicapptfg.datos.local.entidades.Competicion;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -48,6 +49,16 @@ public class CompeticionFormActivity extends AppCompatActivity {
 
         findViewById(R.id.btnGuardarCompeticion).setOnClickListener(v -> guardar());
 
+        // Vincula el MaterialToolbar usando su ID
+        MaterialToolbar toolbar = findViewById(R.id.toolbarCompeticionForm);
+
+        // Configura la acción para ir hacia atrás al presionar la flecha
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getOnBackPressedDispatcher().onBackPressed();
+            }
+        });
 
         observarEstado();
     }

@@ -1,4 +1,4 @@
-package com.example.myhipicapptfg.ui.admin.equinos;
+package com.example.myhipicapptfg.ui.admin.equidos;
 
 import android.app.Application;
 

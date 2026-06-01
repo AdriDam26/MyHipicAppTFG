@@ -58,11 +58,11 @@
             android:exported="false" />
 
         <activity
-            android:name=".ui.admin.equinos.GestionEquinosActivity"
+            android:name=".ui.admin.equidos.GestionEquinosActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.admin.equinos.EquinoFormActivity"
+            android:name=".ui.admin.equidos.EquinoFormActivity"
             android:exported="false" />
 
         <activity

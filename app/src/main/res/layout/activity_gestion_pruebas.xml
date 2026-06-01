@@ -16,9 +16,10 @@
             android:id="@+id/toolbarPruebas"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:background="#5D3A1A"
             app:title="Pruebas"
             app:titleTextColor="#FFFFFF"
-            app:navigationIcon="@android:drawable/ic_menu_revert"
+            app:navigationIcon="?attr/homeAsUpIndicator"
             app:navigationIconTint="#FFFFFF"
             app:layout_scrollFlags="scroll|enterAlways"/>
     </com.google.android.material.appbar.AppBarLayout>

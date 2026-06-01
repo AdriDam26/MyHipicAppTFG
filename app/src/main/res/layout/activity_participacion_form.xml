@@ -6,16 +6,15 @@
     android:layout_height="match_parent"
     android:background="#F5F2EE">
 
-    <androidx.appcompat.widget.Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbarParticipacionForm"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="#5D3A1A"
-        android:elevation="4dp"
-        app:navigationIcon="@android:drawable/ic_menu_revert"
-        app:navigationIconTint="#FFFFFF"
         app:title="Inscribir Binomio"
-        app:titleTextColor="#FFFFFF" />
+        app:titleTextColor="#FFFFFF"
+        app:navigationIcon="?attr/homeAsUpIndicator"
+        app:navigationIconTint="#FFFFFF"/>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"

@@ -1,7 +1,6 @@
-package com.example.myhipicapptfg.ui.admin.equinos;
+package com.example.myhipicapptfg.ui.admin.equidos;
 
 import android.content.res.ColorStateList;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

@@ -10,17 +10,80 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#5D3A1A"
+        app:liftOnScroll="false"
         app:elevation="4dp">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbarUsuarios"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:background="#5D3A1A"
             app:title="Usuarios"
             app:titleTextColor="#FFFFFF"
-            app:navigationIcon="@android:drawable/ic_menu_revert"
-            app:navigationIconTint="#FFFFFF"
-            app:layout_scrollFlags="scroll|enterAlways"/>
+            app:navigationIcon="?attr/homeAsUpIndicator"
+            app:navigationIconTint="#FFFFFF"/>
+        <!-- ✅ Eliminado app:layout_scrollFlags="scroll|enterAlways" -->
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="10dp"
+            android:hint="Buscar por nombre, DNI o email"
+            app:hintTextColor="#FFFFFF"
+            app:boxStrokeColor="#FFFFFF"
+            app:boxBackgroundColor="#7B5030"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etBuscarUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#CCCCCC"
+                android:inputType="text"
+                android:imeOptions="actionSearch"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="10dp">
+
+            <CheckBox
+                android:id="@+id/cbAlumno"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Alumno"
+                android:textColor="#FFFFFF"/>
+
+            <CheckBox
+                android:id="@+id/cbProfesor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Profesor"
+                android:textColor="#FFFFFF"/>
+
+            <CheckBox
+                android:id="@+id/cbJuez"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Juez"
+                android:textColor="#FFFFFF"/>
+
+            <CheckBox
+                android:id="@+id/cbPropietario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Propietario"
+                android:textColor="#FFFFFF"/>
+        </LinearLayout>
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView

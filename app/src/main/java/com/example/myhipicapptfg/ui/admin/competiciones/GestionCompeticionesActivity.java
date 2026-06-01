@@ -2,6 +2,7 @@ package com.example.myhipicapptfg.ui.admin.competiciones;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myhipicapptfg.R;
 import com.example.myhipicapptfg.datos.local.entidades.Competicion;
 import com.example.myhipicapptfg.ui.admin.competiciones.pruebas.GestionPruebasActivity;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class GestionCompeticionesActivity extends AppCompatActivity {
@@ -24,6 +26,14 @@ public class GestionCompeticionesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gestion_competiciones);
+
+        MaterialToolbar toolbarCompeticiones = findViewById(R.id.toolbarCompeticiones);
+        toolbarCompeticiones.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getOnBackPressedDispatcher().onBackPressed();
+            }
+        });
 
         initRecyclerView();
         initViewModel();

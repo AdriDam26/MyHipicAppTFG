@@ -2,6 +2,7 @@ package com.example.myhipicapptfg.ui.admin.pistas;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myhipicapptfg.R;
 import com.example.myhipicapptfg.datos.local.entidades.Pista;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class GestionPistaActivity extends AppCompatActivity {
@@ -25,6 +27,15 @@ public class GestionPistaActivity extends AppCompatActivity {
 
         RecyclerView rv = findViewById(R.id.recyclerPistas);
         FloatingActionButton fab = findViewById(R.id.fabAddPista);
+
+
+        MaterialToolbar toolbarPistas = findViewById(R.id.toolbarPistas);
+        toolbarPistas.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getOnBackPressedDispatcher().onBackPressed();
+            }
+        });
 
         viewModel = new ViewModelProvider(this)
                 .get(GestionPistaViewModel.class);

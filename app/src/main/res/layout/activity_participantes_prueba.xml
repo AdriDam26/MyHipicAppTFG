@@ -7,39 +7,16 @@
     android:orientation="vertical"
     android:background="#FAF8F5">
 
-    <!-- TOOLBAR PERSONALIZADA: Identidad Cuero Oscuro -->
-    <LinearLayout
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbarParticipantes"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_height="?attr/actionBarSize"
         android:background="#5D3A1A"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="12dp"
-        android:elevation="4dp"
-        android:gravity="center_vertical">
+        app:title="Participantes"
+        app:titleTextColor="#FFFFFF"
+        app:navigationIcon="?attr/homeAsUpIndicator"
+        app:navigationIconTint="#FFFFFF"/>
 
-        <ImageButton
-            android:id="@+id/btnVolverParticipantes"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@android:drawable/ic_menu_revert"
-            android:contentDescription="Volver"
-            app:tint="@android:color/white" />
-
-        <TextView
-            android:id="@+id/tvTituloPrueba"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Participantes"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp"
-            android:fontFamily="sans-serif-medium"
-            android:paddingStart="8dp" />
-    </LinearLayout>
-
-    <!-- Subtítulo de la sección -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -51,7 +28,6 @@
         android:paddingTop="16dp"
         android:paddingBottom="6dp" />
 
-    <!-- Estado de lista vacía -->
     <TextView
         android:id="@+id/tvEmptyParticipantes"
         android:layout_width="match_parent"
@@ -65,7 +41,6 @@
         android:padding="32dp"
         android:visibility="gone" />
 
-    <!-- Lista de jinetes inscritos -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvParticipantes"
         android:layout_width="match_parent"
@@ -76,7 +51,6 @@
         android:paddingTop="4dp"
         android:paddingBottom="16dp" />
 
-    <!-- BOTÓN PUBLICAR: Forzado el estilo para aceptar el tinte Burdeos -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnPublicarResultados"
         style="@style/Widget.MaterialComponents.Button"

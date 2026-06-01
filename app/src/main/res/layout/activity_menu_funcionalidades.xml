@@ -99,7 +99,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="GESTIÓN ECUESTRE"
+                        android:text="LA REVOLUCIÓN ECUESTRE"
                         android:textSize="10sp"
                         android:textColor="#70FFFFFF"
                         android:letterSpacing="0.15" />
@@ -278,7 +278,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Chapas, herrajes y caballos"
+                            android:text="Escanea un código QR y ve la información de tu caballo en RA"
                             android:textSize="12sp"
                             android:textColor="#807D5A2E"
                             android:layout_marginTop="2dp" />
@@ -357,7 +357,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Senderos y rutas a caballo"
+                            android:text="Graba y sigue tus rutas por el campo"
                             android:textSize="12sp"
                             android:textColor="#803A6B2E"
                             android:layout_marginTop="2dp" />
@@ -436,7 +436,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Equipamiento y horarios"
+                            android:text="Ve las proximas clases y haz tu reserva"
                             android:textSize="12sp"
                             android:textColor="#80C8860A"
                             android:layout_marginTop="2dp" />
@@ -515,7 +515,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Historial y próximas clases"
+                            android:text="Ve tus clases reservadas"
                             android:textSize="12sp"
                             android:textColor="#80C8860A"
                             android:layout_marginTop="2dp" />
@@ -592,7 +592,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Ver Mis Clases"
+                                android:text="Ver mis Clases"
                                 android:textSize="15sp"
                                 android:textStyle="bold"
                                 android:textColor="#5D3A1A" />
@@ -616,7 +616,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Clases asignadas"
+                            android:text="Ver mis Clases asignadas"
                             android:textSize="12sp"
                             android:textColor="#805D3A1A"
                             android:layout_marginTop="2dp" />
@@ -673,7 +673,7 @@
                             android:layout_gravity="center"
                             android:src="@android:drawable/ic_menu_sort_by_size"
                             app:tint="#8B1A2E"
-                            android:contentDescription="Mis Pruebas" />
+                            android:contentDescription="Mis Pruebas Asignadas" />
                     </FrameLayout>
 
                     <LinearLayout
@@ -717,7 +717,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Evaluaciones y resultados"
+                            android:text="Califica a los participantes"
                             android:textSize="12sp"
                             android:textColor="#808B1A2E"
                             android:layout_marginTop="2dp" />
@@ -796,10 +796,11 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Dorsales, galardones y ranking"
+                            android:text="Ver Ranking y Hoja de Calificaciones"
                             android:textSize="12sp"
                             android:textColor="#808B1A2E"
                             android:layout_marginTop="2dp" />
+
                     </LinearLayout>
 
 

@@ -7,15 +7,28 @@
     android:orientation="vertical"
     android:background="#FAF8F5">
 
-    <!-- TOOLBAR PRINCIPAL: Identidad Cuero Oscuro -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="#5D3A1A"
-        app:titleTextColor="@android:color/white" />
+        app:title="Mis Pruebas"
+        app:titleTextColor="@android:color/white"
+        app:navigationIcon="?attr/homeAsUpIndicator"
+        app:navigationIconTint="#FFFFFF"/>
 
-    <!-- ESTADO VACÍO: Estilizado en tono Tierra sutil -->
+    <TextView
+        android:id="@+id/tvInstrucciones"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Selecciona una prueba para ver su ranking y tu hoja de calificación"
+        android:textColor="#8B1A2E"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-medium"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="6dp" />
+
     <TextView
         android:id="@+id/tvEmpty"
         android:layout_width="match_parent"
@@ -29,7 +42,6 @@
         android:padding="32dp"
         android:visibility="gone" />
 
-    <!-- LISTA DE PRUEBAS CON RESULTADOS -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvMisPruebas"
         android:layout_width="match_parent"

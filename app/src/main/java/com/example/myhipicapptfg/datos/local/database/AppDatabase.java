@@ -26,7 +26,6 @@ import com.example.myhipicapptfg.datos.local.entidades.Alumno;
 import com.example.myhipicapptfg.datos.local.entidades.Clase;
 import com.example.myhipicapptfg.datos.local.entidades.Competicion;
 import com.example.myhipicapptfg.datos.local.entidades.CoordenadaRuta;
-import com.example.myhipicapptfg.datos.local.entidades.Cuidado;
 import com.example.myhipicapptfg.datos.local.entidades.Equino;
 import com.example.myhipicapptfg.datos.local.entidades.Juez;
 import com.example.myhipicapptfg.datos.local.entidades.Movimiento;

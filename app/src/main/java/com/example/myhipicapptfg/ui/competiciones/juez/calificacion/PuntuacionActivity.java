@@ -1,6 +1,7 @@
 package com.example.myhipicapptfg.ui.competiciones.juez.calificacion;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myhipicapptfg.R;
 import com.example.myhipicapptfg.datos.local.entidades.NotaMovimiento;
 import com.example.myhipicapptfg.model.MovimientoConNota;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
@@ -46,9 +48,16 @@ public class PuntuacionActivity extends AppCompatActivity {
         double correccionPrevia = getIntent().getDoubleExtra(EXTRA_CORRECCION_PREVIA, 0.0);
 
         // ── Toolbar ──────────────────────────────────────────────────────────
-        setSupportActionBar(findViewById(R.id.toolbar));
-        if (getSupportActionBar() != null)
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // Vincula el Toolbar usando su ID
+        MaterialToolbar toolbar = findViewById(R.id.toolbarPuntuacion);
+
+// Configura la acción para ir hacia atrás
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getOnBackPressedDispatcher().onBackPressed();
+            }
+        });
 
         // ── Info participante ─────────────────────────────────────────────────
         ((TextView) findViewById(R.id.tvJinete)).setText(jinete);

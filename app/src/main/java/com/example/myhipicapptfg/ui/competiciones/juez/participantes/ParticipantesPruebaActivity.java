@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myhipicapptfg.R;
 import com.example.myhipicapptfg.ui.competiciones.juez.calificacion.PuntuacionActivity;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 
 public class ParticipantesPruebaActivity extends AppCompatActivity {
@@ -30,12 +31,16 @@ public class ParticipantesPruebaActivity extends AppCompatActivity {
         int    idPrueba     = getIntent().getIntExtra(EXTRA_ID_PRUEBA, -1);
         String nombrePrueba = getIntent().getStringExtra(EXTRA_NOMBRE_PRUEBA);
 
-        TextView     tvTitulo  = findViewById(R.id.tvTituloPrueba);
+        // Configuración de la nueva MaterialToolbar y acción de volver atrás
+        MaterialToolbar toolbar = findViewById(R.id.toolbarParticipantes);
+        if (nombrePrueba != null) {
+            toolbar.setTitle(nombrePrueba);
+        }
+        toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
+
         TextView     tvEmpty   = findViewById(R.id.tvEmptyParticipantes);
         RecyclerView rv        = findViewById(R.id.rvParticipantes);
         MaterialButton btnPublicar    = findViewById(R.id.btnPublicarResultados);
-
-        if (nombrePrueba != null) tvTitulo.setText(nombrePrueba);
 
         rv.setLayoutManager(new LinearLayoutManager(this));
 
@@ -55,7 +60,6 @@ public class ParticipantesPruebaActivity extends AppCompatActivity {
                 adapter.submitList(lista);
             }
         });
-
 
         vm.isPublicado().observe(this, publicado -> {
             if (publicado != null && publicado) {
@@ -85,7 +89,6 @@ public class ParticipantesPruebaActivity extends AppCompatActivity {
                     .setNegativeButton("Cancelar", null)
                     .show();
         });
-
 
         adapter.setOnParticipanteClickListener(item -> {
             Intent intent = new Intent(this, PuntuacionActivity.class);

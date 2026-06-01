@@ -14,10 +14,11 @@
         android:layout_height="?attr/actionBarSize"
         android:background="#5D3A1A"
         android:elevation="0dp"
+        app:title="Hoja de Calificaciones"
         app:titleTextColor="@android:color/white"
         app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         app:subtitleTextColor="#EAD9C9"
-        app:navigationIcon="@drawable/ic_arrow_back"
+        app:navigationIcon="?attr/homeAsUpIndicator"
         app:navigationIconTint="@android:color/white" />
 
     <!-- BANNER RESUMEN: con icono + puntuación destacada -->

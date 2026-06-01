@@ -2,15 +2,17 @@ package com.example.myhipicapptfg.ui.admin;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myhipicapptfg.R;
 import com.example.myhipicapptfg.ui.admin.clases.GestionClasesActivity;
 import com.example.myhipicapptfg.ui.admin.competiciones.GestionCompeticionesActivity;
-import com.example.myhipicapptfg.ui.admin.equinos.GestionEquinosActivity;
+import com.example.myhipicapptfg.ui.admin.equidos.GestionEquinosActivity;
 import com.example.myhipicapptfg.ui.admin.pistas.GestionPistaActivity;
 import com.example.myhipicapptfg.ui.admin.usuarios.GestionUsuariosActivity;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.card.MaterialCardView;
 
 public class AdminMenuActivity extends AppCompatActivity {
@@ -19,6 +21,16 @@ public class AdminMenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_menu);
+
+        MaterialToolbar toolbarAdmin = findViewById(R.id.toolbarAdmin);
+
+        toolbarAdmin.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Ejecuta la acción nativa de volver atrás
+                getOnBackPressedDispatcher().onBackPressed();
+            }
+        });
 
         configurarNavegacion();
     }

@@ -55,8 +55,8 @@ public interface PruebaDao {
     @Query("SELECT * FROM Movimiento WHERE ID_Prueba = :idPrueba ORDER BY Orden ASC")
     List<Movimiento> obtenerMovimientosPorPruebaSync(int idPrueba);
 
-    @Query("DELETE FROM Movimiento WHERE ID_Prueba = :idPrueba")
-    void eliminarMovimientosDePrueba(int idPrueba);
+    @Delete
+    void eliminarMovimientos(List<Movimiento> movimientos);;
 
     @Transaction
     default long insertarPruebaConMovimientos(Prueba prueba, List<Movimiento> movimientos) {
@@ -69,14 +69,14 @@ public interface PruebaDao {
     }
 
     @Transaction
-    default void actualizarPruebaConMovimientos(Prueba prueba, List<Movimiento> movimientos) {
+    default void actualizarPruebaConMovimientos(Prueba prueba,
+                                                List<Movimiento> aActualizar,
+                                                List<Movimiento> aInsertar,
+                                                List<Movimiento> aEliminar) {
         actualizarPrueba(prueba);
-        eliminarMovimientosDePrueba(prueba.idPrueba);
-        for (Movimiento m : movimientos) {
-            m.idPrueba    = prueba.idPrueba;
-            m.idMovimiento = 0;
-        }
-        insertarMovimientos(movimientos);
+        if (!aEliminar.isEmpty())   eliminarMovimientos(aEliminar);
+        if (!aActualizar.isEmpty()) actualizarMovimientos(aActualizar);
+        if (!aInsertar.isEmpty())   insertarMovimientos(aInsertar);
     }
 
     @Query("UPDATE Prueba SET Publicado = :publicado WHERE ID_Prueba = :idPrueba")

@@ -86,4 +86,30 @@ public interface UsuarioDao {
             "INNER JOIN Juez ON Usuario.ID_Usuario = Juez.ID_Juez " +
             "WHERE Juez.Activo = 1")
     LiveData<List<Usuario>> obtenerJuecesActivos();
+
+    @Query("SELECT * FROM Usuario " +
+            "WHERE (" +
+            "Nombre LIKE '%' || :texto || '%' " +
+            "OR DNI LIKE '%' || :texto || '%' " +
+            "OR Email LIKE '%' || :texto || '%'" +
+            ") " +
+            "AND (" +
+            "(:alumno = 0 AND :profesor = 0 AND :juez = 0 AND :propietario = 0) " +
+
+            "OR (:alumno = 1 AND lower(Tipo) = 'alumno') " +
+            "OR (:profesor = 1 AND lower(Tipo) = 'profesor') " +
+            "OR (:juez = 1 AND lower(Tipo) = 'juez') " +
+            "OR (:propietario = 1 AND lower(Tipo) = 'propietario') " +
+
+            ") " +
+            "ORDER BY Nombre ASC")
+    LiveData<List<Usuario>> buscarUsuariosFiltrado(
+            String texto,
+            boolean alumno,
+            boolean profesor,
+            boolean juez,
+            boolean propietario
+    );
+
+
 }

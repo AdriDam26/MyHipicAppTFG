@@ -17,6 +17,7 @@ import com.example.myhipicapptfg.R;
 import com.example.myhipicapptfg.datos.local.entidades.Movimiento;
 import com.example.myhipicapptfg.datos.local.entidades.Prueba;
 import com.example.myhipicapptfg.datos.local.entidades.Usuario;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -79,6 +80,17 @@ public class PruebaFormActivity extends AppCompatActivity {
         }
 
         if (modoEdicion) cargarDatos();
+
+        // Vincula el MaterialToolbar usando su ID
+        MaterialToolbar toolbar = findViewById(R.id.toolbarPruebaForm);
+
+        // Configura la acción para ir hacia atrás al presionar la flecha
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getOnBackPressedDispatcher().onBackPressed();
+            }
+        });
 
         btnAnadirMovimiento.setOnClickListener(v -> agregarFilaMovimiento(null));
         btnGuardar.setOnClickListener(v -> guardar());
@@ -200,6 +212,8 @@ public class PruebaFormActivity extends AppCompatActivity {
         TextInputEditText etLet = fila.findViewById(R.id.etLetraMovimiento);
         TextInputEditText etCoe = fila.findViewById(R.id.etCoeficienteMovimiento);
         TextInputEditText etDir = fila.findViewById(R.id.etDirectrizMovimiento);
+
+        fila.setTag(movimiento != null ? movimiento.idMovimiento : 0);
 
         fila.findViewById(R.id.btnEliminarMovimiento)
                 .setOnClickListener(v -> eliminarFila(fila));
@@ -365,16 +379,18 @@ public class PruebaFormActivity extends AppCompatActivity {
         for (int i = 0; i < listEjercicio.size(); i++) {
             String coefStr = listCoeficiente.get(i).getText().toString().trim();
             double coef    = coefStr.isEmpty() ? 1.0 : Double.parseDouble(coefStr);
-            movimientos.add(new Movimiento(
+
+            Movimiento m = new Movimiento(
                     listEjercicio.get(i).getText().toString().trim(),
-                    listLetra.get(i).getText().toString()
-                            .trim()
-                            .toUpperCase()
-                            .replace(" ", ""),
+                    listLetra.get(i).getText().toString().trim().toUpperCase().replace(" ", ""),
                     i + 1, coef,
                     listDirectriz.get(i).getText().toString().trim(),
                     0
-            ));
+            );
+
+            m.idMovimiento = (int) containerMovimientos.getChildAt(i).getTag();
+
+            movimientos.add(m);
         }
 
         if (modoEdicion) {

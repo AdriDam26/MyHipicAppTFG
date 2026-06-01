@@ -20,8 +20,10 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="#5D3A1A"
+            app:title="Buscar Clases"
             app:titleTextColor="#FFFFFF"
-            app:title="Buscar Clases" />
+            app:navigationIcon="?attr/homeAsUpIndicator"
+            app:navigationIconTint="#FFFFFF"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 

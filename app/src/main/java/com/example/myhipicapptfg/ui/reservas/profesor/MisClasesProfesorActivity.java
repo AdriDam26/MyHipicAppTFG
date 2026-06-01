@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myhipicapptfg.R;
+import com.google.android.material.appbar.MaterialToolbar;
 
 public class MisClasesProfesorActivity extends AppCompatActivity {
 
@@ -23,13 +24,22 @@ public class MisClasesProfesorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mis_clase_profesor);
 
+
+        // Vincula el nuevo MaterialToolbar usando su ID
+        MaterialToolbar toolbar = findViewById(R.id.toolbarMisClases);
+
+// Configura la acción para ir hacia atrás al presionar la flecha
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getOnBackPressedDispatcher().onBackPressed();
+            }
+        });
+
+
         // ── Extras ────────────────────────────────────────────────────────────
         int idProfesor = getIntent().getIntExtra(EXTRA_ID_PROFESOR, -1);
-        android.util.Log.d("Prueba", "ID Profesor recibido: " + idProfesor);
-        if (idProfesor == -1) {
-            finish();
-            return;
-        }
+
 
         // El título ahora es estático desde el XML, no necesitamos tvTitulo.setText() aquí.
 
@@ -63,7 +73,6 @@ public class MisClasesProfesorActivity extends AppCompatActivity {
             }
         });
 
-        // ── Botón volver ──────────────────────────────────────────────────────
-        findViewById(R.id.btn_volver_mis_clases).setOnClickListener(v -> finish());
+
     }
 }

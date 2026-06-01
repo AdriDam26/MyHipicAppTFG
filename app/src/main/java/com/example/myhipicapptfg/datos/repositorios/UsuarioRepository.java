@@ -18,13 +18,13 @@ import java.util.concurrent.ExecutorService;
 
 public class UsuarioRepository {
 
-    private final AppDatabase db;                                          // ✅ campo de instancia
+    private final AppDatabase db;
     private final UsuarioDao usuarioDao;
     private final ExecutorService executorService;
     private final MutableLiveData<String> estadoOperacion = new MutableLiveData<>();
 
     public UsuarioRepository(@NonNull Application application) {
-        db = AppDatabase.getInstance(application);                         // ✅ sin redeclarar como local
+        db = AppDatabase.getInstance(application);
         usuarioDao = db.usuarioDao();
         executorService = AppDatabase.getDatabaseExecutor();
     }
@@ -173,5 +173,25 @@ public class UsuarioRepository {
 
     public LiveData<List<Usuario>> obtenerJuecesActivos() {
         return usuarioDao.obtenerJuecesActivos();
+    }
+
+    public LiveData<List<Usuario>> buscarPorNombre(String nombre) {
+        return usuarioDao.buscarPorNombre(nombre);
+    }
+
+    public LiveData<List<Usuario>> buscarUsuariosFiltrado(
+            String texto,
+            boolean alumno,
+            boolean profesor,
+            boolean juez,
+            boolean propietario
+    ) {
+        return usuarioDao.buscarUsuariosFiltrado(
+                texto,
+                alumno,
+                profesor,
+                juez,
+                propietario
+        );
     }
 }

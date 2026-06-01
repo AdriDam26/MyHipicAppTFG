@@ -1,4 +1,4 @@
-package com.example.myhipicapptfg.datos.repository;
+package com.example.myhipicapptfg.datos.repositorios;
 
 import android.app.Application;
 
@@ -11,7 +11,10 @@ import com.example.myhipicapptfg.datos.local.database.AppDatabase;
 import com.example.myhipicapptfg.datos.local.entidades.Movimiento;
 import com.example.myhipicapptfg.datos.local.entidades.Prueba;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 
 public class PruebaRepository {
@@ -75,7 +78,27 @@ public class PruebaRepository {
                 return;
             }
             try {
-                dao.actualizarPruebaConMovimientos(prueba, movimientos);
+                List<Movimiento> existentes = dao.obtenerMovimientosPorPruebaSync(prueba.idPrueba);
+
+                Set<Integer> idsEntrantes = new HashSet<>();
+                for (Movimiento m : movimientos) {
+                    if (m.idMovimiento > 0) idsEntrantes.add(m.idMovimiento);
+                }
+
+                List<Movimiento> aEliminar   = new ArrayList<>();
+                List<Movimiento> aActualizar = new ArrayList<>();
+                List<Movimiento> aInsertar   = new ArrayList<>();
+
+                for (Movimiento e : existentes) {
+                    if (!idsEntrantes.contains(e.idMovimiento)) aEliminar.add(e);
+                }
+                for (Movimiento m : movimientos) {
+                    m.idPrueba = prueba.idPrueba;
+                    if (m.idMovimiento > 0) aActualizar.add(m);
+                    else                    aInsertar.add(m);
+                }
+
+                dao.actualizarPruebaConMovimientos(prueba, aActualizar, aInsertar, aEliminar);
                 estadoOperacion.postValue("EXITO");
             } catch (Exception e) {
                 estadoOperacion.postValue("ERROR_BD");

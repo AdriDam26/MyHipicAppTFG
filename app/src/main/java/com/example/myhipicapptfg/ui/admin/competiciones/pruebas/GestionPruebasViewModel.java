@@ -11,7 +11,7 @@ import com.example.myhipicapptfg.datos.local.entidades.Prueba;
 import com.example.myhipicapptfg.datos.local.entidades.Usuario;
 import com.example.myhipicapptfg.datos.repositorios.ParticipacionRepository;
 import com.example.myhipicapptfg.datos.repositorios.JuezRepository;
-import com.example.myhipicapptfg.datos.repository.PruebaRepository;
+import com.example.myhipicapptfg.datos.repositorios.PruebaRepository;
 import com.example.myhipicapptfg.model.ConteoParticipantes;
 
 import java.util.List;

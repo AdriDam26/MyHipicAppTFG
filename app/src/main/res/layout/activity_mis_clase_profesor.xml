@@ -7,38 +7,15 @@
     android:orientation="vertical"
     android:background="#FAF8F5"> <!-- Fondo M3 Surface: Crema/Arena limpio -->
 
-    <!-- TOOLBAR FIJA: Cuero Oscuro (#5D3A1A) -->
-    <LinearLayout
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbarMisClases"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_height="?attr/actionBarSize"
         android:background="#5D3A1A"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="12dp"
-        android:gravity="center_vertical"
-        android:elevation="4dp">
-
-        <ImageButton
-            android:id="@+id/btn_volver_mis_clases"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@android:drawable/ic_menu_revert"
-            app:tint="#FFFFFF"
-            android:contentDescription="Volver" />
-
-        <TextView
-            android:id="@+id/tv_titulo_mis_clases"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Mis Clases Asignadas"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp"
-            android:fontFamily="sans-serif-medium"
-            android:paddingStart="8dp" />
-
-    </LinearLayout>
+        app:title="Mis Clases Asignadas"
+        app:titleTextColor="#FFFFFF"
+        app:navigationIcon="?attr/homeAsUpIndicator"
+        app:navigationIconTint="#FFFFFF"/>
 
     <!-- INSTRUCCIÓN DE USO: Resaltada sutilmente en Dorado Cuero (#C8860A) -->
     <TextView

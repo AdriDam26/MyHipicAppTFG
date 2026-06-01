@@ -37,24 +37,28 @@ public class MenuFuncionalidadesActivity extends AppCompatActivity {
         cardAR.setOnClickListener(v ->
                 startActivity(new Intent(this, ARMenuActivity.class)));
 
-        cardGPS.setOnClickListener(v ->
-                startActivity(new Intent(this, RutasMenuActivity.class)));
+        // Busca la sección del GPS dentro de tu onCreate y cámbiala por esto:
+        cardGPS.setOnClickListener(v -> {
+            Intent intent = new Intent(this, RutasMenuActivity.class);
+            intent.putExtra("ID_PROPIETARIO", 12); // ← Forzamos el ID 12 aquí
+            startActivity(intent);
+        });
 
         cardReservar.setOnClickListener(v -> {
             Intent intent = new Intent(this, ReservaClaseActivity.class);
-            intent.putExtra("ID_ALUMNO", 2);
+            intent.putExtra("ID_ALUMNO", 10);
             startActivity(intent);
         });
 
         cardMisReservas.setOnClickListener(v -> {
             Intent intent = new Intent(this, MisReservasActivity.class);
-            intent.putExtra("ID_ALUMNO", 2);
+            intent.putExtra("ID_ALUMNO", 10);
             startActivity(intent);
         });
 
         cardProfesor.setOnClickListener(v -> {
             Intent intent = new Intent(this, MisClasesProfesorActivity.class);
-            intent.putExtra(MisClasesProfesorActivity.EXTRA_ID_PROFESOR, 7);
+            intent.putExtra(MisClasesProfesorActivity.EXTRA_ID_PROFESOR, 9);
             startActivity(intent);
         });
 
@@ -62,7 +66,7 @@ public class MenuFuncionalidadesActivity extends AppCompatActivity {
         cardJuez.setOnClickListener(v -> {
             Intent intent = new Intent(this, PruebasJuezActivity.class);
             // Sustituye el valor hardcodeado por el ID real del juez logueado
-            intent.putExtra(PruebasJuezActivity.EXTRA_ID_JUEZ, 5);
+            intent.putExtra(PruebasJuezActivity.EXTRA_ID_JUEZ, 11);
             startActivity(intent);
         });
 
@@ -70,7 +74,7 @@ public class MenuFuncionalidadesActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MisPruebasActivity.class);
 
             // ID fijo = 2 como pediste
-            intent.putExtra(MisPruebasActivity.EXTRA_ID_ALUMNO, 2);
+            intent.putExtra(MisPruebasActivity.EXTRA_ID_ALUMNO, 10);
 
             startActivity(intent);
         });

@@ -7,16 +7,22 @@
     android:background="#F5F2EE">
 
     <!-- TOOLBAR -->
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="#5D3A1A"
-        android:elevation="4dp"
-        app:navigationIconTint="#FFFFFF"
-        app:title="Formulario Usuario"
-        app:titleTextColor="#FFFFFF"
-        app:subtitleTextColor="#E8D5A3"/>
+        android:layout_height="wrap_content"
+        android:elevation="0dp">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#5D3A1A"
+            app:title="Registro de Usuario"
+            app:titleTextColor="#FFFFFF"
+            app:navigationIcon="?attr/homeAsUpIndicator"
+            app:navigationIconTint="#FFFFFF"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <!-- ═══════════════════════════════════════════════════
          CONTENIDO PRINCIPAL
@@ -702,14 +708,14 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="8dp"
                 android:text="GUARDAR USUARIO"
+                android:fontFamily="sans-serif-medium"
                 android:textStyle="bold"
-                android:letterSpacing="0.08"
-                android:backgroundTint="#1E3D1E"
-                android:textColor="#E8D5A3"
-                app:cornerRadius="8dp"
-                app:iconTint="#E8D5A3"
+                android:letterSpacing="0.05"
+                android:textColor="#FFFFFF"
+                app:backgroundTint="#1E3D1E"
+                app:cornerRadius="12dp"
+                app:iconTint="#FFFFFF"
                 app:iconGravity="textStart"/>
-
             <!-- PROGRESS -->
             <ProgressBar
                 android:id="@+id/progressBar"

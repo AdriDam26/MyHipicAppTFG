@@ -1,7 +1,8 @@
-package com.example.myhipicapptfg.ui.admin.equinos;
+package com.example.myhipicapptfg.ui.admin.equidos;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myhipicapptfg.R;
 import com.example.myhipicapptfg.datos.local.entidades.Equino;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class GestionEquinosActivity extends AppCompatActivity {
@@ -26,6 +28,14 @@ public class GestionEquinosActivity extends AppCompatActivity {
         // 1. Inicializar Vistas
         RecyclerView rv = findViewById(R.id.recyclerEquinos);
         FloatingActionButton fab = findViewById(R.id.fabAddEquino);
+
+        MaterialToolbar toolbar = findViewById(R.id.toolbarEquinos);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getOnBackPressedDispatcher().onBackPressed(); // O finish();
+            }
+        });
 
         // 2. Inicializar ViewModel
         viewModel = new ViewModelProvider(this)

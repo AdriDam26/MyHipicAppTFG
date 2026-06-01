@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myhipicapptfg.R;
 import com.example.myhipicapptfg.ui.competiciones.juez.participantes.ParticipantesPruebaActivity;
+import com.google.android.material.appbar.MaterialToolbar;
 
 public class PruebasJuezActivity extends AppCompatActivity {
 
@@ -27,6 +28,17 @@ public class PruebasJuezActivity extends AppCompatActivity {
 
         RecyclerView rv   = findViewById(R.id.rvPruebas);
         TextView     tvEmpty = findViewById(R.id.tvEmptyPruebas);
+
+        // Vincula el nuevo MaterialToolbar usando su ID
+        MaterialToolbar toolbar = findViewById(R.id.toolbarPruebas);
+
+// Configura la acción para ir hacia atrás al presionar la flecha
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getOnBackPressedDispatcher().onBackPressed();
+            }
+        });
 
         rv.setLayoutManager(new LinearLayoutManager(this));
 

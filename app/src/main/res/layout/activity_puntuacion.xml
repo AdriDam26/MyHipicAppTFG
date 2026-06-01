@@ -7,15 +7,15 @@
     android:orientation="vertical"
     android:background="#FAF8F5">
 
-    <!-- TOOLBAR FIJA: Identidad Cuero Oscuro -->
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/toolbarPuntuacion"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="#5D3A1A"
         app:title="Puntuación"
-        app:titleTextColor="@android:color/white" />
-
+        app:titleTextColor="@android:color/white"
+        app:navigationIcon="?attr/homeAsUpIndicator"
+        app:navigationIconTint="#FFFFFF"/>
     <!-- INFO PARTICIPANTE (BINOMIO) -->
     <LinearLayout
         android:layout_width="match_parent"

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myhipicapptfg.R;
 import com.example.myhipicapptfg.ui.competiciones.participantes.AlumnoResultadosViewModel;
 import com.example.myhipicapptfg.ui.competiciones.participantes.calificacion.HojaCalificacionesActivity;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 
 public class RankingPruebaActivity extends AppCompatActivity {
@@ -28,11 +29,18 @@ public class RankingPruebaActivity extends AppCompatActivity {
         int    idParticipacion = getIntent().getIntExtra(EXTRA_ID_PARTICIPACION, -1);
         String nombrePrueba    = getIntent().getStringExtra(EXTRA_NOMBRE_PRUEBA);
 
-        setSupportActionBar(findViewById(R.id.toolbar));
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(nombrePrueba);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // 1. Configuración de la MaterialToolbar vinculada por ID
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+
+        // Asignación dinámica del nombre de la prueba como título
+        if (nombrePrueba != null) {
+            toolbar.setTitle(nombrePrueba);
+        } else {
+            toolbar.setTitle("Ranking"); // Título por defecto en caso de que llegue nulo
         }
+
+        // Configurar la acción del botón de retroceso (flecha de navegación)
+        toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
 
         RecyclerView rv = findViewById(R.id.rvRanking);
         rv.setLayoutManager(new LinearLayoutManager(this));
@@ -52,6 +60,4 @@ public class RankingPruebaActivity extends AppCompatActivity {
             startActivity(i);
         });
     }
-
-    @Override public boolean onSupportNavigateUp() { finish(); return true; }
 }

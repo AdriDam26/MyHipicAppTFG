@@ -3,6 +3,7 @@ package com.example.myhipicapptfg.ui.admin.clases;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
@@ -14,6 +15,7 @@ import com.example.myhipicapptfg.datos.local.entidades.Clase;
 import com.example.myhipicapptfg.datos.local.entidades.Pista;
 import com.example.myhipicapptfg.datos.local.entidades.Profesor;
 import com.example.myhipicapptfg.datos.local.entidades.Usuario;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -100,6 +102,17 @@ public class ClaseFormActivity extends AppCompatActivity {
         comprobarModoEdicion();
 
         setupBotones();
+
+        // Vincula el MaterialToolbar usando su ID
+        MaterialToolbar toolbar = findViewById(R.id.toolbarClaseForm);
+
+        // Configura la acción para ir hacia atrás al presionar la flecha
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getOnBackPressedDispatcher().onBackPressed();
+            }
+        });
     }
 
     // =========================================================

@@ -1,6 +1,7 @@
 package com.example.myhipicapptfg.ui.competiciones.participantes.calificacion;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myhipicapptfg.R;
 import com.example.myhipicapptfg.ui.competiciones.participantes.AlumnoResultadosViewModel;
+import com.google.android.material.appbar.MaterialToolbar;
 
 import java.util.Locale;
 
@@ -24,13 +26,18 @@ public class HojaCalificacionesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_hoja_calificaciones);
 
         int    idParticipacion = getIntent().getIntExtra(EXTRA_ID_PARTICIPACION, -1);
-        String nombrePrueba    = getIntent().getStringExtra(EXTRA_NOMBRE_PRUEBA);
 
-        setSupportActionBar(findViewById(R.id.toolbar));
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("Hoja de calificaciones");
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+
+
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getOnBackPressedDispatcher().onBackPressed();
+            }
+        });
 
         TextView     tvResumen = findViewById(R.id.tvResumen);
         RecyclerView rv        = findViewById(R.id.rvHoja);

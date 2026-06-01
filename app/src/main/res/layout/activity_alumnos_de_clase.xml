@@ -7,34 +7,23 @@
     android:orientation="vertical"
     android:background="#FAF8F5"> <!-- Fondo M3 Surface: Tono crema/arena muy claro y limpio -->
 
-    <!-- TOOLBAR FIJA: Cuero Oscuro (#5D3A1A) -->
-    <LinearLayout
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbarAlumnos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:minHeight="?attr/actionBarSize"
         android:background="#5D3A1A"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="12dp"
-        android:gravity="center_vertical"
-        android:elevation="4dp"> <!-- Sutil sombra para dar volumen M3 -->
-
-        <ImageButton
-            android:id="@+id/btn_volver_alumnos"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@android:drawable/ic_menu_revert"
-            app:tint="#FFFFFF"
-            android:contentDescription="Volver" />
+        app:navigationIcon="?attr/homeAsUpIndicator"
+        app:navigationIconTint="#FFFFFF">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:orientation="vertical"
-            android:paddingStart="8dp">
+            android:paddingStart="8dp"
+            android:paddingEnd="16dp"
+            android:paddingVertical="8dp">
 
-            <!-- Subtítulo en tono arena claro para contraste suave -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -44,7 +33,6 @@
                 android:fontFamily="sans-serif-medium"
                 android:letterSpacing="0.05" />
 
-            <!-- Título Principal -->
             <TextView
                 android:id="@+id/tv_titulo_alumnos"
                 android:layout_width="wrap_content"
@@ -56,7 +44,7 @@
 
         </LinearLayout>
 
-    </LinearLayout>
+    </com.google.android.material.appbar.MaterialToolbar>
 
     <!-- CONTADOR: Resaltado sutilmente con el acento Dorado Cuero (#C8860A) -->
     <TextView

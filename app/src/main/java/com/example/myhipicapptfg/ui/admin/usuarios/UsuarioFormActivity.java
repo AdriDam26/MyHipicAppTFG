@@ -24,6 +24,7 @@ import com.example.myhipicapptfg.datos.local.entidades.Alumno;
 import com.example.myhipicapptfg.datos.local.entidades.Juez;
 import com.example.myhipicapptfg.datos.local.entidades.Profesor;
 import com.example.myhipicapptfg.datos.local.entidades.Usuario;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -109,6 +110,17 @@ public class UsuarioFormActivity extends AppCompatActivity {
             modoEdicion = true;
             cargarUsuario(usuarioId);
         }
+
+        // Vincula la MaterialToolbar mediante su ID
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+
+        // Configura la acción para regresar a la pantalla anterior
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getOnBackPressedDispatcher().onBackPressed();
+            }
+        });
 
         findViewById(R.id.btnGuardar).setOnClickListener(v -> guardarUsuario());
     }

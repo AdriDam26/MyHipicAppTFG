@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -13,6 +14,7 @@ import androidx.core.content.ContextCompat;
 
 import com.example.myhipicapptfg.R;
 import com.example.myhipicapptfg.ui.ar.scanner.QRScannerActivity;
+import com.google.android.material.appbar.MaterialToolbar;
 
 public class ARMenuActivity extends AppCompatActivity {
 
@@ -24,6 +26,19 @@ public class ARMenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ar_menu); // puedes cambiarlo a activity_ar_menu si quieres
 
         Button btnEscanear = findViewById(R.id.btnEscanear);
+
+
+        // 1. Encuentra el Toolbar por su ID
+        MaterialToolbar toolbar = findViewById(R.id.toolbarEscanner);
+
+        // 2. Configura el listener para el icono de navegación (la flecha)
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Ejecuta la acción de ir hacia atrás (cierra la Activity actual)
+                getOnBackPressedDispatcher().onBackPressed();
+            }
+        });
 
         btnEscanear.setOnClickListener(v -> verificarPermiso());
     }

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myhipicapptfg.R;
 import com.example.myhipicapptfg.ui.competiciones.participantes.AlumnoResultadosViewModel;
 import com.example.myhipicapptfg.ui.competiciones.participantes.ranking.RankingPruebaActivity;
+import com.google.android.material.appbar.MaterialToolbar;
 
 public class MisPruebasActivity extends AppCompatActivity {
 
@@ -25,11 +26,16 @@ public class MisPruebasActivity extends AppCompatActivity {
 
         int idAlumno = getIntent().getIntExtra(EXTRA_ID_ALUMNO, -1);
 
-        setSupportActionBar(findViewById(R.id.toolbar));
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("Mis pruebas");
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        // Vincula el Toolbar usando su ID (@id/toolbar)
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+
+        // Configura la acción para ir hacia atrás
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getOnBackPressedDispatcher().onBackPressed();
+            }
+        });
 
         RecyclerView rv      = findViewById(R.id.rvMisPruebas);
         TextView     tvEmpty = findViewById(R.id.tvEmpty);

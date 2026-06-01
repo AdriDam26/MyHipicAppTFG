@@ -2,6 +2,7 @@ package com.example.myhipicapptfg.ui.admin.competiciones.pruebas;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import com.example.myhipicapptfg.R;
 import com.example.myhipicapptfg.datos.local.entidades.Prueba;
 import com.example.myhipicapptfg.datos.local.entidades.Usuario;
 import com.example.myhipicapptfg.ui.admin.competiciones.pruebas.participaciones.GestionParticipacionesActivity;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.HashMap;
@@ -28,6 +30,14 @@ public class GestionPruebasActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gestion_pruebas);
+
+        MaterialToolbar toolbarPruebas = findViewById(R.id.toolbarPruebas);
+        toolbarPruebas.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getOnBackPressedDispatcher().onBackPressed();
+            }
+        });
 
         idCompeticion = getIntent().getIntExtra("ID_COMPETICION", -1);
         String nombreCompeticion = getIntent().getStringExtra("NOMBRE_COMPETICION");

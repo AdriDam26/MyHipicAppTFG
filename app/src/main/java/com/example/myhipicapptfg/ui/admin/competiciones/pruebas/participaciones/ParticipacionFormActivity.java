@@ -1,6 +1,7 @@
 package com.example.myhipicapptfg.ui.admin.competiciones.pruebas.participaciones;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
@@ -12,6 +13,7 @@ import com.example.myhipicapptfg.R;
 import com.example.myhipicapptfg.datos.local.entidades.Equino;
 import com.example.myhipicapptfg.datos.local.entidades.Participacion;
 import com.example.myhipicapptfg.datos.local.entidades.Usuario;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -64,6 +66,18 @@ public class ParticipacionFormActivity extends AppCompatActivity {
                 if (orden != null) etOrden.setText(String.valueOf(orden));
             });
         }
+
+
+        // Vincula el MaterialToolbar usando su ID
+        MaterialToolbar toolbar = findViewById(R.id.toolbarParticipacionForm);
+
+        // Configura la acción para ir hacia atrás al presionar la flecha
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getOnBackPressedDispatcher().onBackPressed();
+            }
+        });
 
         findViewById(R.id.btnGuardarParticipacion).setOnClickListener(v -> guardar());
 

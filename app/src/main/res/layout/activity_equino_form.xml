@@ -8,16 +8,17 @@
     android:background="#F5F2EE">
 
     <!-- TOOLBAR -->
-    <androidx.appcompat.widget.Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbarEquino"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="#5D3A1A"
-        android:elevation="4dp"
-        app:navigationIconTint="#FFFFFF"
         app:title="Registro de Equino"
         app:titleTextColor="#FFFFFF"
-        app:subtitleTextColor="#E8D5A3"/>
+        app:subtitleTextColor="#E8D5A3"
+        app:navigationIcon="?attr/homeAsUpIndicator"
+        app:navigationIconTint="#FFFFFF"/>
+
 
     <ScrollView
         android:layout_width="match_parent"
@@ -501,10 +502,9 @@
                 android:text="GUARDAR EQUINO"
                 android:textStyle="bold"
                 android:letterSpacing="0.08"
-                android:backgroundTint="#1E3D1E"
-                android:textColor="#E8D5A3"
+                android:textColor="#FFFFFF"
+                app:backgroundTint="#1E3D1E"
                 app:cornerRadius="8dp"/>
-
             <!-- PROGRESS -->
             <ProgressBar
                 android:id="@+id/progressBarEquino"

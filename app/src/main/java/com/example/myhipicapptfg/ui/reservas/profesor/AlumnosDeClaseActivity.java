@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myhipicapptfg.R;
+import com.google.android.material.appbar.MaterialToolbar;
 
 public class AlumnosDeClaseActivity extends AppCompatActivity {
 
@@ -30,10 +31,18 @@ public class AlumnosDeClaseActivity extends AppCompatActivity {
         String disciplina = getIntent().getStringExtra(EXTRA_DISCIPLINA);
         String nivel      = getIntent().getStringExtra(EXTRA_NIVEL);
 
-        if (idClase == -1) {
-            finish();
-            return;
-        }
+        // Vincula el nuevo MaterialToolbar
+        MaterialToolbar toolbar = findViewById(R.id.toolbarAlumnos);
+
+// Configura la acción para ir hacia atrás
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getOnBackPressedDispatcher().onBackPressed();
+            }
+        });
+
+
 
         // ── Cabecera ──────────────────────────────────────────────────────────
         TextView tvTitulo = findViewById(R.id.tv_titulo_alumnos);
@@ -67,7 +76,6 @@ public class AlumnosDeClaseActivity extends AppCompatActivity {
             }
         });
 
-        // ── Botón volver ──────────────────────────────────────────────────────
-        findViewById(R.id.btn_volver_alumnos).setOnClickListener(v -> finish());
+
     }
 }

@@ -2,6 +2,7 @@ package com.example.myhipicapptfg.ui.admin.clases;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -12,6 +13,7 @@ import com.example.myhipicapptfg.R;
 import com.example.myhipicapptfg.datos.local.entidades.Clase;
 import com.example.myhipicapptfg.datos.local.entidades.Pista;
 import com.example.myhipicapptfg.datos.local.entidades.Usuario;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -34,6 +36,14 @@ public class GestionClasesActivity extends AppCompatActivity {
 
         RecyclerView rv = findViewById(R.id.recyclerClases);
         FloatingActionButton fab = findViewById(R.id.fabAddClase);
+
+        MaterialToolbar toolbarClases = findViewById(R.id.toolbarClases);
+        toolbarClases.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getOnBackPressedDispatcher().onBackPressed();
+            }
+        });
 
         viewModel = new ViewModelProvider(this).get(GestionClaseViewModel.class);
 

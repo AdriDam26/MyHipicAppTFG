@@ -45,13 +45,7 @@ public class GestionUsuariosViewModel extends AndroidViewModel {
         return repository.getEstadoOperacion();
     }
 
-    public void insertarUsuario(Usuario u) {
-        repository.insertarUsuario(u);
-    }
 
-    public void actualizarUsuario(Usuario u) {
-        repository.actualizarUsuario(u);
-    }
 
     public void eliminarUsuario(Usuario u) {
         repository.eliminarUsuario(u);
@@ -87,5 +81,25 @@ public class GestionUsuariosViewModel extends AndroidViewModel {
 
     public LiveData<Juez> getJuez(int id) {
         return juezRepository.buscarPorId(id);
+    }
+
+    public LiveData<List<Usuario>> buscarPorNombre(String nombre) {
+        return repository.buscarPorNombre(nombre);
+    }
+
+    public LiveData<List<Usuario>> buscarUsuariosFiltrado(
+            String texto,
+            boolean alumno,
+            boolean profesor,
+            boolean juez,
+            boolean propietario
+    ) {
+        return repository.buscarUsuariosFiltrado(
+                texto,
+                alumno,
+                profesor,
+                juez,
+                propietario
+        );
     }
 }

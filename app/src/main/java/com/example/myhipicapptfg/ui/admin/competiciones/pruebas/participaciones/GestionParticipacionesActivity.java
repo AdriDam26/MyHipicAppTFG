@@ -2,6 +2,7 @@ package com.example.myhipicapptfg.ui.admin.competiciones.pruebas.participaciones
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -14,6 +15,7 @@ import com.example.myhipicapptfg.R;
 import com.example.myhipicapptfg.datos.local.entidades.Equino;
 import com.example.myhipicapptfg.datos.local.entidades.Participacion;
 import com.example.myhipicapptfg.datos.local.entidades.Usuario;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.HashMap;
@@ -29,6 +31,14 @@ public class GestionParticipacionesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gestion_participaciones);
+
+        MaterialToolbar toolbarParticipaciones = findViewById(R.id.toolbarParticipaciones);
+        toolbarParticipaciones.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getOnBackPressedDispatcher().onBackPressed();
+            }
+        });
 
         // 1. Obtener datos del Intent
         idPrueba = getIntent().getIntExtra("ID_PRUEBA", -1);

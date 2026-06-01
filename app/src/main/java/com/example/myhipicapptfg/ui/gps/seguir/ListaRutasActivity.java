@@ -43,7 +43,7 @@ public class ListaRutasActivity extends AppCompatActivity implements RutasAdapte
         recyclerView.setAdapter(adapter);
 
         // ViewModel y Observador
-        int idPropietario = getIntent().getIntExtra("ID_PROPIETARIO", 1);
+        int idPropietario = getIntent().getIntExtra("ID_PROPIETARIO", 12);
         viewModel = new ViewModelProvider(this).get(ListaRutasViewModel.class);
 
         viewModel.obtenerRutas(idPropietario).observe(this, lista -> {

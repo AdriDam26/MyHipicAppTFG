@@ -43,6 +43,17 @@ public class ReservaClaseActivity extends AppCompatActivity {
             return;
         }
 
+        // Vincula el Toolbar usando su ID (@id/toolbar)
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+
+        // Configura la acción para ir hacia atrás
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getOnBackPressedDispatcher().onBackPressed();
+            }
+        });
+
         initViews();
         initViewModel();
         setupRecyclerView();

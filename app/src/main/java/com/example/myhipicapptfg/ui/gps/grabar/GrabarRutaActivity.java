@@ -54,7 +54,7 @@ public class GrabarRutaActivity extends AppCompatActivity implements OnMapReadyC
 
     private boolean mapaCentradoInicialmente = false;
 
-    private int idPropietarioActual = 1;
+    private int idPropietarioActual = 12;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

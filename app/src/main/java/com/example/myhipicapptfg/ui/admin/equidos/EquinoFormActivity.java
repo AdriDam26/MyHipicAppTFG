@@ -1,4 +1,4 @@
-package com.example.myhipicapptfg.ui.admin.equinos;
+package com.example.myhipicapptfg.ui.admin.equidos;
 
 import android.app.DatePickerDialog;
 import android.net.Uri;
@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.myhipicapptfg.R;
 import com.example.myhipicapptfg.datos.local.entidades.Equino;
 import com.example.myhipicapptfg.datos.local.entidades.Usuario;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -40,12 +41,12 @@ public class EquinoFormActivity extends AppCompatActivity {
     private CheckBox cbTieneEspecialidades, cbDoma, cbSalto;
     private CheckBox cbTienePropietario;
 
-    // Estado y Edición
+
     private long fechaNacimientoSeleccionada = -1;
     private boolean modoEdicion = false;
     private int equinoId = -1;
 
-    // Lista auxiliar para manejar los IDs de los propietarios
+
     private List<Usuario> listaPropietariosCargados = new ArrayList<>();
 
 
@@ -78,6 +79,17 @@ public class EquinoFormActivity extends AppCompatActivity {
             modoEdicion = true;
             cargarEquino(equinoId);
         }
+
+        // Vincula el MaterialToolbar usando su ID
+        MaterialToolbar toolbar = findViewById(R.id.toolbarEquino);
+
+        // Configura la acción para ir hacia atrás al presionar la flecha
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getOnBackPressedDispatcher().onBackPressed();
+            }
+        });
 
         findViewById(R.id.btnGuardarEquino).setOnClickListener(v -> guardarEquino());
 
@@ -165,12 +177,12 @@ public class EquinoFormActivity extends AppCompatActivity {
     }
 
     private void setupSpinners() {
-        // 1. Razas extendidas
+        // Razas extendidas
         String[] razas = {"Pura Raza Española (PRE)", "Árabe", "Cuarto de Milla", "Pura Sangre Inglés",
                 "Appaloosa", "Frisón", "CDE", "Lusitano", "Hispano-Árabe", "Anglo-Árabe", "Poni Galés", "Shetland"};
         spinnerRaza.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, razas));
 
-        // 2. Sexo, Temperamento y Salud
+
         spinnerSexo.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, new String[]{Equino.SEXO_MACHO, Equino.SEXO_HEMBRA}));
         spinnerTemperamento.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, new String[]{Equino.FACIL, Equino.MANEJABLE, Equino.DIFICIL}));
         spinnerSalud.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, new String[]{Equino.BUENO, Equino.REGULAR, Equino.MALO}));
@@ -213,7 +225,7 @@ public class EquinoFormActivity extends AppCompatActivity {
     private boolean validar() {
         boolean ok = true;
 
-        // 1. Validar Nombre
+
         if (etNombre.getText().toString().trim().isEmpty()) {
             layNombre.setError("El nombre es obligatorio");
             ok = false;
@@ -221,7 +233,7 @@ public class EquinoFormActivity extends AppCompatActivity {
             layNombre.setError(null);
         }
 
-        // 2. Validar Raza
+
         if (spinnerRaza.getText().toString().trim().isEmpty()) {
             layRaza.setError("Selecciona una raza");
             ok = false;
@@ -229,20 +241,19 @@ public class EquinoFormActivity extends AppCompatActivity {
             layRaza.setError(null);
         }
 
-        // 3. Validar Microchip (Exactamente 15 dígitos)
+
         String microchip = etMicrochip.getText().toString().trim();
         if (microchip.isEmpty()) {
             layMicrochip.setError("Obligatorio");
             ok = false;
         } else if (!microchip.matches("\\d{15}")) {
-            // Mensaje con el ejemplo que pediste
+
             layMicrochip.setError("Debe tener 15 dígitos numéricos. Ej: 981001234567890");
             ok = false;
         } else {
             layMicrochip.setError(null);
         }
 
-        // 4. Validar Fecha de Nacimiento
         if (fechaNacimientoSeleccionada <= 0) {
             layFechaNacimiento.setError("Selecciona fecha");
             ok = false;
@@ -250,7 +261,7 @@ public class EquinoFormActivity extends AppCompatActivity {
             layFechaNacimiento.setError(null);
         }
 
-        // 5. Validar Cuadra
+
         if (etCuadra.getText().toString().trim().isEmpty()) {
             layCuadra.setError("Obligatorio");
             ok = false;
@@ -258,7 +269,7 @@ public class EquinoFormActivity extends AppCompatActivity {
             layCuadra.setError(null);
         }
 
-        // 6. Validar Propietario (solo si el CheckBox está marcado)
+
         if (cbTienePropietario.isChecked()) {
             if (spinnerPropietario.getText().toString().trim().isEmpty()) {
                 layPropietario.setError("Debes seleccionar un propietario");
@@ -268,7 +279,7 @@ public class EquinoFormActivity extends AppCompatActivity {
             }
         }
 
-        // 7. Validar Disciplinas (solo si el CheckBox está marcado)
+
         if (cbTieneEspecialidades.isChecked()) {
             if (!cbDoma.isChecked() && !cbSalto.isChecked()) {
                 Toast.makeText(this, "Selecciona al menos una disciplina", Toast.LENGTH_SHORT).show();
@@ -308,7 +319,7 @@ public class EquinoFormActivity extends AppCompatActivity {
                 cbDoma.isChecked(),
                 idPropietario,
                 Integer.parseInt(etCuadra.getText().toString().trim()),
-                fotoUri != null ? fotoUri.toString() : null  // ✅
+                fotoUri != null ? fotoUri.toString() : null
         );
 
         if (modoEdicion) {

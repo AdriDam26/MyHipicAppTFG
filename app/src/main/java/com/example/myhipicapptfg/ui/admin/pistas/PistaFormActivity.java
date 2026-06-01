@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.myhipicapptfg.R;
 import com.example.myhipicapptfg.datos.local.entidades.Pista;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -38,6 +39,17 @@ public class PistaFormActivity extends AppCompatActivity {
             idPistaEditar = getIntent().getIntExtra("ID_PISTA", -1);
             cargarDatos(idPistaEditar);
         }
+
+        // Vincula el MaterialToolbar usando su ID
+        MaterialToolbar toolbar = findViewById(R.id.toolbarPistaForm);
+
+        // Configura la acción para ir hacia atrás al presionar la flecha
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getOnBackPressedDispatcher().onBackPressed();
+            }
+        });
 
         findViewById(R.id.btnGuardarPista)
                 .setOnClickListener(v -> guardar());

@@ -34,9 +34,7 @@ public interface ClaseDao {
     @Query("SELECT * FROM Clase WHERE ID_Clase = :id LIMIT 1")
     LiveData<Clase> buscarPorId(int id);
 
-    // 🔹 CONTAR
-    @Query("SELECT COUNT(*) FROM Clase")
-    LiveData<Integer> contarClases();
+
 
     // 🔹 VALIDAR EXISTENCIA PISTA (SYNC)
     @Query("SELECT EXISTS(SELECT 1 FROM Pista WHERE ID_Pista = :idPista)")

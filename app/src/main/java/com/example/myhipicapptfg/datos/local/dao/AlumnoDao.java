@@ -37,13 +37,10 @@ public interface AlumnoDao {
 
     // 🔹 CONTAR REGISTROS
 
-    @Query("SELECT COUNT(*) FROM Alumno")
-    int contarAlumnos();
 
     // 🔹 CONSULTA SÍNCRONA (validaciones / lógica interna)
     @Query("SELECT * FROM Alumno WHERE ID_Alumno = :id LIMIT 1")
     Alumno buscarPorIdSync(int id);
 
-    @Query("SELECT * FROM Alumno")
-    List<Alumno> obtenerTodosSync();
+
 }
