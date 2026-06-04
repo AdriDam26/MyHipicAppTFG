@@ -15,15 +15,14 @@ import java.util.List;
 @Dao
 public interface AlumnoDao {
 
-    // 🔹 INSERT
+
     @Insert(onConflict = OnConflictStrategy.ABORT)
     long insertarAlumno(Alumno alumno);
 
-    // 🔹 UPDATE
     @Update
     int actualizarAlumno(Alumno alumno);
 
-    // 🔹 DELETE
+
     @Delete
     int eliminarAlumno(Alumno alumno);
 
