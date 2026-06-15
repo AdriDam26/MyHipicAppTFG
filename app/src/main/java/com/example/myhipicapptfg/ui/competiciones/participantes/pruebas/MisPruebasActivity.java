@@ -15,57 +15,126 @@ import com.example.myhipicapptfg.ui.competiciones.participantes.AlumnoResultados
 import com.example.myhipicapptfg.ui.competiciones.participantes.ranking.RankingPruebaActivity;
 import com.google.android.material.appbar.MaterialToolbar;
 
+/**
+ * Activity que muestra las pruebas publicadas en las que participa un alumno.
+ *
+ * Permite consultar el listado de pruebas y acceder al ranking
+ * de cada una de ellas.
+ */
 public class MisPruebasActivity extends AppCompatActivity {
 
     public static final String EXTRA_ID_ALUMNO = "extra_id_alumno";
+
+    private AlumnoResultadosViewModel viewModel;
+    private PruebaAlumnoAdapter adapter;
+
+    private RecyclerView recyclerView;
+    private TextView tvEmpty;
+
+    private int idAlumno;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mis_pruebas);
 
-        int idAlumno = getIntent().getIntExtra(EXTRA_ID_ALUMNO, -1);
+        obtenerExtras();
+        initViews();
+        initToolbar();
+        initViewModel();
+        observarPruebas();
+    }
 
-        // Vincula el Toolbar usando su ID (@id/toolbar)
-        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+    /**
+     * Obtiene el identificador del alumno recibido mediante el Intent.
+     */
+    private void obtenerExtras() {
+        idAlumno = getIntent().getIntExtra(EXTRA_ID_ALUMNO, -1);
+    }
 
-        // Configura la acción para ir hacia atrás
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getOnBackPressedDispatcher().onBackPressed();
-            }
+    /**
+     * Inicializa las vistas de la pantalla.
+     */
+    private void initViews() {
+
+        recyclerView = findViewById(R.id.rvMisPruebas);
+        tvEmpty = findViewById(R.id.tvEmpty);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        adapter = new PruebaAlumnoAdapter();
+
+        adapter.setOnClick(item -> {
+            Intent intent = new Intent(
+                    MisPruebasActivity.this,
+                    RankingPruebaActivity.class
+            );
+
+            intent.putExtra(
+                    RankingPruebaActivity.EXTRA_ID_PRUEBA,
+                    item.idPrueba
+            );
+
+            intent.putExtra(
+                    RankingPruebaActivity.EXTRA_ID_PARTICIPACION,
+                    item.idParticipacion
+            );
+
+            intent.putExtra(
+                    RankingPruebaActivity.EXTRA_NOMBRE_PRUEBA,
+                    item.nombrePrueba
+            );
+
+            startActivity(intent);
         });
 
-        RecyclerView rv      = findViewById(R.id.rvMisPruebas);
-        TextView     tvEmpty = findViewById(R.id.tvEmpty);
+        recyclerView.setAdapter(adapter);
+    }
 
-        rv.setLayoutManager(new LinearLayoutManager(this));
-        PruebaAlumnoAdapter adapter = new PruebaAlumnoAdapter();
-        rv.setAdapter(adapter);
+    /**
+     * Configura la barra superior de navegación.
+     */
+    private void initToolbar() {
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
 
-        AlumnoResultadosViewModel vm = new ViewModelProvider(this)
+        toolbar.setNavigationOnClickListener(
+                v -> getOnBackPressedDispatcher().onBackPressed()
+        );
+    }
+
+    /**
+     * Inicializa el ViewModel asociado a la Activity.
+     */
+    private void initViewModel() {
+        viewModel = new ViewModelProvider(this)
                 .get(AlumnoResultadosViewModel.class);
+    }
 
-        vm.getPruebas(idAlumno).observe(this, lista -> {
+    /**
+     * Observa las pruebas publicadas del alumno y actualiza la interfaz.
+     */
+    private void observarPruebas() {
+
+        viewModel.getPruebas(idAlumno).observe(this, lista -> {
+
             if (lista == null || lista.isEmpty()) {
+
                 tvEmpty.setVisibility(View.VISIBLE);
-                rv.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.GONE);
+
             } else {
+
                 tvEmpty.setVisibility(View.GONE);
-                rv.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.VISIBLE);
+
                 adapter.submitList(lista);
             }
         });
-
-        adapter.setOnClick(item -> {
-            Intent i = new Intent(this, RankingPruebaActivity.class);
-            i.putExtra(RankingPruebaActivity.EXTRA_ID_PRUEBA,        item.idPrueba);
-            i.putExtra(RankingPruebaActivity.EXTRA_ID_PARTICIPACION, item.idParticipacion);
-            i.putExtra(RankingPruebaActivity.EXTRA_NOMBRE_PRUEBA,    item.nombrePrueba);
-            startActivity(i);
-        });
     }
 
-    @Override public boolean onSupportNavigateUp() { finish(); return true; }
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
+    }
 }

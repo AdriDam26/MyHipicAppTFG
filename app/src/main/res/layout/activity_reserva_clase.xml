@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="#5D3A1A"
-            app:title="Buscar Clases"
+            app:title="Reservar Clase"
             app:titleTextColor="#FFFFFF"
             app:navigationIcon="?attr/homeAsUpIndicator"
             app:navigationIconTint="#FFFFFF"/>

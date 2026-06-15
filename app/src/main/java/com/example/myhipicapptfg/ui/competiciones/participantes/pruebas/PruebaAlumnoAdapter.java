@@ -13,19 +13,46 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myhipicapptfg.R;
 import com.example.myhipicapptfg.model.PruebaAlumno;
 
+
+/**
+ * Adaptador encargado de mostrar las pruebas en las que participa un alumno.
+ *
+ * Utiliza ListAdapter y DiffUtil para optimizar la actualización
+ * de los elementos mostrados en el RecyclerView.
+ */
 public class PruebaAlumnoAdapter
         extends ListAdapter<PruebaAlumno, PruebaAlumnoAdapter.VH> {
 
-    public interface OnClick { void onClick(PruebaAlumno item); }
+    /**
+     * Interfaz para gestionar la pulsación sobre una prueba.
+     */
+    public interface OnClick {
+        void onClick(PruebaAlumno item);
+    }
     private OnClick listener;
-    public void setOnClick(OnClick l) { this.listener = l; }
+    /**
+     * Establece el listener que se ejecutará al pulsar una prueba.
+     */
+    public void setOnClick(OnClick l) {
+        this.listener = l;
+    }
 
+    /**
+     * Constructor del adaptador.
+     * Configura DiffUtil para detectar cambios entre elementos.
+     */
     public PruebaAlumnoAdapter() {
         super(new DiffUtil.ItemCallback<PruebaAlumno>() {
+            /**
+             * Comprueba si dos elementos representan la misma prueba.
+             */
             @Override public boolean areItemsTheSame(@NonNull PruebaAlumno a,
                                                      @NonNull PruebaAlumno b) {
                 return a.idPrueba == b.idPrueba;
             }
+            /**
+             * Comprueba si el contenido de dos elementos es idéntico.
+             */
             @Override public boolean areContentsTheSame(@NonNull PruebaAlumno a,
                                                         @NonNull PruebaAlumno b) {
                 return a.idPrueba == b.idPrueba;
@@ -33,6 +60,9 @@ public class PruebaAlumnoAdapter
         });
     }
 
+    /**
+     * Crea una nueva vista para un elemento de la lista.
+     */
     @NonNull @Override
     public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
@@ -40,6 +70,9 @@ public class PruebaAlumnoAdapter
         return new VH(v);
     }
 
+    /**
+     * Vincula los datos de una prueba con su correspondiente fila.
+     */
     @Override
     public void onBindViewHolder(@NonNull VH h, int pos) {
         PruebaAlumno item = getItem(pos);
@@ -51,8 +84,17 @@ public class PruebaAlumnoAdapter
         });
     }
 
-    @Override public int getItemCount() { return getCurrentList().size(); }
+    /**
+     * Devuelve el número de elementos mostrados.
+     */
+    @Override public int getItemCount() {
+        return getCurrentList().size();
+    }
 
+    /**
+     * ViewHolder que almacena las referencias a las vistas
+     * de cada elemento de la lista.
+     */
     static class VH extends RecyclerView.ViewHolder {
         TextView tvNombrePrueba, tvCompeticion, tvCategoria;
         VH(@NonNull View v) {

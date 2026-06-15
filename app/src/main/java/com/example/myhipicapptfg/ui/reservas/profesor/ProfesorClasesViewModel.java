@@ -35,7 +35,6 @@ public class ProfesorClasesViewModel extends AndroidViewModel {
 
     /**
      * Devuelve los alumnos inscritos en una clase desde el ReservaClaseRepository.
-     * Esto utiliza la Query con INNER JOIN que acabamos de configurar.
      */
     public LiveData<List<Usuario>> getAlumnosDeClase(int idClase) {
         return reservaRepositorio.obtenerAlumnosDeClase(idClase);

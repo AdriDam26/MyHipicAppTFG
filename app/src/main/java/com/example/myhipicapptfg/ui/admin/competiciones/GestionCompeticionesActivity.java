@@ -17,9 +17,21 @@ import com.example.myhipicapptfg.ui.admin.competiciones.pruebas.GestionPruebasAc
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+/**
+ * Activity de administración de competiciones.
+ *
+ * Responsabilidades:
+ * - Mostrar listado de competiciones (RecyclerView)
+ * - Permitir crear, editar y eliminar competiciones
+ * - Navegar a gestión de pruebas de una competición
+ *
+ */
 public class GestionCompeticionesActivity extends AppCompatActivity {
 
+    // ViewModel que gestiona la lógica de datos
     private GestionCompeticionesViewModel viewModel;
+
+    // Adapter del RecyclerView
     private CompeticionAdapter adapter;
 
     @Override
@@ -27,6 +39,7 @@ public class GestionCompeticionesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gestion_competiciones);
 
+        // toolbar
         MaterialToolbar toolbarCompeticiones = findViewById(R.id.toolbarCompeticiones);
         toolbarCompeticiones.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -35,9 +48,11 @@ public class GestionCompeticionesActivity extends AppCompatActivity {
             }
         });
 
+        // Inicializa RecyclerView y ViewModel
         initRecyclerView();
         initViewModel();
 
+        // Botón flotante para crear competiciones
         FloatingActionButton fab = findViewById(R.id.fabAddCompeticion);
         fab.setOnClickListener(v -> {
             // Abrir formulario para nueva competición
@@ -46,6 +61,9 @@ public class GestionCompeticionesActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Configura el RecyclerView y su adapter
+     */
     private void initRecyclerView() {
         RecyclerView rv = findViewById(R.id.recyclerCompeticiones);
         rv.setLayoutManager(new LinearLayoutManager(this));
@@ -77,6 +95,9 @@ public class GestionCompeticionesActivity extends AppCompatActivity {
         rv.setAdapter(adapter);
     }
 
+    /**
+     * Inicializa ViewModel y observers
+     */
     private void initViewModel() {
         viewModel = new ViewModelProvider(this).get(GestionCompeticionesViewModel.class);
 
@@ -98,6 +119,9 @@ public class GestionCompeticionesActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Muestra diálogo de confirmación antes de eliminar
+     */
     private void mostrarDialogoConfirmacionEliminar(Competicion c) {
         new AlertDialog.Builder(this)
                 .setTitle("Eliminar competición")

@@ -13,45 +13,70 @@ import com.example.myhipicapptfg.datos.local.entidades.Usuario;
 
 import java.util.List;
 
+
+/**
+ * DAO de Juez.
+ *
+ * Gestiona el acceso a datos de los jueces del sistema,
+ * incluyendo operaciones CRUD, búsquedas y consultas combinadas con Usuario.
+ */
 @Dao
 public interface JuezDao {
 
-    // 🔹 INSERT
+    /**
+     * Inserta un juez.
+     * Si hay conflicto (ID duplicado), se aborta la operación.
+     */
     @Insert(onConflict = OnConflictStrategy.ABORT)
     long insertarJuez(Juez juez);
 
-    // 🔹 UPDATE
+
     @Update
     int actualizarJuez(Juez juez);
 
-    // 🔹 DELETE
+
     @Delete
     int eliminarJuez(Juez juez);
 
-    // 🔹 LISTADO GENERAL
+    /**
+     * Obtiene todos los jueces registrados.
+     */
+
     @Query("SELECT * FROM Juez")
     LiveData<List<Juez>> obtenerTodosJueces();
 
-    // 🔹 BUSCAR POR ID
+
+    /**
+     * Busca un juez por su ID.
+     */
     @Query("SELECT * FROM Juez WHERE ID_Juez = :id LIMIT 1")
     LiveData<Juez> buscarPorId(int id);
 
-    // 🔹 CONTAR
+    /**
+     * Cuenta el número total de jueces.
+     */
     @Query("SELECT COUNT(*) FROM Juez")
     LiveData<Integer> contarJueces();
 
-    // 🔹 SYNC (validaciones / lógica interna)
+
+    /**
+     * Obtiene un juez por ID de forma síncrona.
+     */
     @Query("SELECT * FROM Juez WHERE ID_Juez = :id LIMIT 1")
     Juez buscarPorIdSync(int id);
 
-    // 🔹 BUSCAR POR NÚMERO DE LICENCIA
+    /**
+     * Busca un juez por número de licencia (modo síncrono).
+     */
     @Query("SELECT * FROM Juez WHERE Numero_Licencia = :licencia LIMIT 1")
     Juez buscarPorLicenciaSync(String licencia);
 
-    // 🔹 OBTENER ID POR LICENCIA
-    @Query("SELECT ID_Juez FROM Juez WHERE Numero_Licencia = :licencia LIMIT 1")
-    int obtenerIdPorLicenciaSync(String licencia);
 
+    /**
+     * Obtiene jueces activos junto con datos del usuario asociado.
+     *
+     * Se realiza un JOIN entre Usuario y Juez para obtener información completa.
+     */
     @Query("SELECT u.* FROM Usuario u " +
             "INNER JOIN Juez j ON u.ID_Usuario = j.ID_Juez " +
             "WHERE j.Activo = 1 " +

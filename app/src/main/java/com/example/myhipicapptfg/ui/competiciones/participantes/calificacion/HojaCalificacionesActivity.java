@@ -1,7 +1,6 @@
 package com.example.myhipicapptfg.ui.competiciones.participantes.calificacion;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,68 +14,148 @@ import com.google.android.material.appbar.MaterialToolbar;
 
 import java.util.Locale;
 
+/**
+ * Activity que muestra la hoja de calificaciones de una participación.
+ *
+ * Permite visualizar las notas obtenidas en cada movimiento,
+ * así como el resumen final de la prueba y las correcciones aplicadas.
+ */
 public class HojaCalificacionesActivity extends AppCompatActivity {
 
     public static final String EXTRA_ID_PARTICIPACION = "extra_id_participacion";
-    public static final String EXTRA_NOMBRE_PRUEBA    = "extra_nombre_prueba";
+    public static final String EXTRA_NOMBRE_PRUEBA = "extra_nombre_prueba";
+
+    private AlumnoResultadosViewModel viewModel;
+    private HojaCalifAdapter adapter;
+
+    private RecyclerView recyclerView;
+    private TextView tvResumen;
+    private TextView tvCorreccion;
+
+    private int idParticipacion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hoja_calificaciones);
 
-        int    idParticipacion = getIntent().getIntExtra(EXTRA_ID_PARTICIPACION, -1);
+        obtenerExtras();
+        initViews();
+        initToolbar();
+        initViewModel();
+        observarHojaCalificaciones();
+        observarParticipacion();
+    }
 
+    /**
+     * Obtiene los datos recibidos mediante el Intent.
+     */
+    private void obtenerExtras() {
+        idParticipacion = getIntent().getIntExtra(EXTRA_ID_PARTICIPACION, -1);
+    }
 
+    /**
+     * Inicializa las vistas de la pantalla.
+     */
+    private void initViews() {
+
+        tvResumen = findViewById(R.id.tvResumen);
+        tvCorreccion = findViewById(R.id.tvCorreccion);
+        recyclerView = findViewById(R.id.rvHoja);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        adapter = new HojaCalifAdapter();
+        recyclerView.setAdapter(adapter);
+    }
+
+    /**
+     * Configura la barra superior de navegación.
+     */
+    private void initToolbar() {
 
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
 
+        toolbar.setNavigationOnClickListener(
+                v -> getOnBackPressedDispatcher().onBackPressed()
+        );
+    }
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getOnBackPressedDispatcher().onBackPressed();
-            }
-        });
-
-        TextView     tvResumen = findViewById(R.id.tvResumen);
-        RecyclerView rv        = findViewById(R.id.rvHoja);
-
-        TextView tvCorreccion = findViewById(R.id.tvCorreccion);
-
-        rv.setLayoutManager(new LinearLayoutManager(this));
-        HojaCalifAdapter adapter = new HojaCalifAdapter();
-        rv.setAdapter(adapter);
-
-        AlumnoResultadosViewModel vm = new ViewModelProvider(this)
+    /**
+     * Inicializa el ViewModel asociado a la Activity.
+     */
+    private void initViewModel() {
+        viewModel = new ViewModelProvider(this)
                 .get(AlumnoResultadosViewModel.class);
+    }
 
-        // RecyclerView — solo carga la lista
-        vm.getHoja(idParticipacion).observe(this, lista -> {
-            if (lista == null || lista.isEmpty()) return;
+    /**
+     * Observa la hoja de calificaciones y actualiza la lista de movimientos.
+     */
+    private void observarHojaCalificaciones() {
+
+        viewModel.getHoja(idParticipacion).observe(this, lista -> {
+
+            if (lista == null || lista.isEmpty()) {
+                return;
+            }
+
             adapter.submitList(lista);
         });
+    }
 
-        // Resumen — lee notaFinal y porcentaje ya calculados en Participacion
-        vm.getParticipacion(idParticipacion).observe(this, p -> {
-            if (p == null) return;
-            if (p.eliminado) {
-                tvResumen.setText("ELIMINADO");
-                tvResumen.setBackgroundColor(getColor(android.R.color.holo_red_dark));
-            } else {
-                tvResumen.setText(String.format(Locale.getDefault(),
-                        "Nota: %.2f  |  Porcentaje: %.3f%%",
-                        p.notaFinal, p.porcentaje));
+    /**
+     * Observa la participación y muestra el resumen final de resultados.
+     */
+    private void observarParticipacion() {
+
+        viewModel.getParticipacion(idParticipacion).observe(this, participacion -> {
+
+            if (participacion == null) {
+                return;
             }
 
-            String etiqueta;
-            if      (p.correccion == 0.0) etiqueta = "Sin corrección";
-            else if (p.correccion == 2.0) etiqueta = "1 corrección";
-            else if (p.correccion == 4.0) etiqueta = "2 correcciones";
-            else                          etiqueta = "3 correcciones";   // -1 → tu caso especial
+            if (participacion.eliminado) {
 
-            tvCorreccion.setText(String.format(Locale.getDefault(),
-                    "Correcciones: %s", etiqueta));
+                tvResumen.setText("ELIMINADO");
+                tvResumen.setBackgroundColor(
+                        getColor(android.R.color.holo_red_dark)
+                );
+
+            } else {
+
+                tvResumen.setText(
+                        String.format(
+                                Locale.getDefault(),
+                                "Nota: %.2f  |  Porcentaje: %.3f%%",
+                                participacion.notaFinal,
+                                participacion.porcentaje
+                        )
+                );
+            }
+
+            String etiquetaCorreccion;
+
+            if (participacion.correccion == 0.0) {
+                etiquetaCorreccion = "Sin corrección";
+
+            } else if (participacion.correccion == 2.0) {
+                etiquetaCorreccion = "1 corrección";
+
+            } else if (participacion.correccion == 4.0) {
+                etiquetaCorreccion = "2 correcciones";
+
+            } else {
+                etiquetaCorreccion = "3 correcciones";
+            }
+
+            tvCorreccion.setText(
+                    String.format(
+                            Locale.getDefault(),
+                            "Correcciones: %s",
+                            etiquetaCorreccion
+                    )
+            );
         });
     }
 

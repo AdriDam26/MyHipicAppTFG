@@ -12,42 +12,54 @@ import com.example.myhipicapptfg.datos.local.entidades.Profesor;
 
 import java.util.List;
 
+
+/**
+ * DAO de Profesor.
+ *
+ * Gestiona el acceso a datos de los profesores del sistema,
+ * incluyendo operaciones CRUD, consultas básicas y búsquedas relacionadas con Usuario.
+ */
 @Dao
 public interface ProfesorDao {
 
-    // 🔹 INSERT
+    /**
+     * Inserta un profesor.
+     * Si hay conflicto (ID duplicado), se aborta la operación.
+     */
     @Insert(onConflict = OnConflictStrategy.ABORT)
     long insertarProfesor(Profesor profesor);
 
-    // 🔹 UPDATE
+
     @Update
     int actualizarProfesor(Profesor profesor);
 
-    // 🔹 DELETE
     @Delete
     int eliminarProfesor(Profesor profesor);
 
-    // 🔹 LISTADO GENERAL
+    /**
+     * Obtiene todos los profesores registrados.
+     */
     @Query("SELECT * FROM Profesor")
     LiveData<List<Profesor>> obtenerTodosProfesores();
 
-    // 🔹 BUSCAR POR ID
+    /**
+     * Busca un profesor por su ID.
+     */
     @Query("SELECT * FROM Profesor WHERE ID_Profesor = :id LIMIT 1")
     LiveData<Profesor> buscarPorId(int id);
 
+    /**
+     * Busca un profesor por su ID.
+     */
     // 🔹 CONTAR
     @Query("SELECT COUNT(*) FROM Profesor")
     LiveData<Integer> contarProfesores();
 
-    // 🔹 SYNC (validaciones / lógica interna)
+    /**
+     * Obtiene un profesor por ID de forma síncrona.
+     */
     @Query("SELECT * FROM Profesor WHERE ID_Profesor = :id LIMIT 1")
     Profesor buscarPorIdSync(int id);
 
-    // 🔹 OBTENER ID POR NOMBRE
-    @Query("SELECT p.ID_Profesor " +
-            "FROM Profesor p " +
-            "INNER JOIN Usuario u ON p.ID_Profesor = u.ID_Usuario " +
-            "WHERE u.Nombre = :nombre " +
-            "LIMIT 1")
-    int obtenerIdProfesorPorNombreSync(String nombre);
+
 }

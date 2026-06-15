@@ -1,6 +1,6 @@
 package com.example.myhipicapptfg.model;
 
-// com/example/myhipicapptfg/pojos/ParticipacionDetalle.java
+
 
 public class ParticipacionDetalle {
     public int    idParticipacion;

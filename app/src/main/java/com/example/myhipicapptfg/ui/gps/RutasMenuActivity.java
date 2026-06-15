@@ -12,6 +12,17 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.card.MaterialCardView;
 import com.example.myhipicapptfg.R;
 
+
+/**
+ * Pantalla principal del módulo de rutas GPS.
+ *
+ * Esta Activity funciona como un menú donde el usuario puede:
+ * - Grabar una nueva ruta GPS.
+ * - Ver / seguir rutas ya guardadas.
+ *
+ * También recibe el ID del usuario propietario para asociar
+ * las rutas a su cuenta.
+ */
 public class RutasMenuActivity extends AppCompatActivity {
 
     @Override
@@ -19,31 +30,41 @@ public class RutasMenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rutas_menu);
 
+        // Botón para grabar ruta
         MaterialCardView btnGrabar = findViewById(R.id.btnGrabarRuta);
+
+        // Botón para ver/seguir rutas guardadas
         MaterialCardView btnSeguir = findViewById(R.id.btnSeguirRuta);
 
+        // ID del usuario que ha iniciado sesión o está activo
+        // (si no viene en el Intent, se usa 12 como valor por defecto)
         int idUsuario = getIntent().getIntExtra("ID_PROPIETARIO", 12);
 
-        // Vincula el Toolbar de Rutas
+        // Toolbar superior del menú
         MaterialToolbar toolbar = findViewById(R.id.toolbarRutas);
 
-        // Configura la acción para ir hacia atrás
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getOnBackPressedDispatcher().onBackPressed();
-            }
-        });
+        // Acción del icono de navegación (flecha atrás)
+        toolbar.setNavigationOnClickListener(v ->
+                getOnBackPressedDispatcher().onBackPressed()
+        );
 
+        /**
+         * Ir a pantalla de grabar ruta GPS
+         */
         btnGrabar.setOnClickListener(v -> {
             Intent intent = new Intent(this, GrabarRutaActivity.class);
-            intent.putExtra("ID_PROPIETARIO", idUsuario); // Envía el ID activo (12)
+            // Se pasa el ID del usuario para asociar la ruta grabada
+            intent.putExtra("ID_PROPIETARIO", idUsuario);
             startActivity(intent);
         });
 
+        /**
+         * Ir a pantalla donde se listan las rutas del usuario
+         */
         btnSeguir.setOnClickListener(v -> {
             Intent intent = new Intent(this, ListaRutasActivity.class);
-            intent.putExtra("ID_PROPIETARIO", idUsuario); // ← ¡Faltaba añadir esto para listar sus rutas!
+            //  se pasa el ID para filtrar rutas del usuario
+            intent.putExtra("ID_PROPIETARIO", idUsuario);
             startActivity(intent);
         });
     }

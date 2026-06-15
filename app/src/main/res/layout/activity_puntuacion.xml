@@ -56,7 +56,7 @@
         android:paddingHorizontal="16dp"
         android:paddingVertical="8dp" />
 
-    <!-- PANEL DE CORRECCIÓN Y GUARDADO (MATERIAL 3) -->
+    <!-- PANEL DE CORRECCIÓN Y GUARDADO  -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -81,7 +81,7 @@
                 android:textSize="14sp"
                 android:fontFamily="sans-serif-medium" />
 
-            <!-- FILA DE ERRORES (SELECCIÓN) -->
+            <!-- FILA DE ERRORES  -->
             <RadioGroup
                 android:id="@+id/rgCorreccion"
                 android:layout_width="match_parent"
@@ -157,7 +157,7 @@
                     android:gravity="end" />
             </LinearLayout>
 
-            <!-- BOTÓN DE GUARDADO BURDEOS M3 -->
+            <!-- BOTÓN DE GUARDADO BURDEOS  -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnGuardar"
                 style="@style/Widget.Material3.Button"

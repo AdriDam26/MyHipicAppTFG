@@ -6,6 +6,13 @@ import androidx.room.ForeignKey;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+
+/**
+ * Entidad Movimiento para la base de datos Room.
+ *
+ * Representa un ejercicio o movimiento dentro de una prueba ecuestre.
+ * Cada movimiento pertenece a una única prueba.
+ */
 @Entity(
         tableName = "Movimiento",
         foreignKeys = @ForeignKey(
@@ -18,32 +25,55 @@ import androidx.room.PrimaryKey;
 )
 public class Movimiento {
 
+    /**
+     * Identificador único del movimiento (clave primaria autogenerada).
+     */
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "ID_Movimiento")
     public int idMovimiento;
 
+    // Atributos
     @ColumnInfo(name = "Ejercicio")
-    public String ejercicio; // Ej: "Trote de trabajo"
+    public String ejercicio;
 
+    /**
+     * Letra o tramo del ejercicio dentro del recorrido.
+     * Ejemplo: "A-C"
+     */
     @ColumnInfo(name = "Letra")
-    public String letra; // Ej: "A-C"
+    public String letra;
 
+    /**
+     * Orden del movimiento dentro de la prueba.
+     * Importante para mostrar la secuencia (1, 2, 3...).
+     */
     @ColumnInfo(name = "Orden")
-    public int orden; // Importante para el ranking y la vista del juez (1, 2, 3...)
+    public int orden;
 
+    /**
+     * Coeficiente de puntuación del movimiento.
+     * Normalmente 1 o 2, afecta al cálculo final.
+     */
     @ColumnInfo(name = "Coeficiente")
-    public double coeficiente; // Normalmente 1 o 2
+    public double coeficiente;
 
+    /**
+     * Directriz o indicación para el juez.
+     */
     @ColumnInfo(name = "Directriz")
-    public String directriz; // Notas de ayuda para el juez
+    public String directriz;
 
     @ColumnInfo(name = "ID_Prueba")
-    public int idPrueba; // Relación con la Prueba
+    public int idPrueba;
 
-    // 🔹 Constructor vacío para Room
+    /**
+     * Constructor vacío requerido por Room.
+     */
     public Movimiento() {}
 
-    // 🔹 Constructor para usar en tu Panel de Admin
+    /**
+     * Constructor para crear movimientos desde la interfaz de administración.
+     */
     public Movimiento(String ejercicio, String letra, int orden,
                       double coeficiente, String directriz, int idPrueba) {
         this.ejercicio   = ejercicio;

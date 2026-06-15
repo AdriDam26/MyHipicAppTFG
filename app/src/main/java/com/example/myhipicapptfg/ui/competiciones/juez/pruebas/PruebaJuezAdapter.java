@@ -1,4 +1,3 @@
-// com/example/myhipicapptfg/adapters/PruebaJuezAdapter.java
 package com.example.myhipicapptfg.ui.competiciones.juez.pruebas;
 
 import android.view.LayoutInflater;
@@ -14,16 +13,29 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myhipicapptfg.R;
 import com.example.myhipicapptfg.model.PruebaConCompeticion;
 
+/**
+ * Adaptador para el RecyclerView que muestra las pruebas asignadas a un juez.
+ *
+ * Utiliza ListAdapter junto con DiffUtil para actualizar únicamente los
+ * elementos que cambian, mejorando el rendimiento frente a un RecyclerView.Adapter tradicional.
+ */
 public class PruebaJuezAdapter
         extends ListAdapter<PruebaConCompeticion, PruebaJuezAdapter.ViewHolder> {
 
+    /**
+     * Interfaz que permite notificar cuando el usuario pulsa sobre una prueba.
+     */
     public interface OnPruebaClickListener {
         void onPruebaClick(PruebaConCompeticion prueba);
     }
 
+    // Listener que recibirá los eventos de clic sobre los elementos de la lista
     private final OnPruebaClickListener listener;
 
-    // DiffUtil para actualizar sólo los ítems que cambian
+    /**
+     * Callback de DiffUtil encargado de comparar elementos antiguos y nuevos.
+     * Gracias a esto RecyclerView actualiza únicamente los ítems modificados.
+     */
     private static final DiffUtil.ItemCallback<PruebaConCompeticion> DIFF =
             new DiffUtil.ItemCallback<PruebaConCompeticion>() {
                 @Override
@@ -39,11 +51,20 @@ public class PruebaJuezAdapter
                 }
             };
 
+    /**
+     * Constructor del adaptador.
+     *
+     * @param listener Listener que gestionará el clic sobre una prueba.
+     */
     public PruebaJuezAdapter(OnPruebaClickListener listener) {
         super(DIFF);
         this.listener = listener;
     }
 
+    /**
+     * Se ejecuta cuando RecyclerView necesita crear una nueva fila.
+     * Aquí se infla el layout XML que representa cada elemento de la lista.
+     */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -52,6 +73,12 @@ public class PruebaJuezAdapter
         return new ViewHolder(v);
     }
 
+    /**
+     * Asocia los datos de una prueba con las vistas del ViewHolder.
+     *
+     * @param holder   ViewHolder que contiene las vistas.
+     * @param position Posición del elemento dentro de la lista.
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         PruebaConCompeticion item = getItem(position);
@@ -61,6 +88,10 @@ public class PruebaJuezAdapter
         holder.itemView.setOnClickListener(v -> listener.onPruebaClick(item));
     }
 
+    /**
+     * ViewHolder encargado de almacenar las referencias a las vistas
+     * de cada elemento para evitar búsquedas repetidas con findViewById.
+     */
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvCompeticion, tvPrueba, tvCatNivel;
         ViewHolder(@NonNull View itemView) {

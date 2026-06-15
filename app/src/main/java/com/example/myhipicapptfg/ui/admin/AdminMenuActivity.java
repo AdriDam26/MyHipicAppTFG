@@ -43,12 +43,12 @@ public class AdminMenuActivity extends AppCompatActivity {
         MaterialCardView cardCompeticiones = findViewById(R.id.cardCompeticiones);
         MaterialCardView cardPistas = findViewById(R.id.cardPistas);
 
-        // USUARIOS
+
         cardUsuarios.setOnClickListener(v -> {
             startActivity(new Intent(this, GestionUsuariosActivity.class));
         });
 
-        // 🔹 PISTAS
+
         cardPistas.setOnClickListener(v -> {
             startActivity(new Intent(this, GestionPistaActivity.class));
         });

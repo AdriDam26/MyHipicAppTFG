@@ -25,48 +25,82 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+
+/**
+ * Activity encargada de la creación y edición de clases.
+ *
+ * Permite:
+ * - Seleccionar fecha y horario.
+ * - Elegir nivel y disciplina.
+ * - Mostrar profesores disponibles.
+ * - Mostrar pistas disponibles.
+ * - Crear nuevas clases.
+ * - Modificar clases existentes.
+ *
+ */
 public class ClaseFormActivity extends AppCompatActivity {
 
+    /**
+     * ViewModel encargado de gestionar la lógica
+     * relacionada con las clases.
+     */
     private GestionClaseViewModel viewModel;
 
-    // =========================================================
-    // VISTAS
-    // =========================================================
 
     private TextInputEditText etFecha;
     private TextInputEditText etHoraInicio;
     private TextInputEditText etHoraFin;
 
+    /**
+     * Layouts utilizados para mostrar errores
+     * de validación al usuario.
+     */
     private TextInputLayout layFecha;
     private TextInputLayout layHoraInicio;
     private TextInputLayout layHoraFin;
     private TextInputLayout layProfesor;
     private TextInputLayout layPista;
 
+    /**
+     * Selectores desplegables.
+     */
     private AutoCompleteTextView spinnerNivel;
     private AutoCompleteTextView spinnerProfesor;
     private AutoCompleteTextView spinnerPista;
     private AutoCompleteTextView spinnerDisciplina;
 
-    // =========================================================
-    // DATOS
-    // =========================================================
-
+    /**
+     * Lista de usuarios cuyo rol es profesor.
+     *
+     * Se utiliza para generar las opciones disponibles
+     * en el selector de profesores.
+     */
     private final List<Usuario> listaUsuariosProfesores =
             new ArrayList<>();
 
+    /**
+     * Información adicional de cada profesor.
+     *
+     * Contiene especialidades y datos necesarios
+     * para filtrar disponibilidad.
+     */
     private final List<Profesor> detallesProfesores =
             new ArrayList<>();
 
+    /**
+     * Lista completa de pistas registradas.
+     */
     private final List<Pista> listaPistasCargadas =
             new ArrayList<>();
 
+    /**
+     * Lista completa de clases existentes.
+     *
+     * Se utiliza para detectar conflictos horarios.
+     */
     private final List<Clase> todasLasClasesCargadas =
             new ArrayList<>();
 
-    // =========================================================
-    // ESTADO
-    // =========================================================
 
     private long fechaSeleccionada = -1;
     private long horaInicioSeleccionada = -1;
@@ -74,6 +108,10 @@ public class ClaseFormActivity extends AppCompatActivity {
 
     private int claseId = -1;
 
+    /**
+     * Indica si la pantalla se encuentra
+     * en modo edición o creación.
+     */
     private boolean modoEdicion = false;
 
     // =========================================================
@@ -103,7 +141,7 @@ public class ClaseFormActivity extends AppCompatActivity {
 
         setupBotones();
 
-        // Vincula el MaterialToolbar usando su ID
+        // Configuración de la barra superior.
         MaterialToolbar toolbar = findViewById(R.id.toolbarClaseForm);
 
         // Configura la acción para ir hacia atrás al presionar la flecha
@@ -115,10 +153,10 @@ public class ClaseFormActivity extends AppCompatActivity {
         });
     }
 
-    // =========================================================
-    // INIT
-    // =========================================================
-
+    /**
+     * Obtiene las referencias a todos los
+     * componentes visuales del layout.
+     */
     private void initViews() {
 
         etFecha = findViewById(R.id.etFechaClase);
@@ -137,18 +175,31 @@ public class ClaseFormActivity extends AppCompatActivity {
         spinnerDisciplina = findViewById(R.id.spinnerDisciplina);
     }
 
+    /**
+     * Configura los eventos asociados
+     * a los botones de la pantalla.
+     */
     private void setupBotones() {
 
         findViewById(R.id.btnGuardarClase)
                 .setOnClickListener(v -> guardarClase());
 
-
     }
 
+    /**
+     * Comprueba si la Activity se ha abierto
+     * para editar una clase existente.
+     *
+     * Si recibe un ID mediante Intent,
+     * activa el modo edición y carga
+     * los datos de la clase.
+     */
     private void comprobarModoEdicion() {
 
-        if (!getIntent().hasExtra("ID_CLASE"))
+        if (!getIntent().hasExtra("ID_CLASE")){
             return;
+        }
+
 
         claseId =
                 getIntent().getIntExtra("ID_CLASE", -1);
@@ -158,10 +209,12 @@ public class ClaseFormActivity extends AppCompatActivity {
         cargarClase(claseId);
     }
 
-    // =========================================================
-    // OBSERVERS
-    // =========================================================
 
+    /**
+     * Registra todos los observadores necesarios
+     * para mantener sincronizada la interfaz
+     * con los datos almacenados.
+     */
     private void observarDatos() {
 
         viewModel.obtenerTodasLasClases()
@@ -173,6 +226,8 @@ public class ClaseFormActivity extends AppCompatActivity {
                     actualizarDisponibilidad();
                 });
 
+        // Observa todos los usuarios y filtra
+        // únicamente aquellos que son profesores.
         viewModel.obtenerTodosLosUsuarios()
                 .observe(this, usuarios -> {
 
@@ -189,6 +244,8 @@ public class ClaseFormActivity extends AppCompatActivity {
                     actualizarDisponibilidad();
                 });
 
+        // Observa la información detallada
+        // de todos los profesores.
         viewModel.obtenerTodosLosProfesores()
                 .observe(this, profesores -> {
 
@@ -198,6 +255,7 @@ public class ClaseFormActivity extends AppCompatActivity {
                     actualizarDisponibilidad();
                 });
 
+        // Observa todas las pistas registradas.
         viewModel.obtenerTodasLasPistas()
                 .observe(this, pistas -> {
 
@@ -207,9 +265,6 @@ public class ClaseFormActivity extends AppCompatActivity {
                     actualizarDisponibilidad();
                 });
 
-        // =====================================================
-        // PROFESORES DISPONIBLES
-        // =====================================================
 
         viewModel.getProfesoresDisponibles()
                 .observe(this, profesores -> {
@@ -223,7 +278,7 @@ public class ClaseFormActivity extends AppCompatActivity {
 
                     spinnerProfesor.setAdapter(adapter);
 
-                    // ✅ Mensaje si no hay profesores
+                    // Mensaje si no hay profesores
                     if (profesores.isEmpty()) {
 
                         layProfesor.setHelperText(
@@ -240,9 +295,6 @@ public class ClaseFormActivity extends AppCompatActivity {
                     validarProfesorSeleccionado(profesores);
                 });
 
-        // =====================================================
-        // PISTAS DISPONIBLES
-        // =====================================================
 
         viewModel.getPistasDisponibles()
                 .observe(this, pistas -> {
@@ -256,7 +308,7 @@ public class ClaseFormActivity extends AppCompatActivity {
 
                     spinnerPista.setAdapter(adapter);
 
-                    // ✅ Mensaje si no hay pistas
+                    // Mensaje si no hay pistas
                     if (pistas.isEmpty()) {
 
                         layPista.setHelperText(
@@ -274,10 +326,14 @@ public class ClaseFormActivity extends AppCompatActivity {
                 });
     }
 
-    // =========================================================
-    // SPINNERS
-    // =========================================================
 
+    /**
+     * Configura los desplegables de nivel y disciplina.
+     *
+     * También registra los eventos necesarios para
+     * recalcular la disponibilidad cada vez que
+     * el usuario modifica alguno de estos valores.
+     */
     private void setupSpinners() {
 
         spinnerNivel.setAdapter(
@@ -314,10 +370,12 @@ public class ClaseFormActivity extends AppCompatActivity {
         );
     }
 
-    // =========================================================
-    // PICKERS
-    // =========================================================
-
+    /**
+     * Configura los selectores de fecha y hora.
+     *
+     * Al pulsar sobre los campos correspondientes
+     * se abrirán los diálogos de selección.
+     */
     private void setupPickers() {
 
         etFecha.setOnClickListener(v -> abrirDatePicker());
@@ -328,6 +386,14 @@ public class ClaseFormActivity extends AppCompatActivity {
         etHoraFin.setOnClickListener(v ->
                 mostrarTimePicker(false));
     }
+
+    /**
+     * Muestra un DatePickerDialog para permitir
+     * al usuario seleccionar la fecha de la clase.
+     *
+     * La fecha seleccionada se almacena en
+     * fechaSeleccionada y se muestra en pantalla.
+     */
 
     private void abrirDatePicker() {
 
@@ -372,6 +438,14 @@ public class ClaseFormActivity extends AppCompatActivity {
         ).show();
     }
 
+    /**
+     * Muestra un TimePickerDialog para seleccionar
+     * la hora de inicio o fin de la clase.
+     *
+     * @param esInicio true si se está seleccionando
+     *                 la hora de inicio.
+     *                 false si se selecciona la hora final.
+     */
     private void mostrarTimePicker(boolean esInicio) {
 
         new TimePickerDialog(
@@ -433,10 +507,23 @@ public class ClaseFormActivity extends AppCompatActivity {
         ).show();
     }
 
-    // =========================================================
-    // DISPONIBILIDAD
-    // =========================================================
-
+    /**
+     * Solicita al ViewModel el cálculo de:
+     *
+     * - Profesores disponibles.
+     * - Pistas disponibles.
+     *
+     * según:
+     *
+     * - Fecha seleccionada.
+     * - Hora de inicio.
+     * - Hora de fin.
+     * - Disciplina.
+     * - Nivel.
+     *
+     * No realiza ningún cálculo si todavía faltan
+     * datos obligatorios del formulario.
+     */
     private void actualizarDisponibilidad() {
 
         if (fechaSeleccionada <= 0)
@@ -461,10 +548,16 @@ public class ClaseFormActivity extends AppCompatActivity {
         );
     }
 
-    // =========================================================
-    // VALIDACIONES UI
-    // =========================================================
-
+    /**
+     * Comprueba si el profesor actualmente seleccionado
+     * en el spinner sigue siendo válido tras actualizar
+     * la lista de profesores disponibles.
+     *
+     * Si el profesor seleccionado ya no está disponible,
+     * limpia el spinner para evitar valores inconsistentes.
+     *
+     * @param profesores Lista actualizada de profesores disponibles.
+     */
     private void validarProfesorSeleccionado(
             List<Usuario> profesores
     ) {
@@ -489,6 +582,16 @@ public class ClaseFormActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Comprueba si la pista actualmente seleccionada
+     * en el spinner sigue siendo válida tras actualizar
+     * la lista de pistas disponibles.
+     *
+     * Si la pista seleccionada ya no está disponible,
+     * limpia el spinner para evitar valores inconsistentes.
+     *
+     * @param pistas Lista actualizada de pistas disponibles.
+     */
     private void validarPistaSeleccionada(
             List<Pista> pistas
     ) {
@@ -513,10 +616,24 @@ public class ClaseFormActivity extends AppCompatActivity {
         }
     }
 
-    // =========================================================
-    // VALIDAR FORMULARIO
-    // =========================================================
-
+    /**
+     * Valida todos los campos del formulario antes de
+     * proceder con el guardado de la clase.
+     *
+     * Comprobaciones realizadas:
+     * - Fecha seleccionada (obligatoria).
+     * - Hora de inicio seleccionada (obligatoria).
+     * - Hora de fin seleccionada (obligatoria).
+     * - Hora de fin posterior a la hora de inicio.
+     * - Profesor seleccionado (obligatorio).
+     * - Pista seleccionada (obligatoria).
+     *
+     * Muestra los errores directamente sobre los campos
+     * correspondientes y evalúa todos antes de devolver
+     * el resultado, mostrando todos los errores a la vez.
+     *
+     * @return true si el formulario es válido, false en caso contrario.
+     */
     private boolean validar() {
 
         boolean ok = true;
@@ -590,10 +707,16 @@ public class ClaseFormActivity extends AppCompatActivity {
         return ok;
     }
 
-    // =========================================================
-    // GUARDAR
-    // =========================================================
-
+    /**
+     * Recoge los datos del formulario, construye el objeto
+     * Clase y lo persiste en la base de datos.
+     *
+     * Si el formulario no supera la validación, la operación
+     * se cancela. En modo edición actualiza la clase existente;
+     * en modo creación inserta una nueva.
+     *
+     * Cierra la Activity tras completar la operación.
+     */
     private void guardarClase() {
 
         if (!validar())
@@ -629,10 +752,17 @@ public class ClaseFormActivity extends AppCompatActivity {
         finish();
     }
 
-    // =========================================================
-    // CARGAR
-    // =========================================================
-
+    /**
+     * Carga los datos de una clase existente a partir de su
+     * identificador y rellena los campos del formulario.
+     *
+     * Se utiliza exclusivamente en modo edición. Una vez
+     * cargados los datos, actualiza la disponibilidad para
+     * que los spinners reflejen las opciones válidas en el
+     * contexto de la clase que se está editando.
+     *
+     * @param id Identificador de la clase a cargar.
+     */
     private void cargarClase(int id) {
 
         viewModel.buscarPorId(id)
@@ -683,10 +813,11 @@ public class ClaseFormActivity extends AppCompatActivity {
                 });
     }
 
-    // =========================================================
-    // AUXILIARES
-    // =========================================================
-
+    /**
+     * Obtiene el identificador del profesor seleccionado
+     * en el spinner buscando por su representación textual
+     * dentro de la lista de usuarios profesores cargados.
+     */
     private int obtenerIdProfesorSeleccionado() {
 
         String seleccionado =
@@ -703,6 +834,14 @@ public class ClaseFormActivity extends AppCompatActivity {
         return -1;
     }
 
+    /**
+     * Obtiene el identificador de la pista seleccionada
+     * en el spinner buscando por su representación textual
+     * dentro de la lista de pistas cargadas.
+     *
+     * @return Identificador de la pista seleccionada,
+     *         o -1 si no se encuentra ninguna coincidencia.
+     */
     private int obtenerIdPistaSeleccionada() {
 
         String seleccionado =

@@ -13,13 +13,34 @@ import com.example.myhipicapptfg.R;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.snackbar.Snackbar;
 
+
+/**
+ * Activity encargada de mostrar y gestionar las reservas del alumno.
+ *
+ * Permite:
+ * - Listar las clases en las que el alumno está inscrito
+ * - Cancelar reservas existentes
+ * - Mostrar estado vacío si no hay reservas
+ * - Mostrar feedback de operaciones (éxito o error)
+ *
+ */
 public class MisReservasActivity extends AppCompatActivity {
 
-    private ReservaClaseViewModel viewModel;
+    /**
+     * ViewModel que gestiona la lógica de reservas del alumno.
+     */
+    private MisReservasViewModel viewModel;
+
+    /**
+     * Adapter del RecyclerView para mostrar las clases reservadas.
+     */
     private ReservaClaseAdapter adapter;
+
+    /**
+     * ID del alumno recibido desde el Intent.
+     */
     private int idAlumno;
 
-    // Componentes de la UI
     private RecyclerView recyclerMisReservas;
     private View layoutEmpty;
 
@@ -28,62 +49,52 @@ public class MisReservasActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mis_reservas);
 
-        // 1. Obtener ID del alumno desde el Intent
         idAlumno = getIntent().getIntExtra("ID_ALUMNO", -1);
-        if (idAlumno == -1) {
-            Toast.makeText(this, "Error: Usuario no identificado", Toast.LENGTH_SHORT).show();
-            finish();
-            return;
-        }
 
-        // Vincula el Toolbar usando su ID (@id/toolbar)
-        MaterialToolbar toolbar = findViewById(R.id.toolbar);
-
-        // Configura la acción para ir hacia atrás
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getOnBackPressedDispatcher().onBackPressed();
-            }
-        });
 
         initViews();
         initViewModel();
         setupRecyclerView();
         observarDatos();
-
-        // 2. Cargar los datos del alumno (esto dispara las consultas en el ViewModel)
-        viewModel.cargarDatosAlumno(idAlumno);
     }
 
+    /**
+     * Inicializa las referencias a vistas de la Activity.
+     */
     private void initViews() {
         recyclerMisReservas = findViewById(R.id.recyclerMisReservas);
         layoutEmpty = findViewById(R.id.layoutEmptyReservas);
 
-        // Configurar Toolbar con botón de atrás
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        // Botón de navegación atrás
         toolbar.setNavigationOnClickListener(v -> finish());
     }
 
+    /**
+     * Inicializa el ViewModel asociado a la Activity.
+     */
     private void initViewModel() {
-        viewModel = new ViewModelProvider(this).get(ReservaClaseViewModel.class);
+        viewModel = new ViewModelProvider(this).get(MisReservasViewModel.class);
     }
 
+    /**
+     * Configura el RecyclerView con su adapter en modo cancelación.
+     */
     private void setupRecyclerView() {
-        // MUY IMPORTANTE: Pasamos 'true' para activar el modo cancelación en el Adapter
-        adapter = new ReservaClaseAdapter(true, clase -> {
-            // Acción al pulsar "Cancelar"
-            viewModel.cancelarReserva(idAlumno, clase.idClase);
-        });
-
+        adapter = new ReservaClaseAdapter(true, clase ->
+                viewModel.cancelarReserva(idAlumno, clase.idClase)
+        );
         recyclerMisReservas.setLayoutManager(new LinearLayoutManager(this));
         recyclerMisReservas.setAdapter(adapter);
     }
 
+    /**
+     * Observa los cambios en los datos del ViewModel y actualiza la UI.
+     */
     private void observarDatos() {
-        // ✅ Un solo observer en lugar de los 3 anidados
-        viewModel.getClasesReservadasUI().observe(this, clases -> {
+        // Lista de reservas del alumno
+        viewModel.getClasesReservadas(idAlumno).observe(this, clases -> {
             if (clases != null) {
                 adapter.submitList(clases);
                 boolean estaVacio = clases.isEmpty();
@@ -92,8 +103,11 @@ public class MisReservasActivity extends AppCompatActivity {
             }
         });
 
+        // Estado de la operación de cancelación
         viewModel.getEstadoOperacion().observe(this, estado -> {
-            if (estado == null) return;
+            if (estado == null) {
+                return;
+            }
             if ("CANCELADA".equals(estado)) {
                 Snackbar.make(recyclerMisReservas, "Reserva cancelada correctamente",
                         Snackbar.LENGTH_SHORT).show();
@@ -101,9 +115,8 @@ public class MisReservasActivity extends AppCompatActivity {
                 Snackbar.make(recyclerMisReservas, "Error al procesar la cancelación",
                         Snackbar.LENGTH_LONG).show();
             }
-            viewModel.resetearEstado(); // ✅ Añadido para evitar que el Snackbar se repita al rotar
+            // Reinicia el estado después de mostrar el mensaje
+            viewModel.resetearEstado();
         });
     }
-
-
 }

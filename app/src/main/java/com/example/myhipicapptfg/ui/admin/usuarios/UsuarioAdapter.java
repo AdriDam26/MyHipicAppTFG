@@ -19,12 +19,24 @@ import java.util.List;
 import com.google.android.material.imageview.ShapeableImageView;
 import android.net.Uri;
 
-
+/**
+ * Adapter encargado de mostrar la lista de usuarios en el sistema.
+ *
+ * Se encarga de:
+ * - Pintar datos del usuario (nombre, email, teléfono, tipo)
+ * - Mostrar foto de perfil con Glide
+ * - Aplicar estilos dinámicos según el tipo de usuario
+ * - Gestionar acciones de edición, eliminación y clic en item
+ */
 public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.ViewHolder> {
 
+    // Datos
     private List<Usuario> lista;
     private OnClick listener;
 
+    /**
+     * Interfaz para manejar eventos desde la Activity
+     */
     public interface OnClick {
         void editar(Usuario u);
         void eliminar(Usuario u);
@@ -36,11 +48,18 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.ViewHold
         this.listener = listener;
     }
 
+    /**
+     * Actualiza la lista de usuarios
+     */
     public void actualizar(List<Usuario> nuevaLista) {
         this.lista = nuevaLista;
         notifyDataSetChanged();
     }
 
+    /**
+     * ViewHolder:
+     * almacena referencias de vistas para mejorar rendimiento
+     */
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView nombre, email, tipo, telefono;
@@ -50,7 +69,7 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.ViewHold
         public ViewHolder(View v) {
             super(v);
 
-            // ✅ IDs del nuevo XML (Usuario)
+
             nombre = v.findViewById(R.id.txtNombreUsuario);
             email = v.findViewById(R.id.txtEmailUsuario);
             telefono = v.findViewById(R.id.txtTelefonoUsuario);

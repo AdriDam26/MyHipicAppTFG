@@ -41,6 +41,12 @@ import com.example.myhipicapptfg.datos.local.entidades.Usuario;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * Base de datos principal de la aplicación MyHipica.
+ *
+ * Utiliza Room como capa de abstracción sobre SQLite.
+ * Define todas las entidades, DAOs y configuración global.
+ */
 @Database(
         entities = {
                 Usuario.class, Alumno.class, Profesor.class, Juez.class,
@@ -50,20 +56,29 @@ import java.util.concurrent.Executors;
                 Competicion.class, Prueba.class, Participacion.class,
                 Movimiento.class, NotaMovimiento.class
         },
-        version = 27,
-        exportSchema = false
+        version = 28, // Versión actual de la BD (cambiar al modificar esquema)
+        exportSchema = false // No exporta esquema a archivos JSON
 )
 public abstract class AppDatabase extends RoomDatabase {
 
-    // Pool de hilos compartido por todos los repositorios
+
+    /**
+     * Pool de hilos compartido para operaciones en base de datos.
+     * Evita bloquear el hilo principal (UI).
+     */
     private static final ExecutorService DATABASE_EXECUTOR =
             Executors.newFixedThreadPool(4);
 
+
+    /**
+     * Permite acceder al executor desde otras capas (repositorios).
+     */
     public static ExecutorService getDatabaseExecutor() {
         return DATABASE_EXECUTOR;
     }
 
-    // DAOs
+
+    // DAOs de acceso a datos
     public abstract UsuarioDao usuarioDao();
     public abstract AlumnoDao alumnoDao();
     public abstract ProfesorDao profesorDao();
@@ -80,6 +95,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract MovimientoDao movimientoDao();
     public abstract NotaMovimientoDao notaMovimientoDao();
 
+    // Instancia única (Singleton)
     private static volatile AppDatabase INSTANCE;
 
     public static AppDatabase getInstance(Context context) {
@@ -92,25 +108,6 @@ public abstract class AppDatabase extends RoomDatabase {
                                     "myhipica_app.db"
                             )
                             .fallbackToDestructiveMigration()
-                            .addCallback(new Callback() {
-                                @Override
-                                public void onCreate(@NonNull SupportSQLiteDatabase db) {
-                                    super.onCreate(db);
-                                    android.util.Log.e("CADENA", "⚠️ BASE DE DATOS RECREADA - todos los datos borrados");
-                                }
-
-                                @Override
-                                public void onOpen(@NonNull SupportSQLiteDatabase db) {
-                                    super.onOpen(db);
-                                    android.util.Log.d("CADENA", "BD abierta - versión: " + db.getVersion());
-                                }
-
-                                @Override
-                                public void onDestructiveMigration(@NonNull SupportSQLiteDatabase db) {
-                                    super.onDestructiveMigration(db);
-                                    android.util.Log.e("CADENA", "⚠️ MIGRACIÓN DESTRUCTIVA EJECUTADA");
-                                }
-                            })
                             .build();
                 }
             }
@@ -118,18 +115,7 @@ public abstract class AppDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
-    /**
-     * Limpia todas las tablas y reinicia los contadores autoincrementales.
-     * Llama a este método SOLO cuando realmente quieras borrar todos los datos
-     * (por ejemplo, desde un botón de "Resetear" en ajustes).
-     */
-    public void limpiarManual() {
-        DATABASE_EXECUTOR.execute(() -> {
-            clearAllTables();
-            getOpenHelper().getWritableDatabase()
-                    .execSQL("DELETE FROM sqlite_sequence");
-        });
-    }
+
 
 
 }

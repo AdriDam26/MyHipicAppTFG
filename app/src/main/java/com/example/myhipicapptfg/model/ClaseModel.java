@@ -1,6 +1,6 @@
 package com.example.myhipicapptfg.model;
 
-public class ClaseUIModel {
+public class ClaseModel {
 
     public int    idClase;
     public String disciplina;

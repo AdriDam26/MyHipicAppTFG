@@ -18,11 +18,23 @@ import com.google.android.material.imageview.ShapeableImageView;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Adapter encargado de mostrar la lista de Equinos en el sistema.
+ *
+ * Responsabilidades:
+ * - Mostrar datos del caballo (nombre, raza, microchip, disciplina)
+ * - Mostrar estado de temperamento con colores
+ * - Cargar imagen con Glide
+ * - Gestionar acciones de edición y eliminación
+ */
 public class EquinoAdapter extends RecyclerView.Adapter<EquinoAdapter.EquinoViewHolder> {
 
     private List<Equino> lista;
     private final OnClick listener;
 
+    /**
+     * Interfaz de eventos del adapter
+     */
     public interface OnClick {
         void editar(Equino e);
         void eliminar(Equino e);
@@ -33,6 +45,9 @@ public class EquinoAdapter extends RecyclerView.Adapter<EquinoAdapter.EquinoView
         this.listener = listener;
     }
 
+    /**
+     * Actualiza la lista de equinos
+     */
     public void actualizar(List<Equino> nuevaLista) {
         this.lista = (nuevaLista != null) ? nuevaLista : new ArrayList<>();
         notifyDataSetChanged();
@@ -75,15 +90,29 @@ public class EquinoAdapter extends RecyclerView.Adapter<EquinoAdapter.EquinoView
         return lista != null ? lista.size() : 0;
     }
 
+    /**
+     * Calcula la disciplina del equino según sus capacidades
+     */
     private String getDisciplina(Equino e) {
-        if (e.sabeDoma && e.sabeSalto) return "DOMA + SALTO";
-        if (e.sabeDoma) return "DOMA";
-        if (e.sabeSalto) return "SALTO";
+        if (e.sabeDoma && e.sabeSalto) {
+            return "DOMA + SALTO";
+        }
+        if (e.sabeDoma) {
+            return "DOMA";
+        }
+        if (e.sabeSalto) {
+            return "SALTO";
+        }
         return "SIN DISCIPLINA";
     }
 
+    /**
+     * Asigna color según el temperamento del equino
+     */
     private void configurarColorTemperamento(TextView view, String t) {
-        if (t == null) return;
+        if (t == null) {
+            return;
+        }
         switch (t) {
             case Equino.FACIL:
                 view.setBackgroundTintList(ColorStateList.valueOf(0xFF10B981));
@@ -98,11 +127,15 @@ public class EquinoAdapter extends RecyclerView.Adapter<EquinoAdapter.EquinoView
         }
     }
 
+    /**
+     * ViewHolder:
+     * cachea las vistas del item_equino para mejorar rendimiento
+     */
     static class EquinoViewHolder extends RecyclerView.ViewHolder {
 
         TextView txtNombre, txtRaza, txtMicrochip, txtDisciplina, txtTemperamento;
         ImageButton btnEditar, btnEliminar;
-        ShapeableImageView foto; // ✅
+        ShapeableImageView foto;
 
         public EquinoViewHolder(@NonNull View itemView) {
             super(itemView);

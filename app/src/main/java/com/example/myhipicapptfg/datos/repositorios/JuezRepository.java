@@ -23,21 +23,81 @@ import com.example.myhipicapptfg.model.PruebaConCompeticion;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
+/**
+ * Repositorio encargado de gestionar las operaciones relacionadas
+ * con la entidad Juez y las funcionalidades asociadas al proceso
+ * de evaluación de pruebas de doma.
+ *
+ * Esta clase actúa como intermediaria entre los ViewModel y los DAO,
+ * centralizando la lógica de negocio, las validaciones de integridad
+ * y el acceso a la información necesaria para que un juez pueda
+ * consultar pruebas, evaluar participantes y registrar puntuaciones.
+ *
+ * Además de las operaciones CRUD sobre jueces, el repositorio integra
+ * funcionalidades de varias entidades relacionadas como Prueba,
+ * Participacion, Movimiento y NotaMovimiento.
+ */
 public class JuezRepository {
 
+    /**
+     * DAO para operaciones sobre la entidad Juez.
+     */
     private final JuezDao juezDao;
+
+    /**
+     * DAO utilizado para validar la existencia y el tipo
+     * del usuario asociado al juez.
+     */
     private final UsuarioDao usuarioDao;
 
+
+    /**
+     * DAO para consultas relacionadas con pruebas.
+     */
     private final PruebaDao pruebaDao;
+
+    /**
+     * DAO para consultas y actualizaciones de participaciones.
+     */
     private final ParticipacionDao participacionDao;
 
+    /**
+     * DAO para la gestión de movimientos de las pruebas.
+     */
     private final MovimientoDao movimientoDao;
+
+    /**
+     * DAO para la gestión de notas asignadas a movimientos.
+     */
     private final NotaMovimientoDao notaMovimientoDao;
 
-
+    /**
+     * Executor encargado de ejecutar operaciones de base de datos
+     * fuera del hilo principal.
+     */
     private final ExecutorService executorService;
+
+    /**
+     * LiveData utilizado para comunicar el resultado de las
+     * operaciones realizadas.
+     *
+     * Valores posibles:
+     * - EXITO
+     * - ERROR_USUARIO_NO_EXISTE
+     * - ERROR_TIPO_USUARIO_INVALIDO
+     * - ERROR_LICENCIA_DUPLICADA
+     * - ERROR_BD
+     */
     private final MutableLiveData<String> estadoOperacion = new MutableLiveData<>();
 
+    /**
+     * Constructor del repositorio.
+     *
+     * Inicializa todos los DAO necesarios para la gestión de jueces,
+     * pruebas y evaluaciones.
+     *
+     * @param application Contexto de la aplicación.
+     */
     public JuezRepository(@NonNull Application application) {
 
         AppDatabase db = AppDatabase.getInstance(application);
@@ -56,19 +116,30 @@ public class JuezRepository {
         executorService = AppDatabase.getDatabaseExecutor();
     }
 
+    /**
+     * Devuelve el estado de la última operación realizada.
+     *
+     * @return Estado de la operación.
+     */
     public LiveData<String> getEstadoOperacion() {
         return estadoOperacion;
     }
 
-    // =====================================
-    // 🔹 INSERTAR
-    // =====================================
-
+    /**
+     * Inserta un nuevo juez en la base de datos.
+     *
+     * Antes de realizar la inserción se verifican:
+     * - La existencia del usuario asociado.
+     * - Que el usuario tenga tipo JUEZ.
+     * - Que el número de licencia no esté duplicado.
+     *
+     * @param juez Juez a insertar.
+     */
     public void insertarJuez(Juez juez) {
 
         executorService.execute(() -> {
 
-            // 1️⃣ Verificar que existe el Usuario base
+            // Verificar que existe el Usuario base
             Usuario usuarioBase = usuarioDao.buscarPorIdSync(juez.idJuez);
 
             if (usuarioBase == null) {
@@ -76,13 +147,13 @@ public class JuezRepository {
                 return;
             }
 
-            // 2️⃣ Verificar que el tipo sea JUEZ
+            // Verificar que el tipo sea JUEZ
             if (!Usuario.TIPO_JUEZ.equals(usuarioBase.tipo)) {
                 estadoOperacion.postValue("ERROR_TIPO_USUARIO_INVALIDO");
                 return;
             }
 
-            // 3️⃣ Verificar que no exista ya la licencia
+            // 3Verificar que no exista ya la licencia
             if (juezDao.buscarPorLicenciaSync(juez.numeroLicencia) != null) {
                 estadoOperacion.postValue("ERROR_LICENCIA_DUPLICADA");
                 return;
@@ -97,10 +168,13 @@ public class JuezRepository {
         });
     }
 
-    // =====================================
-    // 🔹 UPDATE
-    // =====================================
-
+    /**
+     * Actualiza los datos de un juez existente.
+     *
+     * La operación se ejecuta en segundo plano.
+     *
+     * @param juez Juez con la información actualizada.
+     */
     public void actualizarJuez(Juez juez) {
         executorService.execute(() -> {
             try {
@@ -112,10 +186,14 @@ public class JuezRepository {
         });
     }
 
-    // =====================================
-    // 🔹 DELETE
-    // =====================================
-
+    /**
+     * Elimina un juez de la base de datos.
+     *
+     * La operación se ejecuta de forma asíncrona
+     * para no bloquear la interfaz.
+     *
+     * @param juez Juez que se desea eliminar.
+     */
     public void eliminarJuez(Juez juez) {
         executorService.execute(() -> {
             try {
@@ -127,30 +205,69 @@ public class JuezRepository {
         });
     }
 
-
+    /**
+     * Recupera todos los jueces registrados en el sistema.
+     *
+     * @return Lista observable de jueces.
+     */
     public LiveData<List<Juez>> obtenerTodosJueces() {
         return juezDao.obtenerTodosJueces();
     }
 
+    /**
+     * Busca un juez por su identificador.
+     *
+     * @param id Identificador del juez.
+     * @return Juez correspondiente al identificador indicado.
+     */
     public LiveData<Juez> buscarPorId(int id) {
         return juezDao.buscarPorId(id);
     }
 
+
+    /**
+     * Obtiene el número total de jueces registrados.
+     *
+     * @return Cantidad total de jueces.
+     */
     public LiveData<Integer> contarJueces() {
         return juezDao.contarJueces();
     }
 
+    /**
+     * Obtiene los jueces activos junto con la información
+     * básica del usuario asociado.
+     *
+     * Esta consulta suele utilizarse para poblar
+     * listas de selección de jueces.
+     *
+     * @return Lista de jueces activos.
+     */
     public LiveData<List<Usuario>> obtenerJuecesActivosConNombre() {
         return juezDao.obtenerJuecesActivosConNombre();
     }
 
 
-    // ── Pruebas del juez ──────────────────────────────────────────────────────
+
+    /**
+     * Obtiene todas las pruebas asignadas a un juez.
+     *
+     * La información incluye tanto los datos de la prueba
+     * como los de la competición asociada.
+     *
+     * @param idJuez Identificador del juez.
+     * @return Lista de pruebas asignadas.
+     */
     public LiveData<List<PruebaConCompeticion>> getPruebasByJuez(int idJuez) {
         return pruebaDao.getPruebasByJuez(idJuez);
     }
 
-    // ── Participantes de una prueba ───────────────────────────────────────────
+    /**
+     * Recupera los participantes inscritos en una prueba.
+     *
+     * @param idPrueba Identificador de la prueba.
+     * @return Lista de participantes con información ampliada.
+     */
     public LiveData<List<ParticipacionDetalle>> getParticipantesByPrueba(int idPrueba) {
         return participacionDao.getParticipantesByPrueba(idPrueba);
     }
@@ -179,7 +296,6 @@ public class JuezRepository {
 
         executorService.execute(() -> {
             notaMovimientoDao.insertOrUpdateAll(notas);
-
             participacionDao.updateResultado(
                     idParticipacion,
                     notaFinal,

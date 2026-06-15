@@ -35,33 +35,131 @@ import android.provider.Settings;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import android.widget.Toast;
 
+/**
+ * Actividad encargada de guiar al usuario a lo largo de una ruta GPS
+ * previamente grabada.
+ *
+ * Funcionalidades principales:
+ *
+ * - Cargar las coordenadas de una ruta almacenada.
+ * - Mostrar el recorrido sobre Google Maps.
+ * - Obtener la ubicación actual del usuario mediante GPS.
+ * - Calcular el progreso realizado sobre la ruta.
+ * - Detectar desviaciones respecto al trazado original.
+ * - Mostrar visualmente la parte recorrida y pendiente.
+ * - Indicar cuándo la ruta ha sido completada.
+ */
 public class SeguirRutaActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    /**
+     * Código utilizado para solicitar permisos
+     * de acceso a la ubicación.
+     */
     private static final int REQUEST_LOCATION = 100;
 
+    /**
+     * Color utilizado para representar
+     * la parte pendiente de la ruta.
+     */
     private static final int COLOR_RUTA_PENDIENTE = 0xAA6200EE;
+    /**
+     * Color utilizado para representar
+     * la parte ya recorrida de la ruta.
+     */
     private static final int COLOR_RUTA_RECORRIDA = 0xFF4CAF50;
 
+    /**
+     * ViewModel encargado de gestionar
+     * la lógica de seguimiento de rutas.
+     */
     private SeguirRutaViewModel viewModel;
+
+    /**
+     * Instancia principal de Google Maps.
+     */
     private GoogleMap mMap;
+    /**
+     * Cliente de localización fusionada.
+     *
+     * Combina GPS, Wi-Fi y redes móviles
+     * para obtener ubicaciones precisas.
+     */
     private FusedLocationProviderClient fusedClient;
+    /**
+     * Callback que recibe las actualizaciones
+     * periódicas de ubicación.
+     */
     private LocationCallback locationCallback;
 
-    // ✅ NUEVO: flag para saber si el GPS está actualmente activo
+    /**
+     * Indica si el sistema de seguimiento GPS
+     * se encuentra actualmente activo.
+     */
     private boolean gpsActivo = false;
 
+    /**
+     * Textos informativos mostrados al usuario.
+     */
     private TextView tvDistanciaTotal, tvAlPunto, tvProgreso, tvNombreRuta;
+
+    /**
+     * Textos informativos mostrados al usuario.
+     */
     private LinearProgressIndicator progressBar;
+
+    /**
+     * Panel mostrado cuando la ruta
+     * ha sido completada.
+     */
     private View bannerCompletado;
+
+    /**
+     * Botón para abandonar la pantalla
+     * de seguimiento.
+     */
     private MaterialButton btnSalir;
 
+    /**
+     * Polilínea que representa la parte
+     * pendiente de la ruta.
+     */
     private Polyline polylinePendiente;
+
+    /**
+     * Polilínea que representa la parte
+     * ya recorrida por el usuario.
+     */
     private Polyline polylineRecorrida;
+
+    /**
+     * Marcador que indica la posición
+     * actual del usuario sobre el mapa.
+     */
     private Marker marcadorUsuario;
 
+    /**
+     * Lista de coordenadas que forman
+     * el recorrido almacenado.
+     */
     private List<CoordenadaRuta> puntosRuta = new ArrayList<>();
+
+    /**
+     * Indica si Google Maps ya se encuentra listo.
+     */
     private boolean mapaListo      = false;
+
+    /**
+     * Evita cargar varias veces la misma ruta.
+     */
     private boolean puntosCargados = false;
+
+    /**
+     * Último punto alcanzado por el usuario.
+     *
+     * Se utiliza para restaurar el progreso
+     * visual tras cambios de configuración
+     * o regreso desde ajustes del sistema.
+     */
     private int     ultimoIndice   = 0;
 
     @Override
@@ -70,22 +168,22 @@ public class SeguirRutaActivity extends AppCompatActivity implements OnMapReadyC
         setContentView(R.layout.activity_seguir_ruta);
 
         int idRuta = getIntent().getIntExtra("RUTA_ID", -1);
-        if (idRuta == -1) { finish(); return; }
+        if (idRuta == -1) {
+            finish(); return;
+        }
 
         inicializarVistas();
         inicializarViewModel(idRuta);
         inicializarMapa();
-
-        // ✅ CORRECCIÓN: inicializamos fusedClient y callback ANTES de cualquier
-        //    llamada a arrancarGPS(), así onResume() nunca los encuentra nulos.
         fusedClient = LocationServices.getFusedLocationProviderClient(this);
         configurarLocationCallback();
-
         inicializarGPS();
     }
 
-    // ── Vistas ───────────────────────────────────────────────────────────────
-
+    /**
+     * Inicializa todos los componentes visuales de la interfaz
+     * y configura los eventos básicos de interacción.
+     */
     private void inicializarVistas() {
         tvNombreRuta     = findViewById(R.id.tvNombreRuta);
         tvDistanciaTotal = findViewById(R.id.tvDistanciaTotal);
@@ -99,23 +197,45 @@ public class SeguirRutaActivity extends AppCompatActivity implements OnMapReadyC
         btnSalir.setOnClickListener(v -> finish());
     }
 
-    // ── ViewModel ────────────────────────────────────────────────────────────
-
+    /**
+     * Inicializa el ViewModel encargado del seguimiento de rutas.
+     *
+     * Además:
+     * - Configura los observadores de LiveData.
+     * - Carga las coordenadas asociadas a la ruta seleccionada.
+     * - Calcula la distancia total de la ruta.
+     * - Dibuja el recorrido cuando el mapa está listo.
+     */
     private void inicializarViewModel(int idRuta) {
         viewModel = new ViewModelProvider(this).get(SeguirRutaViewModel.class);
         configurarObservadores();
 
         viewModel.cargarPuntos(idRuta).observe(this, puntos -> {
-            if (puntos == null || puntos.isEmpty() || puntosCargados) return;
+            if (puntos == null || puntos.isEmpty() || puntosCargados) {
+                return;
+            }
             puntosCargados = true;
             puntosRuta = puntos;
             viewModel.setPuntos(puntos);
             tvDistanciaTotal.setText(String.format(Locale.getDefault(),
                     "%.2f km", calcularDistanciaTotal(puntos)));
-            if (mapaListo) dibujarRutaInicial();
+            if (mapaListo) {
+                dibujarRutaInicial();
+            }
         });
     }
 
+    /**
+     * Registra los observadores que reaccionan a los cambios
+     * producidos en el ViewModel.
+     *
+     * Actualiza automáticamente:
+     * - El porcentaje de progreso.
+     * - La distancia al siguiente punto.
+     * - Los avisos de salida de ruta.
+     * - El coloreado del recorrido.
+     * - El estado de finalización.
+     */
     private void configurarObservadores() {
 
         viewModel.getProgreso().observe(this, pct -> {
@@ -149,30 +269,54 @@ public class SeguirRutaActivity extends AppCompatActivity implements OnMapReadyC
                 bannerCompletado.setVisibility(View.VISIBLE);
                 progressBar.setProgress(100);
                 tvProgreso.setText("100%");
-                // ✅ NUEVO: detenemos el GPS al completar, ya no hace falta
                 detenerGPS();
             }
         });
     }
 
-    // ── Mapa ─────────────────────────────────────────────────────────────────
-
+    /**
+     * Obtiene el fragmento de Google Maps y solicita
+     * la carga asíncrona del mapa.
+     */
     private void inicializarMapa() {
         SupportMapFragment f = (SupportMapFragment)
                 getSupportFragmentManager().findFragmentById(R.id.mapSeguir);
         if (f != null) f.getMapAsync(this);
     }
 
+    /**
+     * Método invocado automáticamente cuando Google Maps
+     * termina de inicializarse correctamente.
+     *
+     * Configura elementos visuales del mapa y dibuja
+     * la ruta si ya se encuentra cargada.
+     */
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
         mapaListo = true;
         mMap.getUiSettings().setZoomControlsEnabled(true);
-        if (!puntosRuta.isEmpty()) dibujarRutaInicial();
+        if (!puntosRuta.isEmpty()) {
+            dibujarRutaInicial();
+        }
     }
 
+    /**
+     * Dibuja la ruta completa sobre el mapa.
+     *
+     * Se crean:
+     * - Una polilínea para el tramo pendiente.
+     * - Una polilínea para el tramo recorrido.
+     * - Un marcador de inicio.
+     * - Un marcador de fin.
+     *
+     * Además se ajusta la cámara para mostrar
+     * el recorrido completo.
+     */
     private void dibujarRutaInicial() {
-        if (puntosRuta.size() < 2 || mMap == null) return;
+        if (puntosRuta.size() < 2 || mMap == null) {
+            return;
+        }
 
         PolylineOptions pendiente = new PolylineOptions()
                 .color(COLOR_RUTA_PENDIENTE)
@@ -205,27 +349,50 @@ public class SeguirRutaActivity extends AppCompatActivity implements OnMapReadyC
                 .title("Fin")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
 
+
+        // Ajusta la cámara para ver toda la ruta
         mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 120));
 
-        // ✅ NUEVO: si ya teníamos progreso previo (vuelta de ajustes), lo restauramos
+
         if (ultimoIndice > 0) {
             actualizarColorPolylines(ultimoIndice);
         }
     }
 
+    /**
+     * Dibuja la ruta completa sobre el mapa.
+     *
+     * Se crean:
+     * - Una polilínea para el tramo pendiente.
+     * - Una polilínea para el tramo recorrido.
+     * - Un marcador de inicio.
+     * - Un marcador de fin.
+     *
+     * Además se ajusta la cámara para mostrar
+     * el recorrido completo.
+     */
     private void actualizarColorPolylines(int indiceCercano) {
-        if (polylineRecorrida == null || polylinePendiente == null) return;
-        if (puntosRuta.isEmpty()) return;
+        if (polylineRecorrida == null || polylinePendiente == null) {
+            return;
+        }
+        if (puntosRuta.isEmpty()) {
+            return;
+        }
 
         List<LatLng> recorrida = new ArrayList<>();
         List<LatLng> pendiente  = new ArrayList<>();
 
         for (int i = 0; i < puntosRuta.size(); i++) {
             LatLng ll = new LatLng(puntosRuta.get(i).latitud, puntosRuta.get(i).longitud);
-            if (i <= indiceCercano) recorrida.add(ll);
-            else pendiente.add(ll);
+            if (i <= indiceCercano) {
+                recorrida.add(ll); // Verde
+            }
+            else {
+                pendiente.add(ll); // Morado
+            }
         }
 
+        // Une ambas polilíneas sin hueco visual
         if (!recorrida.isEmpty() && !pendiente.isEmpty()) {
             pendiente.add(0, recorrida.get(recorrida.size() - 1));
         }
@@ -234,20 +401,29 @@ public class SeguirRutaActivity extends AppCompatActivity implements OnMapReadyC
         polylinePendiente.setPoints(pendiente);
     }
 
-    // ── GPS ──────────────────────────────────────────────────────────────────
 
     private void inicializarGPS() {
         iniciarSeguimiento();
     }
 
+    /**
+     * Configura el callback encargado de recibir
+     * las actualizaciones periódicas de ubicación.
+     *
+     * Cada nueva posición:
+     * - Actualiza la lógica del seguimiento.
+     * - Mueve el marcador del usuario.
+     *
+     * También informa cuando el GPS pierde señal.
+     */
     private void configurarLocationCallback() {
         locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(@NonNull LocationResult result) {
 
-                // ✅ CORRECCIÓN: igual que en GrabarRuta, procesamos TODOS los puntos del lote
+
                 for (Location loc : result.getLocations()) {
-                    if (loc.getAccuracy() <= 30) {
+                    if (loc.getAccuracy() <= 30) { // Filtra posiciones poco precisas
                         viewModel.actualizarUbicacion(loc.getLatitude(), loc.getLongitude());
                         actualizarMarcadorUsuario(loc);
                     }
@@ -261,15 +437,28 @@ public class SeguirRutaActivity extends AppCompatActivity implements OnMapReadyC
                     tvAlPunto.setText("⚠️ Buscando señal GPS...");
                     tvAlPunto.setTextColor(Color.RED);
                 } else {
-                    // ✅ NUEVO: cuando el GPS vuelve, restauramos el color del texto
                     tvAlPunto.setTextColor(Color.BLACK);
                 }
             }
         };
     }
 
+    /**
+     * Actualiza la posición del usuario sobre el mapa.
+     *
+     * Si todavía no existe un marcador, lo crea en la ubicación
+     * actual y centra la cámara sobre dicha posición.
+     *
+     * Si el marcador ya existe, simplemente actualiza su
+     * posición y orientación para reflejar el movimiento
+     * del usuario en tiempo real.
+     *
+     * @param loc Ubicación GPS recibida.
+     */
     private void actualizarMarcadorUsuario(Location loc) {
-        if (mMap == null) return;
+        if (mMap == null) {
+            return;
+        }
         LatLng pos = new LatLng(loc.getLatitude(), loc.getLongitude());
 
         if (marcadorUsuario == null) {
@@ -287,6 +476,16 @@ public class SeguirRutaActivity extends AppCompatActivity implements OnMapReadyC
         }
     }
 
+    /**
+     * Inicia el proceso de seguimiento GPS.
+     *
+     * Comprueba:
+     * - Permisos de ubicación.
+     * - Estado del GPS.
+     *
+     * Si todo es correcto comienza a recibir
+     * actualizaciones de localización.
+     */
     private void iniciarSeguimiento() {
         if (!checkPermission()) {
             ActivityCompat.requestPermissions(this,
@@ -317,20 +516,22 @@ public class SeguirRutaActivity extends AppCompatActivity implements OnMapReadyC
 
     @SuppressLint("MissingPermission")
     private void arrancarGPS() {
-        if (gpsActivo) return; // ✅ CORRECCIÓN: evita registrar el callback dos veces
+        if (gpsActivo){
+            return;
+        }
 
         LocationRequest req = new LocationRequest.Builder(
                 Priority.PRIORITY_HIGH_ACCURACY, 2000)
                 .setMinUpdateIntervalMillis(1500)
-                .setMaxUpdateDelayMillis(3000)    // ✅ NUEVO: igual que GrabarRuta
+                .setMaxUpdateDelayMillis(3000)
                 .build();
 
-        fusedClient.removeLocationUpdates(locationCallback); // limpieza defensiva
+        fusedClient.removeLocationUpdates(locationCallback);
         fusedClient.requestLocationUpdates(req, locationCallback, Looper.getMainLooper());
         gpsActivo = true;
     }
 
-    // ✅ NUEVO: método centralizado para detener el GPS de forma segura
+
     private void detenerGPS() {
         if (fusedClient != null && locationCallback != null && gpsActivo) {
             fusedClient.removeLocationUpdates(locationCallback);
@@ -343,8 +544,16 @@ public class SeguirRutaActivity extends AppCompatActivity implements OnMapReadyC
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
-    // ── Utilidades ───────────────────────────────────────────────────────────
 
+    /**
+     * Calcula la distancia total acumulada de una ruta.
+     *
+     * Comprueba:
+     * - Si la lista contiene al menos dos puntos para poder operar.
+     *
+     * Si todo es correcto devuelve la distancia total sumada entre
+     * todos los puntos consecutivos, convertida a kilómetros.
+     */
     private double calcularDistanciaTotal(List<CoordenadaRuta> puntos) {
         if (puntos.size() < 2) return 0;
         double total = 0;
@@ -357,25 +566,25 @@ public class SeguirRutaActivity extends AppCompatActivity implements OnMapReadyC
         return total / 1000.0;
     }
 
-    // ── Ciclo de vida ────────────────────────────────────────────────────────
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        if (!checkPermission()) return;
+        if (!checkPermission()) {
+            return;
+        }
 
         if (!isLocationEnabled()) {
             pedirActivarUbicacion();
             return;
         }
 
-        // ✅ CORRECCIÓN PRINCIPAL: siempre detenemos antes de volver a arrancar.
-        //    Así evitamos callbacks duplicados al volver de Ajustes del sistema.
+
         detenerGPS();
         arrancarGPS();
 
-        // Si el mapa ya está listo y tenemos puntos, restauramos el progreso visual
+
         if (mapaListo && puntosCargados && ultimoIndice > 0) {
             actualizarColorPolylines(ultimoIndice);
         }
@@ -384,8 +593,6 @@ public class SeguirRutaActivity extends AppCompatActivity implements OnMapReadyC
     @Override
     protected void onPause() {
         super.onPause();
-        // ✅ NUEVO: pausamos el GPS cuando la app pasa a segundo plano.
-        //    Se reanuda en onResume() al volver.
         detenerGPS();
     }
 
@@ -395,7 +602,6 @@ public class SeguirRutaActivity extends AppCompatActivity implements OnMapReadyC
         detenerGPS();
     }
 
-    // ── Sistema GPS ──────────────────────────────────────────────────────────
 
     private boolean isLocationEnabled() {
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);

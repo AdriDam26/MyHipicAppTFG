@@ -1,19 +1,27 @@
 package com.example.myhipicapptfg.datos.local.entidades;
 
+// Importaciones de Room
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+/**
+ * Entidad Usuario para la base de datos Room.
+ * Representa la tabla "Usuario".
+ */
 @Entity(
         tableName = "Usuario",
         indices = {
-                @Index(value = {"DNI"}, unique = true),
-                @Index(value = {"Email"}, unique = true)
+                @Index(value = {"DNI"}, unique = true), // El DNI no puede repetirse
+                @Index(value = {"Email"}, unique = true) // El email tampoco puede repetirse
         }
 )
 public class Usuario {
 
+    /**
+     * Clave primaria autogenerada de la tabla Usuario.
+     */
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "ID_Usuario")
     public int idUsuario;
@@ -51,11 +59,11 @@ public class Usuario {
     @ColumnInfo(name = "Foto_Perfil")
     public String fotoPerfil;
 
-    // Valores permitidos para sexo
+    // Constantes para Sexo
     public static final String SEXO_MASCULINO = "MASCULINO";
     public static final String SEXO_FEMENINO = "FEMENINO";
 
-    // Valores permitidos para tipo
+    // Constantes para Tipo de Usuario
     public static final String TIPO_ADMIN = "admin";
     public static final String TIPO_ALUMNO = "alumno";
     public static final String TIPO_PROFESOR = "profesor";
@@ -65,13 +73,23 @@ public class Usuario {
 
 
 
+    /**
+     * Método toString para mostrar el nombre completo del usuario.
+     */
     @Override
     public String toString() {
         return nombre + " " + apellido1 + " " + apellido2;
     }
 
+    /**
+     * Constructor vacío requerido por Room.
+     */
     public Usuario() {}
 
+
+    /**
+     * Constructor completo para crear un usuario sin ID (lo genera Room).
+     */
     public Usuario(String email, String telefono,
                    String apellido1, String apellido2, String dni,
                    String nombre, long fechaNacimiento,

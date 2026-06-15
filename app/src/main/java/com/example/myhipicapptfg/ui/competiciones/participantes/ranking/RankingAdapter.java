@@ -16,8 +16,26 @@ import com.example.myhipicapptfg.model.RankingItem;
 
 import java.util.Locale;
 
+
+/**
+ * Adaptador encargado de mostrar el ranking de una prueba.
+ *
+ * Utiliza ListAdapter junto con DiffUtil para actualizar únicamente
+ * los elementos que cambian, mejorando el rendimiento del RecyclerView.
+ *
+ * Cada elemento muestra:
+ * - Posición en la clasificación.
+ * - Nombre del jinete.
+ * - Nombre del caballo.
+ * - Porcentaje obtenido.
+ * - Nota final.
+ */
 public class RankingAdapter extends ListAdapter<RankingItem, RankingAdapter.VH> {
 
+    /**
+     * Constructor del adaptador.
+     * Configura DiffUtil para detectar cambios entre elementos del ranking.
+     */
     public RankingAdapter() {
         super(new DiffUtil.ItemCallback<RankingItem>() {
             @Override public boolean areItemsTheSame(@NonNull RankingItem a,
@@ -33,9 +51,9 @@ public class RankingAdapter extends ListAdapter<RankingItem, RankingAdapter.VH> 
         });
     }
 
-    // La posición la calcula la query, no el adapter
-    // submitList heredado de ListAdapter es suficiente, no lo sobreescribimos
-
+    /**
+     * Crea una nueva vista para un elemento del ranking.
+     */
     @NonNull @Override
     public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
@@ -43,6 +61,9 @@ public class RankingAdapter extends ListAdapter<RankingItem, RankingAdapter.VH> 
         return new VH(v);
     }
 
+    /**
+     * Vincula los datos de un participante con su fila correspondiente.
+     */
     @Override
     public void onBindViewHolder(@NonNull VH h, int pos) {
         RankingItem item = getItem(pos);
@@ -65,8 +86,15 @@ public class RankingAdapter extends ListAdapter<RankingItem, RankingAdapter.VH> 
         h.tvNota.setText(String.format(Locale.getDefault(), "%.2f", item.notaFinal));
     }
 
+    /**
+     * Devuelve el número de elementos mostrados en el ranking.
+     */
     @Override public int getItemCount() { return getCurrentList().size(); }
 
+    /**
+     * ViewHolder que mantiene las referencias a las vistas de cada fila
+     * para evitar búsquedas repetidas mediante findViewById.
+     */
     static class VH extends RecyclerView.ViewHolder {
         TextView tvPosicion, tvJinete, tvCaballo, tvPorcentaje, tvNota;
 

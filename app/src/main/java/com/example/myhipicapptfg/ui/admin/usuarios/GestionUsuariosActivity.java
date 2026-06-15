@@ -2,9 +2,13 @@ package com.example.myhipicapptfg.ui.admin.usuarios;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -16,62 +20,135 @@ import com.example.myhipicapptfg.datos.local.entidades.Usuario;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+/**
+ * Activity encargada de la gestión del catálogo de usuarios.
+ *
+ * Funcionalidades principales:
+ * - Visualizar la lista completa de usuarios registrados.
+ * - Filtrar usuarios por texto libre y por tipo
+ *   (Alumno, Profesor, Juez, Propietario).
+ * - Añadir nuevos usuarios mediante un formulario.
+ * - Editar usuarios existentes.
+ * - Eliminar usuarios con confirmación previa.
+ */
 public class GestionUsuariosActivity extends AppCompatActivity {
+
 
     private GestionUsuariosViewModel viewModel;
     private UsuarioAdapter adapter;
 
 
+    private EditText etBuscar;
+    private CheckBox cbAlumno;
+    private CheckBox cbProfesor;
+    private CheckBox cbJuez;
+    private CheckBox cbPropietario;
+
+
 
     @Override
-    protected void onCreate(Bundle b) {
-        super.onCreate(b);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gestion_usuarios);
-
-        RecyclerView rv = findViewById(R.id.recyclerUsuarios);
-        FloatingActionButton fab = findViewById(R.id.fabAddUsuario);
-        EditText etBuscar = findViewById(R.id.etBuscarUsuario);
-        CheckBox cbAlumno = findViewById(R.id.cbAlumno);
-        CheckBox cbProfesor = findViewById(R.id.cbProfesor);
-        CheckBox cbJuez = findViewById(R.id.cbJuez);
-        CheckBox cbPropietario = findViewById(R.id.cbPropietario);
-
-        MaterialToolbar toolbarUsuarios = findViewById(R.id.toolbarUsuarios);
-
-        toolbarUsuarios.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getOnBackPressedDispatcher().onBackPressed(); // Vuelve a la pantalla anterior
-            }
-        });
 
         viewModel = new ViewModelProvider(this)
                 .get(GestionUsuariosViewModel.class);
 
-        Runnable aplicarFiltro = new Runnable() {
+        initViews();
+        setupToolbar();
+        setupRecyclerView();
+        setupFiltros();
+        setupFab();
+        observarUsuarios();
+    }
+
+    /**
+     * Inicializa las referencias a las vistas de filtrado.
+     */
+    private void initViews() {
+        etBuscar      = findViewById(R.id.etBuscarUsuario);
+        cbAlumno      = findViewById(R.id.cbAlumno);
+        cbProfesor    = findViewById(R.id.cbProfesor);
+        cbJuez        = findViewById(R.id.cbJuez);
+        cbPropietario = findViewById(R.id.cbPropietario);
+    }
+
+    /**
+     * Configura el MaterialToolbar y su acción de navegación hacia atrás.
+     */
+    private void setupToolbar() {
+
+        MaterialToolbar toolbar = findViewById(R.id.toolbarUsuarios);
+
+        toolbar.setNavigationOnClickListener(
+                v -> getOnBackPressedDispatcher().onBackPressed()
+        );
+    }
+
+    /**
+     * Inicializa el RecyclerView y su adaptador con los listeners
+     * de edición, eliminación y pulsación sobre un usuario.
+     */
+    private void setupRecyclerView() {
+
+        RecyclerView rv = findViewById(R.id.recyclerUsuarios);
+
+        adapter = new UsuarioAdapter(null, new UsuarioAdapter.OnClick() {
+
             @Override
-            public void run() {
+            public void editar(Usuario u) {
 
-                String texto = etBuscar.getText().toString().trim();
+                Intent intent = new Intent(
+                        GestionUsuariosActivity.this,
+                        UsuarioFormActivity.class
+                );
 
-                boolean alumno = cbAlumno.isChecked();
-                boolean profesor = cbProfesor.isChecked();
-                boolean juez = cbJuez.isChecked();
-                boolean propietario = cbPropietario.isChecked();
-
-                viewModel.buscarUsuariosFiltrado(
-                        texto,
-                        alumno,
-                        profesor,
-                        juez,
-                        propietario
-                ).observe(GestionUsuariosActivity.this, usuarios -> {
-                    adapter.actualizar(usuarios);
-                });
+                intent.putExtra("ID_USUARIO", u.idUsuario);
+                startActivity(intent);
             }
-        };
 
-        etBuscar.addTextChangedListener(new android.text.TextWatcher() {
+            @Override
+            public void eliminar(Usuario u) {
+                confirmarEliminar(u);
+            }
+
+            @Override
+            public void clickItem(Usuario u) {
+                Toast.makeText(
+                        GestionUsuariosActivity.this,
+                        "ID Usuario: " + u.idUsuario,
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
+        });
+
+        rv.setLayoutManager(new LinearLayoutManager(this));
+        rv.setAdapter(adapter);
+    }
+
+    /**
+     * Configura el botón flotante para abrir el formulario
+     * de creación de un nuevo usuario.
+     */
+    private void setupFab() {
+
+        FloatingActionButton fab = findViewById(R.id.fabAddUsuario);
+
+        fab.setOnClickListener(v ->
+                startActivity(new Intent(this, UsuarioFormActivity.class))
+        );
+    }
+
+
+
+    /**
+     * Configura los listeners del campo de búsqueda y los checkboxes
+     * de tipo de usuario para aplicar el filtro ante cualquier cambio.
+     */
+    private void setupFiltros() {
+
+        etBuscar.addTextChangedListener(new TextWatcher() {
+
             @Override
             public void beforeTextChanged(CharSequence s, int a, int b, int c) {}
 
@@ -79,103 +156,67 @@ public class GestionUsuariosActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int a, int b, int c) {}
 
             @Override
-            public void afterTextChanged(android.text.Editable s) {
-                aplicarFiltro.run();
+            public void afterTextChanged(Editable s) {
+                aplicarFiltro();
             }
         });
 
-        cbAlumno.setOnCheckedChangeListener(
-                new android.widget.CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(
-                            android.widget.CompoundButton buttonView,
-                            boolean isChecked
-                    ) {
-                        aplicarFiltro.run();
-                    }
-                });
+        CompoundButton.OnCheckedChangeListener listenerCheckbox =
+                (buttonView, isChecked) -> aplicarFiltro();
 
-        cbProfesor.setOnCheckedChangeListener(
-                new android.widget.CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(
-                            android.widget.CompoundButton buttonView,
-                            boolean isChecked
-                    ) {
-                        aplicarFiltro.run();
-                    }
-                });
+        cbAlumno.setOnCheckedChangeListener(listenerCheckbox);
+        cbProfesor.setOnCheckedChangeListener(listenerCheckbox);
+        cbJuez.setOnCheckedChangeListener(listenerCheckbox);
+        cbPropietario.setOnCheckedChangeListener(listenerCheckbox);
+    }
 
-        cbJuez.setOnCheckedChangeListener(
-                new android.widget.CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(
-                            android.widget.CompoundButton buttonView,
-                            boolean isChecked
-                    ) {
-                        aplicarFiltro.run();
-                    }
-                });
+    /**
+     * Aplica el filtro combinado de texto libre y tipos seleccionados,
+     * y actualiza el adaptador con los resultados obtenidos.
+     *
+     * Se ejecuta cada vez que cambia el texto de búsqueda
+     * o el estado de algún checkbox de tipo.
+     */
+    private void aplicarFiltro() {
 
-        cbPropietario.setOnCheckedChangeListener(
-                new android.widget.CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(
-                            android.widget.CompoundButton buttonView,
-                            boolean isChecked
-                    ) {
-                        aplicarFiltro.run();
-                    }
-                });
+        viewModel.buscarUsuariosFiltrado(
+                etBuscar.getText().toString().trim(),
+                cbAlumno.isChecked(),
+                cbProfesor.isChecked(),
+                cbJuez.isChecked(),
+                cbPropietario.isChecked()
+        ).observe(this, usuarios -> adapter.actualizar(usuarios));
+    }
 
-        adapter = new UsuarioAdapter(null, new UsuarioAdapter.OnClick() {
-            @Override
-            public void editar(Usuario u) {
-                Intent i = new Intent(GestionUsuariosActivity.this, UsuarioFormActivity.class);
-                i.putExtra("ID_USUARIO", u.idUsuario);
-                startActivity(i);
-            }
+    /**
+     * Observa la lista completa de usuarios y actualiza
+     * el adaptador cuando cambian los datos.
+     */
+    private void observarUsuarios() {
 
-            @Override
-            public void eliminar(Usuario u) {
-
-                new androidx.appcompat.app.AlertDialog.Builder(GestionUsuariosActivity.this)
-                        .setTitle("Eliminar usuario")
-                        .setMessage("¿Estás seguro de que quieres eliminar este usuario?")
-                        .setCancelable(false)
-
-                        .setPositiveButton("Eliminar", (dialog, which) -> {
-                            viewModel.eliminarUsuario(u);
-                        })
-
-                        .setNegativeButton("Cancelar", (dialog, which) -> {
-                            dialog.dismiss();
-                        })
-
-                        .show();
-            }
-
-            @Override
-            public void clickItem(Usuario u) {
-                android.widget.Toast.makeText(
-                        GestionUsuariosActivity.this,
-                        "ID Usuario: " + u.idUsuario,
-                        android.widget.Toast.LENGTH_SHORT
-                ).show();
-            }
-        });
-
-        rv.setLayoutManager(new LinearLayoutManager(this));
-        rv.setAdapter(adapter);
-
-        viewModel.getUsuarios().observe(this, usuarios -> {
-            adapter.actualizar(usuarios);
-        });
-
-        fab.setOnClickListener(v -> {
-            startActivity(new Intent(this, UsuarioFormActivity.class));
-        });
+        viewModel.getUsuarios().observe(this, usuarios ->
+                adapter.actualizar(usuarios)
+        );
+    }
 
 
+    /**
+     * Muestra un diálogo de confirmación antes de eliminar un usuario.
+     *
+     * Si el usuario confirma, delega la eliminación al ViewModel.
+     *
+     * @param u Usuario que se desea eliminar.
+     */
+    private void confirmarEliminar(Usuario u) {
+
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Eliminar usuario")
+                .setMessage("¿Estás seguro de que quieres eliminar este usuario?")
+                .setCancelable(false)
+                .setPositiveButton("Eliminar",
+                        (dialog, which) -> viewModel.eliminarUsuario(u))
+                .setNegativeButton("Cancelar",
+                        (dialog, which) -> dialog.dismiss())
+                .show();
     }
 }

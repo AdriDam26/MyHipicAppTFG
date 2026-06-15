@@ -20,28 +20,81 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Activity encargada de crear y editar una Participacion
+ * (binomio jinete-caballo) dentro de una prueba de doma.
+ *
+ * Funcionalidades principales:
+ * - Selección de alumno y equino habilitados para doma.
+ * - Asignación automática del orden de salida en modo creación.
+ * - Precarga de los datos del binomio en modo edición,
+ *   preservando la nota final y el porcentaje ya registrados.
+ * - Validación del formulario antes de guardar.
+ * - Gestión de estados de operación mediante ViewModel (MVVM).
+ */
 public class ParticipacionFormActivity extends AppCompatActivity {
+
+
 
     private GestionParticipacionesViewModel viewModel;
 
-    private TextInputLayout      layAlumno, layEquino;
-    private AutoCompleteTextView spinnerAlumno, spinnerEquino;
+
+    private TextInputLayout      layAlumno;
+    private TextInputLayout      layEquino;
+    private AutoCompleteTextView spinnerAlumno;
+    private AutoCompleteTextView spinnerEquino;
     private TextInputEditText    etOrden;
+
 
     private List<Usuario> listaAlumnos = new ArrayList<>();
     private List<Equino>  listaEquinos = new ArrayList<>();
+
+    /**
+     * Referencia completa a la participación cargada en modo edición.
+     *
+     * Se conserva para no perder campos que no se editan
+     * en pantalla, como la nota final o el porcentaje.
+     */
+    private Participacion participacionCargada;
+
+
 
     private int     idPrueba        = -1;
     private int     idParticipacion = -1;
     private boolean modoEdicion     = false;
 
-    // VARIABLE CLAVE: Guardamos el objeto original aquí para no perder la nota ni el ID
-    private Participacion participacionCargada;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_participacion_form);
+
+        recogerExtras();
+        configurarActionBar();
+
+        viewModel = new ViewModelProvider(this)
+                .get(GestionParticipacionesViewModel.class);
+
+        initViews();
+        setupToolbar();
+        setupBotones();
+        observarDatos();
+        observarEstado();
+
+        if (!modoEdicion) {
+            observarSiguienteOrden();
+        }
+    }
+
+    // =========================================================
+    // INIT
+    // =========================================================
+
+    /**
+     * Recoge los extras del Intent y determina si la Activity
+     * se abre en modo creación o en modo edición.
+     */
+    private void recogerExtras() {
 
         idPrueba = getIntent().getIntExtra("ID_PRUEBA", -1);
 
@@ -49,40 +102,28 @@ public class ParticipacionFormActivity extends AppCompatActivity {
             idParticipacion = getIntent().getIntExtra("ID_PARTICIPACION", -1);
             modoEdicion     = true;
         }
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(modoEdicion ? "Editar inscripción" : "Inscribir binomio");
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-
-        viewModel = new ViewModelProvider(this).get(GestionParticipacionesViewModel.class);
-
-        initViews();
-        observarDatos();
-        observarEstado();
-
-        if (!modoEdicion) {
-            viewModel.obtenerSiguienteOrden(idPrueba).observe(this, orden -> {
-                if (orden != null) etOrden.setText(String.valueOf(orden));
-            });
-        }
-
-
-        // Vincula el MaterialToolbar usando su ID
-        MaterialToolbar toolbar = findViewById(R.id.toolbarParticipacionForm);
-
-        // Configura la acción para ir hacia atrás al presionar la flecha
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getOnBackPressedDispatcher().onBackPressed();
-            }
-        });
-
-        findViewById(R.id.btnGuardarParticipacion).setOnClickListener(v -> guardar());
-
     }
 
+    /**
+     * Configura el título del ActionBar según el modo activo
+     * y habilita el botón de navegación hacia atrás.
+     */
+    private void configurarActionBar() {
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(
+                    modoEdicion ? "Editar inscripción" : "Inscribir binomio"
+            );
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    /**
+     * Inicializa las referencias a las vistas del layout.
+     *
+     * El campo de orden de salida se deja no editable
+     * ya que se asigna automáticamente.
+     */
     private void initViews() {
         layAlumno     = findViewById(R.id.layAlumnoParticipacion);
         layEquino     = findViewById(R.id.layEquinoParticipacion);
@@ -95,31 +136,138 @@ public class ParticipacionFormActivity extends AppCompatActivity {
         etOrden.setClickable(false);
     }
 
+    /**
+     * Configura el MaterialToolbar y su acción de navegación hacia atrás.
+     */
+    private void setupToolbar() {
+
+        MaterialToolbar toolbar = findViewById(R.id.toolbarParticipacionForm);
+
+        toolbar.setNavigationOnClickListener(
+                v -> getOnBackPressedDispatcher().onBackPressed()
+        );
+    }
+
+    /**
+     * Asigna el listener al botón de guardar.
+     */
+    private void setupBotones() {
+        findViewById(R.id.btnGuardarParticipacion)
+                .setOnClickListener(v -> guardar());
+    }
+
+    // =========================================================
+    // OBSERVADORES
+    // =========================================================
+
+    /**
+     * Observa los alumnos y equinos habilitados para doma
+     * y actualiza los spinners correspondientes.
+     *
+     * Una vez ambas listas están disponibles, intenta precargar
+     * los datos de la participación en modo edición.
+     */
     private void observarDatos() {
+
         viewModel.obtenerAlumnosDomaConNombre().observe(this, alumnos -> {
+
             listaAlumnos = alumnos != null ? alumnos : new ArrayList<>();
+
             spinnerAlumno.setAdapter(new ArrayAdapter<>(
-                    this, android.R.layout.simple_dropdown_item_1line, listaAlumnos));
+                    this,
+                    android.R.layout.simple_dropdown_item_1line,
+                    listaAlumnos
+            ));
+
             intentarPrecargar();
         });
 
         viewModel.obtenerEquinosDoma().observe(this, equinos -> {
+
             listaEquinos = equinos != null ? equinos : new ArrayList<>();
+
             spinnerEquino.setAdapter(new ArrayAdapter<>(
-                    this, android.R.layout.simple_dropdown_item_1line, listaEquinos));
+                    this,
+                    android.R.layout.simple_dropdown_item_1line,
+                    listaEquinos
+            ));
+
             intentarPrecargar();
         });
     }
 
-    private void intentarPrecargar() {
-        if (!modoEdicion || listaAlumnos.isEmpty() || listaEquinos.isEmpty()) return;
+    /**
+     * Observa el siguiente número de orden de salida disponible
+     * para la prueba y lo muestra en el campo correspondiente.
+     *
+     * Solo se activa en modo creación.
+     */
+    private void observarSiguienteOrden() {
 
-        // Cargamos la participación una sola vez al inicio
+        viewModel.obtenerSiguienteOrden(idPrueba).observe(this, orden -> {
+            if (orden != null) {
+                etOrden.setText(String.valueOf(orden));
+            }
+        });
+    }
+
+    /**
+     * Observa el estado de la última operación de guardado.
+     *
+     * Muestra mensajes de éxito o error y cierra la Activity
+     * si la operación fue exitosa.
+     */
+    private void observarEstado() {
+
+        viewModel.getEstadoOperacion().observe(this, estado -> {
+
+            if (estado == null) return;
+
+            switch (estado) {
+
+                case "EXITO":
+                    Toast.makeText(this,
+                            "Guardado correctamente",
+                            Toast.LENGTH_SHORT).show();
+                    finish();
+                    break;
+
+                case "ERROR_YA_INSCRITO":
+                    layAlumno.setError(
+                            "Este binomio ya está inscrito en esta prueba"
+                    );
+                    break;
+
+                case "ERROR_BD":
+                    Toast.makeText(this,
+                            "Error al guardar",
+                            Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        });
+    }
+
+
+    /**
+     * Precarga los datos de la participación en los campos del
+     * formulario cuando ambas listas (alumnos y equinos) ya están
+     * disponibles y la Activity está en modo edición.
+     *
+     * Guarda la referencia completa del objeto cargado para
+     * preservar campos como la nota final o el porcentaje
+     * que no se modifican desde esta pantalla.
+     */
+    private void intentarPrecargar() {
+
+        if (!modoEdicion
+                || listaAlumnos.isEmpty()
+                || listaEquinos.isEmpty()) return;
+
         viewModel.buscarPorId(idParticipacion).observe(this, p -> {
+
             if (p == null) return;
 
-            // Guardamos la referencia completa del objeto
-            this.participacionCargada = p;
+            participacionCargada = p;
 
             etOrden.setText(String.valueOf(p.ordenSalida));
 
@@ -139,72 +287,115 @@ public class ParticipacionFormActivity extends AppCompatActivity {
         });
     }
 
+
+    /**
+     * Valida el formulario, resuelve los IDs seleccionados
+     * y delega el guardado al ViewModel.
+     *
+     * En modo edición modifica únicamente el alumno y el equino
+     * del objeto cargado, preservando el resto de campos.
+     * En modo creación construye una nueva participación con
+     * el orden de salida asignado automáticamente.
+     */
+    private void guardar() {
+
+        if (!validar()) {
+            return;
+        }
+
+        int idAlu  = obtenerIdAlumnoSeleccionado();
+        int idEqui = obtenerIdEquinoSeleccionado();
+
+        if (modoEdicion) {
+
+            if (participacionCargada != null) {
+                participacionCargada.idAlumno = idAlu;
+                participacionCargada.idEquino = idEqui;
+                viewModel.actualizar(participacionCargada);
+            }
+
+        } else {
+
+            int orden = Integer.parseInt(etOrden.getText().toString());
+            viewModel.insertar(new Participacion(orden, idAlu, idEqui, idPrueba));
+        }
+    }
+
+
+    /**
+     * Valida que tanto el alumno como el equino hayan sido
+     * seleccionados antes de intentar guardar.
+     *
+     * @return true si el formulario es válido, false en caso contrario.
+     */
     private boolean validar() {
+
         boolean ok = true;
+
         if (spinnerAlumno.getText().toString().trim().isEmpty()) {
             layAlumno.setError("Selecciona un alumno");
             ok = false;
-        } else layAlumno.setError(null);
+        } else {
+            layAlumno.setError(null);
+        }
 
         if (spinnerEquino.getText().toString().trim().isEmpty()) {
             layEquino.setError("Selecciona un equino");
             ok = false;
-        } else layEquino.setError(null);
+        } else {
+            layEquino.setError(null);
+        }
+
         return ok;
     }
 
-    private void guardar() {
-        if (!validar()) return;
 
-        int idAlu  = -1;
-        int idEqui = -1;
 
-        String selAlu  = spinnerAlumno.getText().toString();
-        String selEqui = spinnerEquino.getText().toString();
+    /**
+     * Busca y devuelve el ID del alumno seleccionado en el spinner
+     * comparando por su representación textual.
+     *
+     * @return ID del alumno seleccionado, o -1 si no se encuentra.
+     */
+    private int obtenerIdAlumnoSeleccionado() {
 
-        for (Usuario u : listaAlumnos)
-            if (u.toString().equals(selAlu)) { idAlu = u.idUsuario; break; }
+        String seleccionado = spinnerAlumno.getText().toString();
 
-        for (Equino e : listaEquinos)
-            if (e.toString().equals(selEqui)) { idEqui = e.idEquino; break; }
-
-        if (modoEdicion) {
-            // SI ESTAMOS EDITANDO:
-            if (participacionCargada != null) {
-                // Modificamos solo lo que ha cambiado en la pantalla
-                participacionCargada.idAlumno = idAlu;
-                participacionCargada.idEquino = idEqui;
-                // notaFinal y porcentaje se quedan como estaban en el objeto cargado
-
-                viewModel.actualizar(participacionCargada);
+        for (Usuario u : listaAlumnos) {
+            if (u.toString().equals(seleccionado)) {
+                return u.idUsuario;
             }
-        } else {
-            // SI ES NUEVO:
-            int orden = Integer.parseInt(etOrden.getText().toString());
-            Participacion p = new Participacion(orden, idAlu, idEqui, idPrueba);
-            viewModel.insertar(p);
         }
+
+        return -1;
     }
 
-    private void observarEstado() {
-        // Importante: No ponemos observadores dentro de otros métodos para evitar duplicados
-        viewModel.getEstadoOperacion().observe(this, estado -> {
-            if (estado == null) return;
-            switch (estado) {
-                case "EXITO":
-                    Toast.makeText(this, "Guardado correctamente", Toast.LENGTH_SHORT).show();
-                    finish();
-                    break;
-                case "ERROR_YA_INSCRITO":
-                    layAlumno.setError("Este binomio ya está inscrito en esta prueba");
-                    break;
-                case "ERROR_BD":
-                    Toast.makeText(this, "Error al guardar", Toast.LENGTH_SHORT).show();
-                    break;
+    /**
+     * Busca y devuelve el ID del equino seleccionado en el spinner
+     * comparando por su representación textual.
+     *
+     * @return ID del equino seleccionado, o -1 si no se encuentra.
+     */
+    private int obtenerIdEquinoSeleccionado() {
+
+        String seleccionado = spinnerEquino.getText().toString();
+
+        for (Equino e : listaEquinos) {
+            if (e.toString().equals(seleccionado)) {
+                return e.idEquino;
             }
-        });
+        }
+
+        return -1;
     }
 
+
+    /**
+     * Cierra la Activity al pulsar la flecha de retroceso
+     * del ActionBar nativo.
+     *
+     * @return true para indicar que la navegación ha sido gestionada.
+     */
     @Override
     public boolean onSupportNavigateUp() {
         finish();

@@ -17,28 +17,43 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Calendar;
 
+
+/**
+ * Activity para crear o editar una Competición.
+ *
+ * Funcionalidad:
+ * - Crear nueva competición
+ * - Editar competición existente
+ * - Seleccionar fecha mediante DatePicker
+ * - Validar campos
+ * - Mostrar estado de operación desde ViewModel
+ */
 public class CompeticionFormActivity extends AppCompatActivity {
 
+    // ViewModel de competiciones
     private GestionCompeticionesViewModel viewModel;
 
+    // Campos de UI
     private TextInputEditText etNombre, etFecha;
     private TextInputLayout layNombre, layFecha;
     private ProgressBar progressBar;
 
+    // Estado de la competición
     private long fechaSeleccionada = -1;
     private int competicionId = -1;
     private boolean modoEdicion = false;
-    private Competicion competicionActual;
+    private Competicion competicionActual; // objeto cargado en edición
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_competicion_form);
 
+        // Inicializa ViewModel
         viewModel = new ViewModelProvider(this).get(GestionCompeticionesViewModel.class);
 
-        initViews();
-        setupFechaPicker();
+        initViews(); // Vincula XML con código
+        setupFechaPicker(); // Configura selector de fecha
 
         // Verificar si es edición
         if (getIntent().hasExtra("ID_COMPETICION")) {
@@ -47,9 +62,10 @@ public class CompeticionFormActivity extends AppCompatActivity {
             cargarDatos();
         }
 
+        // Botón guardar
         findViewById(R.id.btnGuardarCompeticion).setOnClickListener(v -> guardar());
 
-        // Vincula el MaterialToolbar usando su ID
+        // Toolbar
         MaterialToolbar toolbar = findViewById(R.id.toolbarCompeticionForm);
 
         // Configura la acción para ir hacia atrás al presionar la flecha
@@ -60,9 +76,13 @@ public class CompeticionFormActivity extends AppCompatActivity {
             }
         });
 
+        // Observa resultados del ViewModel
         observarEstado();
     }
 
+    /**
+     * Vincula vistas del layout
+     */
     private void initViews() {
         etNombre = findViewById(R.id.etNombreCompeticion);
         etFecha = findViewById(R.id.etFechaCompeticion);
@@ -71,8 +91,11 @@ public class CompeticionFormActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBarCompeticion);
     }
 
+    /**
+     * Carga datos de la competición si estamos en modo edición
+     */
     private void cargarDatos() {
-        // Buscamos la competición en el ViewModel (puedes usar un LiveData específico si tienes el método buscarPorId)
+        // Buscamos la competición en el ViewModel
         viewModel.getCompeticiones().observe(this, lista -> {
             for (Competicion c : lista) {
                 if (c.idCompeticion == competicionId) {
@@ -91,6 +114,9 @@ public class CompeticionFormActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Configura el selector de fecha (DatePickerDialog)
+     */
     private void setupFechaPicker() {
         etFecha.setOnClickListener(v -> {
             Calendar c = Calendar.getInstance();
@@ -106,6 +132,9 @@ public class CompeticionFormActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Valida y guarda la competición (crear o actualizar)
+     */
     private void guardar() {
         String nombre = etNombre.getText().toString().trim();
 
@@ -129,6 +158,9 @@ public class CompeticionFormActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Observa el estado del ViewModel (resultado de operaciones)
+     */
     private void observarEstado() {
         viewModel.getEstado().observe(this, estado -> {
             if (estado == null) return;

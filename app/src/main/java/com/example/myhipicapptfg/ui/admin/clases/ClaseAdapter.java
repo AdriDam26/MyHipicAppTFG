@@ -20,22 +20,37 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Adapter para mostrar una lista de Clases en un RecyclerView.
+ * También resuelve relaciones (Profesor y Pista) a partir de listas auxiliares.
+ */
 public class ClaseAdapter extends RecyclerView.Adapter<ClaseAdapter.ClaseViewHolder> {
 
+    // Lista principal de clases a mostrar
     private List<Clase> listaClases;
-    private List<Usuario> listaProfesores; // Nueva lista para buscar nombres
-    private List<Pista> listaPistas;       // Nueva lista para buscar nombres
+    // Listas auxiliares para obtener información relacionada
+    private List<Usuario> listaProfesores;
+    private List<Pista> listaPistas;
+
+    // Listener para acciones de editar y eliminar
     private final OnClaseClickListener listener;
 
+    // Formateadores de fecha y hora
     private final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
 
+    /**
+     * Interfaz para manejar clics en botones de cada item
+     */
     public interface OnClaseClickListener {
         void editar(Clase clase);
         void eliminar(Clase clase);
     }
 
-    // Constructor actualizado para recibir las listas de referencia
+    /**
+     * Constructor del adapter
+     * Recibe clases + listas auxiliares + listener de acciones
+     */
     public ClaseAdapter(List<Clase> listaClases, List<Usuario> listaProfesores, List<Pista> listaPistas, OnClaseClickListener listener) {
         this.listaClases = listaClases;
         this.listaProfesores = listaProfesores;
@@ -43,6 +58,10 @@ public class ClaseAdapter extends RecyclerView.Adapter<ClaseAdapter.ClaseViewHol
         this.listener = listener;
     }
 
+
+    /**
+     * Infla la vista XML de cada item del RecyclerView
+     */
     @NonNull
     @Override
     public ClaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -50,6 +69,9 @@ public class ClaseAdapter extends RecyclerView.Adapter<ClaseAdapter.ClaseViewHol
         return new ClaseViewHolder(v);
     }
 
+    /**
+     * Asigna los datos a cada ViewHolder
+     */
     @Override
     public void onBindViewHolder(@NonNull ClaseViewHolder holder, int position) {
         if (listaClases != null && position < listaClases.size()) {
@@ -57,6 +79,10 @@ public class ClaseAdapter extends RecyclerView.Adapter<ClaseAdapter.ClaseViewHol
         }
     }
 
+
+    /**
+     * Devuelve el número total de elementos
+     */
     @Override
     public int getItemCount() {
         return listaClases != null ? listaClases.size() : 0;
@@ -70,6 +96,9 @@ public class ClaseAdapter extends RecyclerView.Adapter<ClaseAdapter.ClaseViewHol
         notifyDataSetChanged();
     }
 
+    /**
+     * ViewHolder: representa cada item de la lista
+     */
     class ClaseViewHolder extends RecyclerView.ViewHolder {
         TextView txtRangoHorario, txtDisciplina, txtInfoProfesorPista, txtNivel, txtFecha;
         ImageButton btnEditar, btnEliminar;
@@ -87,6 +116,9 @@ public class ClaseAdapter extends RecyclerView.Adapter<ClaseAdapter.ClaseViewHol
             viewIndicator = itemView.findViewById(R.id.viewIndicator);
         }
 
+        /**
+         * Método principal: pinta los datos de una clase en el item
+         */
         public void bind(Clase clase) {
             try {
                 // 1. Horas

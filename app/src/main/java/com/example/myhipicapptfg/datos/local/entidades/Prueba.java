@@ -74,6 +74,10 @@ public class Prueba {
     public static final String INTERMEDIA = "Intermedia";
     public static final String GRAN_PREMIO = "Gran Premio";
 
+    public static final int MIN_MOVIMIENTOS = 10;
+
+    public static final int MIN_PARTICIPANTES = 3;
+
     // Constructor vacío (Room)
     public Prueba() {}
 

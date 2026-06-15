@@ -11,35 +11,70 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.myhipicapptfg.R;
-import com.example.myhipicapptfg.model.ClaseUIModel;
+import com.example.myhipicapptfg.model.ClaseModel;
 import com.google.android.material.button.MaterialButton;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Objects;
 
 
+/**
+ * Adapter encargado de mostrar una lista de clases en un RecyclerView.
+ *
+ * Permite dos modos de funcionamiento:
+ * - Modo reserva: muestra clases disponibles para reservar
+ * - Modo cancelación: muestra clases ya reservadas que se pueden cancelar
+ *
+ * Gestiona:
+ * - Renderizado de la información de cada clase
+ * - Cambio dinámico de UI según el modo
+ * - Control de cupos disponibles
+ * - Gestión de acciones (reservar / cancelar)
+ */
 public class ReservaClaseAdapter
-        extends ListAdapter<ClaseUIModel, ReservaClaseAdapter.ViewHolder> {
+        extends ListAdapter<ClaseModel, ReservaClaseAdapter.ViewHolder> {
 
+    /**
+     * Listener para manejar el click en el botón de acción.
+     */
     private final OnClaseClickListener listener;
+
+    /**
+     * Indica si el adapter está en modo cancelación o reserva.
+     */
     private final boolean esModoCancelacion;
+
+    /**
+     * Formateador de hora (HH:mm).
+     */
     private final SimpleDateFormat timeFormat =
             new SimpleDateFormat("HH:mm", Locale.getDefault());
+
+    /**
+     * Formateador de fecha (dd/MM/yyyy).
+     */
     private final SimpleDateFormat dateFormat =
             new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
     public interface OnClaseClickListener {
-        void onAccionClick(ClaseUIModel clase);
+        void onAccionClick(ClaseModel clase);
     }
 
+    /**
+     * Constructor del adapter.
+     *
+     * @param esModoCancelacion indica si se muestra modo cancelación o reserva
+     * @param listener callback para acciones del botón
+     */
     public ReservaClaseAdapter(boolean esModoCancelacion, OnClaseClickListener listener) {
         super(DIFF_CALLBACK);
         this.esModoCancelacion = esModoCancelacion;
         this.listener = listener;
     }
 
-    // ── setDatosReferencia() ya no existe ─────────────────────────────────────
-
+    /**
+     * Infla la vista de cada item del RecyclerView.
+     */
     @NonNull @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
@@ -47,10 +82,13 @@ public class ReservaClaseAdapter
         return new ViewHolder(v);
     }
 
+    /**
+     * Vincula los datos de una clase con la vista correspondiente.
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        ClaseUIModel m = getItem(position);
-
+        ClaseModel m = getItem(position);
+        // Información básica de la clase
         holder.tvDisciplina.setText(m.disciplina != null ? m.disciplina : "Clase");
         holder.tvNivel.setText(
                 m.nivel != null ? "Nivel: " + m.nivel : "Nivel no especificado"
@@ -64,7 +102,7 @@ public class ReservaClaseAdapter
             holder.tvPista.setVisibility(View.VISIBLE);
             holder.tvCupo.setVisibility(View.GONE);
 
-            // ✅ Ya viene resuelto, sin bucles
+
             holder.tvProfesor.setText("Prof: " + (m.nombreProfesor != null
                     ? m.nombreProfesor : "No asignado"));
             holder.tvPista.setText("Pista: " + (m.nombrePista != null
@@ -81,16 +119,16 @@ public class ReservaClaseAdapter
 
             holder.btnAccion.setText("Reservar");
 
-            // ✅ inscritos viene del COUNT() del JOIN
-            if (m.inscritos >= ClaseUIModel.MAXIMO) {
+            // Control de cupos
+            if (m.inscritos >= ClaseModel.MAXIMO) {
                 holder.tvCupo.setTextColor(Color.RED);
-                holder.tvCupo.setText("¡LLENO! " + m.inscritos + "/" + ClaseUIModel.MAXIMO);
+                holder.tvCupo.setText("¡LLENO! " + m.inscritos + "/" + ClaseModel.MAXIMO);
                 holder.btnAccion.setEnabled(false);
                 holder.btnAccion.setBackgroundTintList(
                         ColorStateList.valueOf(Color.LTGRAY));
             } else {
                 holder.tvCupo.setTextColor(Color.parseColor("#666666"));
-                holder.tvCupo.setText("Inscritos: " + m.inscritos + "/" + ClaseUIModel.MAXIMO);
+                holder.tvCupo.setText("Inscritos: " + m.inscritos + "/" + ClaseModel.MAXIMO);
                 holder.btnAccion.setEnabled(true);
                 holder.btnAccion.setBackgroundTintList(
                         ColorStateList.valueOf(Color.parseColor("#4CAF50")));
@@ -102,14 +140,17 @@ public class ReservaClaseAdapter
         });
     }
 
-    private static final DiffUtil.ItemCallback<ClaseUIModel> DIFF_CALLBACK =
+    /**
+     * DiffUtil para optimizar actualizaciones del RecyclerView.
+     */
+    private static final DiffUtil.ItemCallback<ClaseModel> DIFF_CALLBACK =
             new DiffUtil.ItemCallback<>() {
                 @Override
-                public boolean areItemsTheSame(@NonNull ClaseUIModel o, @NonNull ClaseUIModel n) {
+                public boolean areItemsTheSame(@NonNull ClaseModel o, @NonNull ClaseModel n) {
                     return o.idClase == n.idClase;
                 }
                 @Override
-                public boolean areContentsTheSame(@NonNull ClaseUIModel o, @NonNull ClaseUIModel n) {
+                public boolean areContentsTheSame(@NonNull ClaseModel o, @NonNull ClaseModel n) {
                     return o.fecha == n.fecha && o.horaInicio == n.horaInicio
                             && o.horaFin == n.horaFin && o.inscritos == n.inscritos
                             && Objects.equals(o.disciplina, n.disciplina)
@@ -118,7 +159,9 @@ public class ReservaClaseAdapter
                 }
             };
 
-    // ViewHolder sin cambios
+    /**
+     * ViewHolder que contiene las referencias a las vistas del item.
+     */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvDisciplina, tvDia, tvProfesor, tvPista, tvHora, tvCupo, tvNivel;;
         MaterialButton btnAccion;

@@ -6,6 +6,12 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
+/**
+ * Entidad Alumno para la base de datos Room.
+ *
+ * Representa a un usuario con rol de alumno dentro del sistema hípico.
+ * Está vinculado a la entidad Usuario (relación 1 a 1).
+ */
 @Entity(
         tableName = "Alumno",
         foreignKeys = @ForeignKey(
@@ -17,10 +23,15 @@ import androidx.room.PrimaryKey;
 )
 public class Alumno {
 
+    /**
+     * Identificador del alumno.
+     * Coincide con el ID del usuario asociado.
+     */
     @PrimaryKey
     @ColumnInfo(name = "ID_Alumno")
     public int idAlumno;
 
+    // Atributos
     @ColumnInfo(name = "Practica_Doma")
     public boolean practicaDoma;
 
@@ -33,12 +44,21 @@ public class Alumno {
     @ColumnInfo(name = "Nivel_Salto")
     public String nivelSalto;
 
+    // Constante de nivel
     public static final String PRINCIPIANTE = "Principiante";
     public static final String INTERMEDIO = "Intermedio";
     public static final String AVANZADO = "Avanzado";
 
+
+    /**
+     * Constructor vacío requerido por Room.
+     */
     public Alumno() {}
 
+
+    /**
+     * Constructor vacío requerido por Room.
+     */
     public Alumno(int idAlumno,
                   boolean practicaDoma,
                   boolean practicaSalto,

@@ -14,50 +14,111 @@ import com.example.myhipicapptfg.ui.competiciones.participantes.calificacion.Hoj
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 
+/**
+ * Activity que muestra el ranking de una prueba.
+ *
+ * Permite visualizar la clasificación de los participantes
+ * y acceder a la hoja de calificaciones del alumno.
+ */
 public class RankingPruebaActivity extends AppCompatActivity {
 
-    public static final String EXTRA_ID_PRUEBA        = "extra_id_prueba";
+    public static final String EXTRA_ID_PRUEBA = "extra_id_prueba";
     public static final String EXTRA_ID_PARTICIPACION = "extra_id_participacion";
-    public static final String EXTRA_NOMBRE_PRUEBA    = "extra_nombre_prueba";
+    public static final String EXTRA_NOMBRE_PRUEBA = "extra_nombre_prueba";
+
+    private AlumnoResultadosViewModel viewModel;
+    private RankingAdapter adapter;
+
+    private int idPrueba;
+    private int idParticipacion;
+    private String nombrePrueba;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ranking_prueba);
 
-        int    idPrueba        = getIntent().getIntExtra(EXTRA_ID_PRUEBA, -1);
-        int    idParticipacion = getIntent().getIntExtra(EXTRA_ID_PARTICIPACION, -1);
-        String nombrePrueba    = getIntent().getStringExtra(EXTRA_NOMBRE_PRUEBA);
+        obtenerExtras();
+        initToolbar();
+        initRecyclerView();
+        initViewModel();
+        observarRanking();
+        initBotonHoja();
+    }
 
-        // 1. Configuración de la MaterialToolbar vinculada por ID
+    /**
+     * Obtiene los datos recibidos mediante el Intent.
+     */
+    private void obtenerExtras() {
+        idPrueba = getIntent().getIntExtra(EXTRA_ID_PRUEBA, -1);
+        idParticipacion = getIntent().getIntExtra(EXTRA_ID_PARTICIPACION, -1);
+        nombrePrueba = getIntent().getStringExtra(EXTRA_NOMBRE_PRUEBA);
+    }
+
+    /**
+     * Configura la barra superior de navegación.
+     */
+    private void initToolbar() {
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
 
-        // Asignación dinámica del nombre de la prueba como título
-        if (nombrePrueba != null) {
-            toolbar.setTitle(nombrePrueba);
-        } else {
-            toolbar.setTitle("Ranking"); // Título por defecto en caso de que llegue nulo
-        }
+        toolbar.setTitle(nombrePrueba != null ? nombrePrueba : "Ranking");
 
-        // Configurar la acción del botón de retroceso (flecha de navegación)
-        toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
+        toolbar.setNavigationOnClickListener(
+                v -> getOnBackPressedDispatcher().onBackPressed()
+        );
+    }
 
-        RecyclerView rv = findViewById(R.id.rvRanking);
-        rv.setLayoutManager(new LinearLayoutManager(this));
-        RankingAdapter adapter = new RankingAdapter();
-        rv.setAdapter(adapter);
+    /**
+     * Configura el RecyclerView que muestra el ranking.
+     */
+    private void initRecyclerView() {
+        RecyclerView recyclerView = findViewById(R.id.rvRanking);
 
-        AlumnoResultadosViewModel vm = new ViewModelProvider(this)
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        adapter = new RankingAdapter();
+        recyclerView.setAdapter(adapter);
+    }
+
+    /**
+     * Inicializa el ViewModel asociado a la Activity.
+     */
+    private void initViewModel() {
+        viewModel = new ViewModelProvider(this)
                 .get(AlumnoResultadosViewModel.class);
+    }
 
-        vm.getRanking(idPrueba).observe(this, adapter::submitList);
+    /**
+     * Observa los cambios en el ranking y actualiza la lista.
+     */
+    private void observarRanking() {
+        viewModel.getRanking(idPrueba)
+                .observe(this, adapter::submitList);
+    }
 
+    /**
+     * Configura el botón para acceder a la hoja de calificaciones.
+     */
+    private void initBotonHoja() {
         MaterialButton btnHoja = findViewById(R.id.btnVerHoja);
+
         btnHoja.setOnClickListener(v -> {
-            Intent i = new Intent(this, HojaCalificacionesActivity.class);
-            i.putExtra(HojaCalificacionesActivity.EXTRA_ID_PARTICIPACION, idParticipacion);
-            i.putExtra(HojaCalificacionesActivity.EXTRA_NOMBRE_PRUEBA,    nombrePrueba);
-            startActivity(i);
+            Intent intent = new Intent(
+                    this,
+                    HojaCalificacionesActivity.class
+            );
+
+            intent.putExtra(
+                    HojaCalificacionesActivity.EXTRA_ID_PARTICIPACION,
+                    idParticipacion
+            );
+
+            intent.putExtra(
+                    HojaCalificacionesActivity.EXTRA_NOMBRE_PRUEBA,
+                    nombrePrueba
+            );
+
+            startActivity(intent);
         });
     }
 }

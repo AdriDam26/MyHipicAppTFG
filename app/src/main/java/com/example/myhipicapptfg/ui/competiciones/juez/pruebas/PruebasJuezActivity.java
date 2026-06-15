@@ -14,54 +14,109 @@ import com.example.myhipicapptfg.R;
 import com.example.myhipicapptfg.ui.competiciones.juez.participantes.ParticipantesPruebaActivity;
 import com.google.android.material.appbar.MaterialToolbar;
 
+/**
+ * Activity que muestra las pruebas asignadas a un juez.
+ */
 public class PruebasJuezActivity extends AppCompatActivity {
 
     public static final String EXTRA_ID_JUEZ = "extra_id_juez";
+
+    private RecyclerView rv;
+    private TextView tvEmpty;
+    private PruebaJuezAdapter adapter;
+    private PruebasJuezViewModel viewModel;
+
+    private int idJuez;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pruebas_juez);
 
-        // Recupera el ID del juez logueado (pasado por Intent)
-        int idJuez = getIntent().getIntExtra(EXTRA_ID_JUEZ, -1);
+        obtenerExtras();
+        initViews();
+        initToolbar();
+        initViewModel();
+        observarPruebas();
+    }
 
-        RecyclerView rv   = findViewById(R.id.rvPruebas);
-        TextView     tvEmpty = findViewById(R.id.tvEmptyPruebas);
+    /**
+     * Obtiene el identificador del juez recibido mediante el Intent.
+     */
+    private void obtenerExtras() {
+        idJuez = getIntent().getIntExtra(EXTRA_ID_JUEZ, -1);
+    }
 
-        // Vincula el nuevo MaterialToolbar usando su ID
-        MaterialToolbar toolbar = findViewById(R.id.toolbarPruebas);
+    /**
+     * Inicializa las vistas de la pantalla.
+     */
+    private void initViews() {
 
-// Configura la acción para ir hacia atrás al presionar la flecha
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getOnBackPressedDispatcher().onBackPressed();
-            }
-        });
+        rv = findViewById(R.id.rvPruebas);
+        tvEmpty = findViewById(R.id.tvEmptyPruebas);
 
         rv.setLayoutManager(new LinearLayoutManager(this));
 
-        PruebaJuezAdapter adapter = new PruebaJuezAdapter(prueba -> {
-            // Al pulsar una prueba, abre el listado de participantes
-            Intent intent = new Intent(this, ParticipantesPruebaActivity.class);
-            intent.putExtra(ParticipantesPruebaActivity.EXTRA_ID_PRUEBA,   prueba.idPrueba);
-            intent.putExtra(ParticipantesPruebaActivity.EXTRA_NOMBRE_PRUEBA, prueba.nombrePrueba);
+        adapter = new PruebaJuezAdapter(prueba -> {
+
+            Intent intent = new Intent(
+                    this,
+                    ParticipantesPruebaActivity.class
+            );
+
+            intent.putExtra(
+                    ParticipantesPruebaActivity.EXTRA_ID_PRUEBA,
+                    prueba.idPrueba
+            );
+
+            intent.putExtra(
+                    ParticipantesPruebaActivity.EXTRA_NOMBRE_PRUEBA,
+                    prueba.nombrePrueba
+            );
+
             startActivity(intent);
         });
 
         rv.setAdapter(adapter);
+    }
 
-        PruebasJuezViewModel vm = new ViewModelProvider(this)
+    /**
+     * Configura la barra superior de navegación.
+     */
+    private void initToolbar() {
+
+        MaterialToolbar toolbar = findViewById(R.id.toolbarPruebas);
+
+        toolbar.setNavigationOnClickListener(
+                v -> getOnBackPressedDispatcher().onBackPressed()
+        );
+    }
+
+    /**
+     * Inicializa el ViewModel asociado a la Activity.
+     */
+    private void initViewModel() {
+        viewModel = new ViewModelProvider(this)
                 .get(PruebasJuezViewModel.class);
+    }
 
-        vm.getPruebas(idJuez).observe(this, lista -> {
+    /**
+     * Observa las pruebas asignadas al juez y actualiza la interfaz.
+     */
+    private void observarPruebas() {
+
+        viewModel.getPruebas(idJuez).observe(this, lista -> {
+
             if (lista == null || lista.isEmpty()) {
+
                 tvEmpty.setVisibility(View.VISIBLE);
                 rv.setVisibility(View.GONE);
+
             } else {
+
                 tvEmpty.setVisibility(View.GONE);
                 rv.setVisibility(View.VISIBLE);
+
                 adapter.submitList(lista);
             }
         });

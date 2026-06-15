@@ -15,11 +15,25 @@ import com.example.myhipicapptfg.datos.local.entidades.Pista;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Adapter encargado de mostrar la lista de Pistas en un RecyclerView.
+ *
+ * Su función es adaptar los datos de la entidad Pista
+ * a la vista item_pista.xml.
+ *
+ * Permite también gestionar acciones de edición y eliminación
+ * mediante un listener externo.
+ */
 public class PistaAdapter extends RecyclerView.Adapter<PistaAdapter.PistaViewHolder> {
 
     private List<Pista> lista;
+
+    // Listener para acciones de usuario (editar / eliminar)
     private final OnClick listener;
 
+    /**
+     * Interfaz para manejar eventos desde el Activity/Fragment
+     */
     public interface OnClick {
         void editar(Pista p);
         void eliminar(Pista p);
@@ -30,6 +44,9 @@ public class PistaAdapter extends RecyclerView.Adapter<PistaAdapter.PistaViewHol
         this.listener = listener;
     }
 
+    /**
+     * Actualiza la lista de pistas y refresca la vista
+     */
     public void actualizar(List<Pista> nuevaLista) {
         this.lista = nuevaLista != null ? nuevaLista : new ArrayList<>();
         notifyDataSetChanged();
@@ -43,6 +60,7 @@ public class PistaAdapter extends RecyclerView.Adapter<PistaAdapter.PistaViewHol
         return new PistaViewHolder(v);
     }
 
+    // Asignar datos a la vista
     @Override
     public void onBindViewHolder(@NonNull PistaViewHolder holder, int position) {
 
@@ -67,6 +85,11 @@ public class PistaAdapter extends RecyclerView.Adapter<PistaAdapter.PistaViewHol
         return lista.size();
     }
 
+    /**
+     * ViewHolder:
+     * Mantiene referencias a las vistas del item_pista.xml
+     * para mejorar rendimiento evitando múltiples findViewById.
+     */
     static class PistaViewHolder extends RecyclerView.ViewHolder {
         TextView txtNombre, txtDimensiones, txtArea;
         ImageButton btnEditar, btnEliminar;

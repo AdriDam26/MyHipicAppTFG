@@ -12,34 +12,47 @@ import com.example.myhipicapptfg.datos.local.entidades.Pista;
 
 import java.util.List;
 
+/**
+ * DAO de Pista.
+ *
+ * Gestiona el acceso a datos de las pistas del sistema hípico,
+ * incluyendo operaciones CRUD y consultas básicas.
+ */
 @Dao
 public interface PistaDao {
 
-    // 🔹 INSERT
+    /**
+     * Inserta una nueva pista.
+     * Si hay conflicto (nombre duplicado), se aborta la operación.
+     */
     @Insert(onConflict = OnConflictStrategy.ABORT)
     long insertarPista(Pista pista);
 
-    // 🔹 UPDATE
+
     @Update
     int actualizarPista(Pista pista);
 
-    // 🔹 DELETE
+
     @Delete
     int eliminarPista(Pista pista);
 
-    // 🔹 LISTADO GENERAL
+    /**
+     * Obtiene todas las pistas registradas.
+     */
     @Query("SELECT * FROM Pista")
     LiveData<List<Pista>> obtenerTodasPistas();
 
-    // 🔹 BUSCAR POR ID
+    /**
+     * Busca una pista por su ID.
+     */
     @Query("SELECT * FROM Pista WHERE ID_Pista = :id LIMIT 1")
     LiveData<Pista> buscarPorId(int id);
 
-    // 🔹 BUSCAR POR NOMBRE (SYNC)
+    /**
+     * Cuenta el número total de pistas registradas.
+     */
     @Query("SELECT * FROM Pista WHERE Nombre = :nombre LIMIT 1")
     Pista buscarPorNombreSync(String nombre);
 
-    // 🔹 CONTAR
-    @Query("SELECT COUNT(*) FROM Pista")
-    LiveData<Integer> contarPistas();
+
 }

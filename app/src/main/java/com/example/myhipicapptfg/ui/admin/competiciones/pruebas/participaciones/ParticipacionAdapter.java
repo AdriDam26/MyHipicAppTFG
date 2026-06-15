@@ -17,33 +17,65 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+/**
+ * Adapter encargado de mostrar las participaciones dentro de una prueba.
+ *
+ * Responsabilidades:
+ * - Mostrar orden de salida
+ * - Mostrar nombre del alumno (jinete)
+ * - Mostrar nombre del equino (binomio)
+ * - Gestionar acciones de edición y eliminación
+ *
+ * Utiliza mapas externos para resolver IDs a nombres.
+ */
+
 public class ParticipacionAdapter extends RecyclerView.Adapter<ParticipacionAdapter.VH> {
 
+    /**
+     * Eventos de interacción con la UI
+     */
     public interface OnClick {
         void editar(Participacion p);
         void eliminar(Participacion p);
     }
 
     private List<Participacion>  lista          = new ArrayList<>();
+
+    // Mapa: idAlumno -> nombre
     private Map<Integer, String> nombresAlumnos = new HashMap<>();
+
+    // Mapa: idEquino -> nombre
     private Map<Integer, String> nombresEquinos = new HashMap<>();
 
+    // Listener de eventos UI
     private final OnClick listener;
 
     public ParticipacionAdapter(OnClick listener) {
         this.listener = listener;
     }
 
+    /**
+     * Actualiza la lista de participaciones
+     */
+
     public void actualizar(List<Participacion> nuevaLista) {
         this.lista = nuevaLista != null ? nuevaLista : new ArrayList<>();
         notifyDataSetChanged();
     }
+
+    /**
+     * Actualiza la lista de participaciones
+     */
 
     public void actualizarNombresAlumnos(Map<Integer, String> mapa) {
         this.nombresAlumnos = mapa;
         notifyDataSetChanged();
     }
 
+    /**
+     * Actualiza el mapa de equinos (id → nombre)
+     */
     public void actualizarNombresEquinos(Map<Integer, String> mapa) {
         this.nombresEquinos = mapa;
         notifyDataSetChanged();
@@ -57,6 +89,9 @@ public class ParticipacionAdapter extends RecyclerView.Adapter<ParticipacionAdap
         return new VH(v);
     }
 
+    /**
+     * Vincula los datos de una participación con la vista
+     */
     @Override
     public void onBindViewHolder(@NonNull VH h, int position) {
         Participacion p = lista.get(position);
@@ -81,6 +116,11 @@ public class ParticipacionAdapter extends RecyclerView.Adapter<ParticipacionAdap
     @Override
     public int getItemCount() { return lista.size(); }
 
+    /**
+     * ViewHolder:
+     * cachea referencias del layout item_participacion
+     * para mejorar rendimiento del RecyclerView
+     */
     static class VH extends RecyclerView.ViewHolder {
         TextView    txtOrden, txtJinete, txtInfo;
         ImageButton btnEditar, btnDelete;

@@ -1,4 +1,3 @@
-// model/ConteoParticipantes.java
 package com.example.myhipicapptfg.model;
 
 import androidx.room.ColumnInfo;

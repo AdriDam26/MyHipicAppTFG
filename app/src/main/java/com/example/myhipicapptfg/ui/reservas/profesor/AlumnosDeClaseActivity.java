@@ -12,70 +12,88 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myhipicapptfg.R;
 import com.google.android.material.appbar.MaterialToolbar;
 
+/**
+ * Activity que muestra los alumnos inscritos en una clase concreta.
+ */
 public class AlumnosDeClaseActivity extends AppCompatActivity {
 
-    public static final String EXTRA_ID_CLASE    = "extra_id_clase";
-    public static final String EXTRA_DISCIPLINA  = "extra_disciplina";
-    public static final String EXTRA_NIVEL       = "extra_nivel";
+    // Claves del Intent
+
+    public static final String EXTRA_ID_CLASE   = "extra_id_clase";
+    public static final String EXTRA_DISCIPLINA = "extra_disciplina";
+    public static final String EXTRA_NIVEL      = "extra_nivel";
+
+    // Componentes de la UI
+
+    private RecyclerView recyclerView;
+    private View tvVacio;
+    private TextView tvTitulo;
+    private TextView tvContador;
+
 
     private ProfesorClasesViewModel viewModel;
     private AlumnoClaseAdapter adapter;
+    private int idClase;
+
+    //Ciclo de vida
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alumnos_de_clase);
 
-        // ── Extras ────────────────────────────────────────────────────────────
-        int idClase      = getIntent().getIntExtra(EXTRA_ID_CLASE, -1);
+        idClase = getIntent().getIntExtra(EXTRA_ID_CLASE, -1);
         String disciplina = getIntent().getStringExtra(EXTRA_DISCIPLINA);
         String nivel      = getIntent().getStringExtra(EXTRA_NIVEL);
 
-        // Vincula el nuevo MaterialToolbar
+        initViews();
+        initToolbar(disciplina, nivel);
+        initViewModel();
+        observarAlumnos();
+    }
+
+    //Inicialización
+
+    private void initViews() {
+        recyclerView = findViewById(R.id.rv_alumnos_clase);
+        tvVacio      = findViewById(R.id.tv_sin_alumnos);
+        tvTitulo     = findViewById(R.id.tv_titulo_alumnos);
+        tvContador   = findViewById(R.id.tv_contador_alumnos);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new AlumnoClaseAdapter(this);
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void initToolbar(String disciplina, String nivel) {
         MaterialToolbar toolbar = findViewById(R.id.toolbarAlumnos);
+        toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
 
-// Configura la acción para ir hacia atrás
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getOnBackPressedDispatcher().onBackPressed();
-            }
-        });
-
-
-
-        // ── Cabecera ──────────────────────────────────────────────────────────
-        TextView tvTitulo = findViewById(R.id.tv_titulo_alumnos);
         if (disciplina != null && nivel != null) {
             tvTitulo.setText(disciplina + " · " + nivel);
         }
+    }
 
-        // ── RecyclerView ──────────────────────────────────────────────────────
-        RecyclerView recyclerView = findViewById(R.id.rv_alumnos_clase);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        adapter = new AlumnoClaseAdapter(this);
-        recyclerView.setAdapter(adapter);
-
-        // ── ViewModel ─────────────────────────────────────────────────────────
+    private void initViewModel() {
         viewModel = new ViewModelProvider(this).get(ProfesorClasesViewModel.class);
+    }
 
+    // Observadores
+
+    private void observarAlumnos() {
         viewModel.getAlumnosDeClase(idClase).observe(this, alumnos -> {
-            View tvVacio = findViewById(R.id.tv_sin_alumnos);
-            TextView tvContador = findViewById(R.id.tv_contador_alumnos);
+            boolean vacio = alumnos == null || alumnos.isEmpty();
+            recyclerView.setVisibility(vacio ? View.GONE  : View.VISIBLE);
+            tvVacio.setVisibility     (vacio ? View.VISIBLE : View.GONE);
 
-            if (alumnos == null || alumnos.isEmpty()) {
-                recyclerView.setVisibility(View.GONE);
-                tvVacio.setVisibility(View.VISIBLE);
+            if (vacio) {
                 tvContador.setText("0 alumnos inscritos");
             } else {
-                recyclerView.setVisibility(View.VISIBLE);
-                tvVacio.setVisibility(View.GONE);
-                tvContador.setText(alumnos.size() + " alumno" + (alumnos.size() == 1 ? "" : "s") + " inscrito" + (alumnos.size() == 1 ? "" : "s"));
                 adapter.setAlumnos(alumnos);
+                int n = alumnos.size();
+                tvContador.setText(n + " alumno" + (n == 1 ? "" : "s") +
+                        " inscrito" + (n == 1 ? "" : "s"));
             }
         });
-
-
     }
 }

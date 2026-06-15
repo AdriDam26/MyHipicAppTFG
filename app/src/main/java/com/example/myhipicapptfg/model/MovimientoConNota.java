@@ -1,4 +1,3 @@
-// model/MovimientoConNota.java
 package com.example.myhipicapptfg.model;
 
 public class MovimientoConNota {

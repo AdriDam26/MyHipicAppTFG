@@ -17,59 +17,85 @@ import com.example.myhipicapptfg.model.RankingItem;
 
 import java.util.List;
 
+/**
+ * DAO de Participacion.
+ *
+ * Gestiona la inscripción de alumnos y equinos en pruebas,
+ * así como los resultados, rankings y consultas complejas del sistema.
+ */
 @Dao
 public interface ParticipacionDao {
 
-    // 🔹 INSERT
+    /**
+     * Inserta una participación en una prueba.
+     * Evita duplicados mediante constraint definida en entidad.
+     */
     @Insert(onConflict = OnConflictStrategy.ABORT)
     long insertarParticipacion(Participacion participacion);
 
-    // 🔹 UPDATE
+
     @Update
     int actualizarParticipacion(Participacion participacion);
 
-    // 🔹 DELETE
+
     @Delete
     int eliminarParticipacion(Participacion participacion);
 
-    // 🔹 LISTADO GENERAL
+    /**
+     * Obtiene todas las participaciones registradas.
+     */
     @Query("SELECT * FROM Participacion")
     LiveData<List<Participacion>> obtenerTodasParticipaciones();
 
-    // 🔹 POR PRUEBA
+    /**
+     * Obtiene las participaciones de una prueba ordenadas por salida.
+     */
     @Query("SELECT * FROM Participacion WHERE ID_Prueba = :idPrueba ORDER BY Orden_Salida ASC")
     LiveData<List<Participacion>> obtenerPorPrueba(int idPrueba);
 
-    // 🔹 POR ALUMNO
+    /**
+     * Obtiene participaciones de un alumno concreto.
+     */
     @Query("SELECT * FROM Participacion " +
             "WHERE ID_Alumno = :idAlumno")
     LiveData<List<Participacion>> obtenerPorAlumno(int idAlumno);
 
-    // 🔹 POR EQUINO
+    /**
+     * Obtiene participaciones de un equino concreto.
+     */
     @Query("SELECT * FROM Participacion " +
             "WHERE ID_Equino = :idEquino")
     LiveData<List<Participacion>> obtenerPorEquino(int idEquino);
 
-    // 🔹 DETALLE (UI)
+    /**
+     * Busca una participación por ID.
+     */
     @Query("SELECT * FROM Participacion " +
             "WHERE ID_Participacion = :id LIMIT 1")
     LiveData<Participacion> buscarPorId(int id);
 
-    // ----------------------------------------------------
-    // 🔹 MÉTODOS SYNC (validaciones / lógica negocio)
-    // ----------------------------------------------------
-
-    // ✔ comprobar si ya está inscrito en la prueba
+    /**
+     * Verifica si existe un alumno.
+     */
     @Query("SELECT EXISTS(SELECT 1 FROM Alumno WHERE ID_Alumno = :id)")
     boolean existeAlumno(int id);
 
+    /**
+     * Verifica si existe un equino.
+     */
     @Query("SELECT EXISTS(SELECT 1 FROM Equino WHERE ID_Equino = :id)")
     boolean existeEquino(int id);
 
+    /**
+     * Verifica si existe una prueba.
+     */
     @Query("SELECT EXISTS(SELECT 1 FROM Prueba WHERE ID_Prueba = :id)")
     boolean existePrueba(int id);
 
-    // 🔹 EVITAR DUPLICADOS (MUY IMPORTANTE)
+    /**
+     * Evita duplicar inscripciones:
+     * un mismo alumno + equino + prueba no puede repetirse.
+     */
     @Query("SELECT EXISTS(" +
             "SELECT 1 FROM Participacion " +
             "WHERE ID_Alumno = :idAlumno " +
@@ -77,6 +103,9 @@ public interface ParticipacionDao {
             "AND ID_Prueba = :idPrueba)")
     boolean existeParticipacion(int idAlumno, int idEquino, int idPrueba);
 
+    /**
+     * Obtiene el siguiente orden de salida disponible en una prueba.
+     */
     @Query("SELECT IFNULL(MAX(orden_Salida), 0) + 1 FROM Participacion WHERE id_Prueba = :idPrueba")
     LiveData<Integer> obtenerSiguienteOrden(int idPrueba);
 
@@ -101,7 +130,9 @@ public interface ParticipacionDao {
             "ORDER BY pa.Orden_Salida ASC")
     LiveData<List<ParticipacionDetalle>> getParticipantesByPrueba(int idPrueba);
 
-
+    /**
+     * Actualiza resultados finales de una participación.
+     */
     @Query("UPDATE Participacion SET Nota_Final = :notaFinal, Porcentaje = :porcentaje, " +
             "Correccion = :correccion, Eliminado = :eliminado WHERE ID_Participacion = :id")
     void updateResultado(int id, double notaFinal, double porcentaje,
@@ -109,7 +140,9 @@ public interface ParticipacionDao {
 
 
 
-    // Pruebas publicadas en las que ha participado un alumno
+    /**
+     * Obtiene pruebas publicadas en las que ha participado un alumno.
+     */
     @Query("SELECT " +
             "  pa.ID_Participacion   AS idParticipacion, " +
             "  pr.ID_Prueba          AS idPrueba, " +
@@ -125,7 +158,11 @@ public interface ParticipacionDao {
             "ORDER BY c.Fecha DESC, pr.Nombre ASC")
     LiveData<List<PruebaAlumno>> getPruebasPublicadasByAlumno(int idAlumno);
 
-    // Ranking de una prueba (ordenado por porcentaje desc, eliminados al final)
+
+    /**
+     * Calcula ranking de una prueba:
+     * ordena por porcentaje y coloca eliminados al final.
+     */
     @Query(
             "SELECT " +
                     "  pa.ID_Participacion AS idParticipacion, " +
@@ -153,7 +190,9 @@ public interface ParticipacionDao {
     LiveData<List<RankingItem>> getRankingByPrueba(int idPrueba);
 
 
-
+    /**
+     * Cuenta participantes por prueba.
+     */
     @Query("SELECT ID_Prueba, COUNT(*) AS total FROM Participacion GROUP BY ID_Prueba")
     LiveData<List<ConteoParticipantes>> contarParticipantesPorTodasLasPruebas();
 

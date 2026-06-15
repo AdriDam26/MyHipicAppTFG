@@ -5,6 +5,12 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
+/**
+ * Entidad Clase para la base de datos Room.
+ *
+ * Representa una clase de equitación programada en una pista,
+ * impartida por un profesor en una fecha y horario concreto.
+ */
 @Entity(
         tableName = "Clase",
         foreignKeys = {
@@ -24,10 +30,14 @@ import androidx.room.PrimaryKey;
 )
 public class Clase {
 
+    /**
+     * Identificador único de la clase (clave primaria autogenerada).
+     */
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "ID_Clase")
     public int idClase;
 
+    // Atributos
     @ColumnInfo(name = "Hora_Inicio")
     public long horaInicio;
 
@@ -49,19 +59,23 @@ public class Clase {
     @ColumnInfo(name = "ID_Profesor")
     public int idProfesor;
 
-    // 🔹 Disciplina
+    // Constantes de disciplina
     public static final String DOMA = "Doma";
     public static final String SALTO = "Salto";
 
-
+    // Constantes de nivel
     public static final String PRINCIPIANTE = "Principiante";
     public static final String INTERMEDIO = "Intermedio";
     public static final String AVANZADO = "Avanzado";
 
-
+    /**
+     * Constructor vacío requerido por Room.
+     */
     public Clase() {}
 
-
+    /**
+     * Constructor para crear una clase con sus datos principales.
+     */
     public Clase(long horaInicio, long horaFin, long fecha,
                  String nivel, String disciplina,
                  int idPista, int idProfesor) {

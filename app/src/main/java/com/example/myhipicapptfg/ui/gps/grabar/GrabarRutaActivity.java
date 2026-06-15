@@ -37,24 +37,89 @@ import android.provider.Settings;
 import android.content.Context;
 
 
+/**
+ * Actividad encargada de grabar rutas GPS.
+ *
+ * Funcionalidades principales:
+ *
+ * - Mostrar el mapa mediante Google Maps.
+ * - Obtener la posición GPS del dispositivo.
+ * - Dibujar el recorrido en tiempo real.
+ * - Calcular distancia y duración de la ruta.
+ * - Guardar la ruta junto con todas sus coordenadas.
+ */
 public class GrabarRutaActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    /**
+     * Código utilizado para solicitar permisos de ubicación.
+     */
     private static final int REQUEST_LOCATION = 100;
 
+    /**
+     * ViewModel encargado de gestionar la lógica
+     * de grabación de la ruta.
+     */
     private GrabarRutaViewModel viewModel;
+
+    /**
+     * Instancia principal de Google Maps.
+     *
+     * Permite controlar la cámara, dibujar elementos
+     * gráficos y mostrar la ubicación actual.
+     */
     private GoogleMap mMap;
+
+    /**
+     * Cliente de localización fusionada de Google.
+     *
+     * Combina GPS, redes móviles y Wi-Fi para obtener
+     * ubicaciones precisas con un consumo energético optimizado.
+     */
     private FusedLocationProviderClient fusedClient;
+
+    /**
+     * Callback encargado de recibir actualizaciones
+     * periódicas de ubicación.
+     */
     private LocationCallback locationCallback;
 
+    /**
+     * Línea dibujada sobre el mapa que representa
+     * visualmente el recorrido realizado.
+     */
     private Polyline polylineActiva;
+
+    /**
+     * Lista de coordenadas utilizadas para construir
+     * la representación gráfica de la ruta.
+     */
     private final List<LatLng> puntosMapa = new ArrayList<>();
 
+    /**
+     * Botones principales de la pantalla.
+     */
     private MaterialButton btnIniciarDetener, btnGuardar;
+
+    /**
+     * Textos que muestran información en tiempo real.
+     */
     private TextView tvDistancia, tvTiempo, tvEstado;
 
+    /**
+     * Evita recentrar continuamente el mapa.
+     *
+     * Solo se centra automáticamente
+     * la primera vez que se obtiene ubicación.
+     */
     private boolean mapaCentradoInicialmente = false;
 
-    private int idPropietarioActual = 12;
+    /**
+     * Identificador del propietario al que pertenece
+     * la ruta que se está grabando.
+     */
+    private int idPropietario;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +131,9 @@ public class GrabarRutaActivity extends AppCompatActivity implements OnMapReadyC
         tvDistancia       = findViewById(R.id.tvDistancia);
         tvTiempo          = findViewById(R.id.tvTiempo);
         tvEstado          = findViewById(R.id.tvEstado);
+
+        idPropietario =
+                getIntent().getIntExtra("ID_PROPIETARIO", -1);
 
         viewModel = new ViewModelProvider(this).get(GrabarRutaViewModel.class);
         configurarObservadores();
@@ -97,10 +165,12 @@ public class GrabarRutaActivity extends AppCompatActivity implements OnMapReadyC
         btnGuardar.setOnClickListener(v -> mostrarDialogoGuardar());
     }
 
-    // =========================
-    // 🔹 PERMISOS
-    // =========================
-
+    /**
+     * Recibe el resultado de la solicitud de permisos.
+     *
+     * Si el usuario concede acceso a la ubicación,
+     * se inicia el mapa y las actualizaciones GPS.
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
@@ -122,22 +192,38 @@ public class GrabarRutaActivity extends AppCompatActivity implements OnMapReadyC
         }
     }
 
+    /**
+     * Comprueba si el permiso ACCESS_FINE_LOCATION
+     * ha sido concedido.
+     *
+     * @return true si existe permiso de ubicación.
+     */
     private boolean checkPermission() {
         return ActivityCompat.checkSelfPermission(
                 this, Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED;
     }
 
-    // =========================
-    // 🔹 MAPA
-    // =========================
 
+    /**
+     * Inicializa el fragmento de Google Maps y solicita
+     * una notificación cuando el mapa esté listo.
+     */
     private void iniciarMapa() {
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        if (mapFragment != null) mapFragment.getMapAsync(this);
+        if (mapFragment != null){
+            mapFragment.getMapAsync(this);
+        }
     }
 
+    /**
+     * Método invocado automáticamente cuando Google Maps
+     * termina de cargarse.
+     *
+     * Configura controles visuales y centra la cámara
+     * sobre la última ubicación conocida del usuario.
+     */
     @Override
     @SuppressLint("MissingPermission")
     public void onMapReady(@NonNull GoogleMap googleMap) {
@@ -153,25 +239,29 @@ public class GrabarRutaActivity extends AppCompatActivity implements OnMapReadyC
         });
     }
 
-    // =========================
-    // 🔹 GPS CALLBACK
-    // =========================
-
+    /**
+     * Configura el callback encargado de recibir
+     * las actualizaciones de ubicación.
+     *
+     * Cada vez que se reciben coordenadas nuevas,
+     * estas son procesadas individualmente.
+     */
     private void configurarLocationCallback() {
         locationCallback = new LocationCallback() {
 
+            //Este método se ejecuta cuando el dispositivo recibe una o varias ubicaciones nuevas.
             @Override
             public void onLocationResult(@NonNull LocationResult result) {
 
-                if (mMap == null) return;
-
-                // ✅ CORRECCIÓN: procesar TODAS las localizaciones del lote,
-                //    no solo la última. Así no se pierden puntos intermedios.
+                if (mMap == null) {
+                    return;
+                }
                 for (Location loc : result.getLocations()) {
                     procesarLocalizacion(loc);
                 }
             }
 
+            // Este método se ejecuta cuando cambia la disponibilidad del servicio de localización
             @Override
             public void onLocationAvailability(@NonNull LocationAvailability availability) {
                 super.onLocationAvailability(availability);
@@ -186,12 +276,24 @@ public class GrabarRutaActivity extends AppCompatActivity implements OnMapReadyC
         };
     }
 
-    // ✅ NUEVO: lógica de cada punto extraída a su propio método
+    /**
+     * Procesa una localización recibida desde el GPS.
+     *
+     * Funciones realizadas:
+     * - Filtrar posiciones con baja precisión.
+     * - Centrar el mapa inicialmente.
+     * - Ignorar movimientos insignificantes.
+     * - Registrar el punto en la ruta.
+     * - Actualizar la polilínea mostrada en pantalla.
+     *
+     * @param loc posición recibida.
+     */
     private void procesarLocalizacion(Location loc) {
 
-        // ✅ CORRECCIÓN: umbral subido de 20 → 35 metros.
-        //    En ciudad/exterior con árboles rara vez se baja de 20m.
-        if (loc.getAccuracy() > 35) return;
+        // Este filtro evita registrar coordenadas poco fiables.
+        if (loc.getAccuracy() > 35) {
+            return;
+        }
 
         LatLng latLng = new LatLng(loc.getLatitude(), loc.getLongitude());
 
@@ -206,8 +308,7 @@ public class GrabarRutaActivity extends AppCompatActivity implements OnMapReadyC
             return;
         }
 
-        // ✅ CORRECCIÓN: umbral de micro-movimientos bajado de 2.0 → 0.5 metros.
-        //    Con 2m + 6s de intervalo se perdían giros y pasos lentos.
+
         if (!puntosMapa.isEmpty()) {
             LatLng last = puntosMapa.get(puntosMapa.size() - 1);
             float[] results = new float[1];
@@ -216,7 +317,10 @@ public class GrabarRutaActivity extends AppCompatActivity implements OnMapReadyC
                     latLng.latitude, latLng.longitude,
                     results
             );
-            if (results[0] < 0.5f) return;
+            // Si la nueva posición está a menos de medio metro del punto anterior, se descarta.
+            if (results[0] < 0.5f) {
+                return;
+            }
         }
 
         viewModel.agregarPunto(loc.getLatitude(), loc.getLongitude(), loc.getAltitude());
@@ -227,17 +331,21 @@ public class GrabarRutaActivity extends AppCompatActivity implements OnMapReadyC
         }
     }
 
+    /**
+     * Inicia las actualizaciones periódicas de ubicación.
+     *
+     * Se solicita alta precisión y una frecuencia elevada
+     * para registrar correctamente movimientos a caballo.
+     */
     @SuppressLint("MissingPermission")
     private void iniciarActualizacionesGPS() {
 
-        // ✅ CORRECCIÓN: intervalo bajado de 6000/4000 → 2000/1500 ms.
-        //    A caballo se pueden recorrer 10-15m en 6 segundos.
         LocationRequest request = new LocationRequest.Builder(
                 Priority.PRIORITY_HIGH_ACCURACY,
                 2000
         )
                 .setMinUpdateIntervalMillis(1500)
-                .setMaxUpdateDelayMillis(3000)   // ✅ NUEVO: máximo retardo de entrega del lote
+                .setMaxUpdateDelayMillis(3000)
                 .build();
 
         fusedClient.removeLocationUpdates(locationCallback);
@@ -255,10 +363,13 @@ public class GrabarRutaActivity extends AppCompatActivity implements OnMapReadyC
                 });
     }
 
-    // =========================
-    // 🔹 UI / OBSERVADORES
-    // =========================
-
+    /**
+     * Vincula los datos observables del ViewModel
+     * con los elementos de la interfaz.
+     *
+     * Gracias a LiveData la interfaz se actualiza
+     * automáticamente cuando cambia el estado.
+     */
     private void configurarObservadores() {
 
         viewModel.getDistanciaKm().observe(this,
@@ -304,14 +415,19 @@ public class GrabarRutaActivity extends AppCompatActivity implements OnMapReadyC
         });
     }
 
-    // =========================
-    // 🔹 CONTROL
-    // =========================
-
+    /**
+     * Inicia una nueva grabación.
+     *
+     * Se eliminan los datos visuales anteriores,
+     * se crea una nueva polilínea y se notifica
+     * al ViewModel el comienzo del recorrido.
+     */
     private void iniciar() {
         puntosMapa.clear();
 
-        if (polylineActiva != null) polylineActiva.remove();
+        if (polylineActiva != null) {
+            polylineActiva.remove();
+        }
 
         polylineActiva = mMap.addPolyline(
                 new PolylineOptions()
@@ -322,14 +438,24 @@ public class GrabarRutaActivity extends AppCompatActivity implements OnMapReadyC
         viewModel.iniciar();
     }
 
+    /**
+     * Finaliza la grabación actual.
+     *
+     * El cálculo de estadísticas continúa gestionado
+     * por el ViewModel.
+     */
     private void detener() {
         viewModel.detener();
     }
 
-    // =========================
-    // 🔹 GUARDAR
-    // =========================
-
+    /**
+     * Muestra un cuadro de diálogo que permite
+     * introducir el nombre de la ruta.
+     *
+     * Si el usuario no introduce ningún texto,
+     * se genera automáticamente un nombre basado
+     * en la fecha y hora actuales.
+     */
     private void mostrarDialogoGuardar() {
 
         View v = LayoutInflater.from(this).inflate(R.layout.dialog_nombre_ruta, null);
@@ -347,28 +473,39 @@ public class GrabarRutaActivity extends AppCompatActivity implements OnMapReadyC
                             && !et.getText().toString().trim().isEmpty()
                             ? et.getText().toString()
                             : "Ruta " + fecha;
-                    viewModel.guardar(nombre, idPropietarioActual);
+                    viewModel.guardar(nombre, idPropietario);
                 })
                 .setNegativeButton("Cancelar", null)
                 .show();
     }
 
-    // =========================
-    // 🔹 CICLO DE VIDA
-    // =========================
-
+    /**
+     * Se ejecuta cuando la actividad vuelve
+     * a primer plano.
+     *
+     * Reactiva el GPS y las actualizaciones
+     * de localización si están disponibles.
+     */
     @Override
     protected void onResume() {
         super.onResume();
 
         if (checkPermission() && isLocationEnabled()) {
             mapaCentradoInicialmente = false;
-            if (mMap == null) iniciarMapa();
+            if (mMap == null) {
+                iniciarMapa();
+            }
             iniciarActualizacionesGPS();
             tvEstado.setText("GPS Conectado");
         }
     }
 
+    /**
+     * Se ejecuta al destruir la actividad.
+     *
+     * Libera los recursos asociados al GPS
+     * para evitar fugas de memoria.
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -377,10 +514,12 @@ public class GrabarRutaActivity extends AppCompatActivity implements OnMapReadyC
         }
     }
 
-    // =========================
-    // 🔹 UBICACIÓN DEL SISTEMA
-    // =========================
-
+    /**
+     * Comprueba si existe algún proveedor
+     * de ubicación activo en el dispositivo.
+     *
+     * @return true si GPS o red están habilitados.
+     */
     private boolean isLocationEnabled() {
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         return lm != null && (
@@ -389,6 +528,13 @@ public class GrabarRutaActivity extends AppCompatActivity implements OnMapReadyC
         );
     }
 
+    /**
+     * Solicita al usuario que active los servicios
+     * de ubicación mediante un diálogo informativo.
+     *
+     * En caso afirmativo se abre directamente
+     * la pantalla de ajustes del sistema.
+     */
     private void pedirActivarUbicacion() {
         new MaterialAlertDialogBuilder(this)
                 .setTitle("Ubicación desactivada")

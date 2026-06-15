@@ -19,12 +19,27 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Activity encargada de la gestión de clases.
+ *
+ * Permite:
+ * - Visualizar todas las clases registradas.
+ * - Crear nuevas clases.
+ * - Editar clases existentes.
+ * - Eliminar clases.
+ *
+ * Además, observa los cambios en clases, profesores y pistas
+ * para mantener la interfaz sincronizada con la base de datos.
+ */
 public class GestionClasesActivity extends AppCompatActivity {
 
     private GestionClaseViewModel viewModel;
     private ClaseAdapter adapter;
 
-    // Listas locales para mantener la referencia de nombres
+    /**
+     * Listas locales utilizadas por el adaptador para
+     * resolver los nombres de profesores y pistas.
+     */
     private List<Usuario> listaProfesores = new ArrayList<>();
     private List<Pista> listaPistas = new ArrayList<>();
     private List<Clase> listaClases = new ArrayList<>();
@@ -34,75 +49,181 @@ public class GestionClasesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gestion_clases);
 
-        RecyclerView rv = findViewById(R.id.recyclerClases);
-        FloatingActionButton fab = findViewById(R.id.fabAddClase);
-
-        MaterialToolbar toolbarClases = findViewById(R.id.toolbarClases);
-        toolbarClases.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getOnBackPressedDispatcher().onBackPressed();
-            }
-        });
-
-        viewModel = new ViewModelProvider(this).get(GestionClaseViewModel.class);
-
-        // CORRECCIÓN: El constructor ahora pide (Clases, Profesores, Pistas, Listener)
-        adapter = new ClaseAdapter(listaClases, listaProfesores, listaPistas, new ClaseAdapter.OnClaseClickListener() {
-            @Override
-            public void editar(Clase clase) {
-                Intent i = new Intent(GestionClasesActivity.this, ClaseFormActivity.class);
-                i.putExtra("ID_CLASE", clase.idClase);
-                startActivity(i);
-            }
-
-            @Override
-            public void eliminar(Clase clase) {
-                new androidx.appcompat.app.AlertDialog.Builder(GestionClasesActivity.this)
-                        .setTitle("Eliminar clase")
-                        .setMessage("¿Estás seguro?")
-                        .setPositiveButton("Eliminar", (dialog, which) -> viewModel.eliminar(clase))
-                        .setNegativeButton("Cancelar", null)
-                        .show();
-            }
-        });
-
-        rv.setLayoutManager(new LinearLayoutManager(this));
-        rv.setAdapter(adapter);
-
-        // --- OBSERVADORES ---
-
-        // 1. Observar Profesores
-        viewModel.obtenerTodosLosUsuarios().observe(this, usuarios -> {
-            listaProfesores.clear();
-            for (Usuario u : usuarios) {
-                if (Usuario.TIPO_PROFESOR.equals(u.tipo)) listaProfesores.add(u);
-            }
-            actualizarUIAdaptador();
-        });
-
-        // 2. Observar Pistas
-        viewModel.obtenerTodasLasPistas().observe(this, pistas -> {
-            listaPistas = pistas;
-            actualizarUIAdaptador();
-        });
-
-        // 3. Observar Clases
-        viewModel.obtenerTodasLasClases().observe(this, clases -> {
-            listaClases = clases;
-            actualizarUIAdaptador();
-        });
-
-        fab.setOnClickListener(v -> startActivity(new Intent(this, ClaseFormActivity.class)));
+        initViewModel();
+        initViews();
+        initToolbar();
+        configurarRecyclerView();
+        configurarObservadores();
     }
 
     /**
-     * Método auxiliar para refrescar el adaptador con todas las listas actualizadas
+     * Inicializa el ViewModel asociado a la Activity.
+     */
+    private void initViewModel() {
+        viewModel = new ViewModelProvider(this)
+                .get(GestionClaseViewModel.class);
+    }
+
+    /**
+     * Inicializa las vistas principales de la pantalla.
+     */
+    private void initViews() {
+
+        FloatingActionButton fab = findViewById(R.id.fabAddClase);
+
+        fab.setOnClickListener(v ->
+                startActivity(
+                        new Intent(this, ClaseFormActivity.class)
+                )
+        );
+    }
+
+    /**
+     * Configura la barra superior de navegación.
+     */
+    private void initToolbar() {
+
+        MaterialToolbar toolbar =
+                findViewById(R.id.toolbarClases);
+
+        toolbar.setNavigationOnClickListener(
+                v -> getOnBackPressedDispatcher().onBackPressed()
+        );
+    }
+
+    /**
+     * Configura el RecyclerView y su adaptador.
+     */
+    private void configurarRecyclerView() {
+
+        RecyclerView rv =
+                findViewById(R.id.recyclerClases);
+
+        adapter = new ClaseAdapter(
+                listaClases,
+                listaProfesores,
+                listaPistas,
+                new ClaseAdapter.OnClaseClickListener() {
+
+                    @Override
+                    public void editar(Clase clase) {
+
+                        Intent intent = new Intent(
+                                GestionClasesActivity.this,
+                                ClaseFormActivity.class
+                        );
+
+                        intent.putExtra(
+                                "ID_CLASE",
+                                clase.idClase
+                        );
+
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void eliminar(Clase clase) {
+
+                        new androidx.appcompat.app.AlertDialog.Builder(
+                                GestionClasesActivity.this
+                        )
+                                .setTitle("Eliminar clase")
+                                .setMessage("¿Estás seguro?")
+                                .setPositiveButton(
+                                        "Eliminar",
+                                        (dialog, which) ->
+                                                viewModel.eliminar(clase)
+                                )
+                                .setNegativeButton(
+                                        "Cancelar",
+                                        null
+                                )
+                                .show();
+                    }
+                }
+        );
+
+        rv.setLayoutManager(
+                new LinearLayoutManager(this)
+        );
+
+        rv.setAdapter(adapter);
+    }
+
+    /**
+     * Configura todos los observadores necesarios para
+     * mantener sincronizada la interfaz.
+     */
+    private void configurarObservadores() {
+
+        observarProfesores();
+        observarPistas();
+        observarClases();
+    }
+
+    /**
+     * Observa los usuarios registrados y filtra
+     * únicamente aquellos que son profesores.
+     */
+    private void observarProfesores() {
+
+        viewModel.obtenerTodosLosUsuarios()
+                .observe(this, usuarios -> {
+
+                    listaProfesores.clear();
+
+                    for (Usuario usuario : usuarios) {
+
+                        if (Usuario.TIPO_PROFESOR.equals(usuario.tipo)) {
+                            listaProfesores.add(usuario);
+                        }
+                    }
+
+                    actualizarUIAdaptador();
+                });
+    }
+
+    /**
+     * Observa las pistas registradas.
+     */
+    private void observarPistas() {
+
+        viewModel.obtenerTodasLasPistas()
+                .observe(this, pistas -> {
+
+                    listaPistas = pistas;
+
+                    actualizarUIAdaptador();
+                });
+    }
+
+    /**
+     * Observa las clases registradas.
+     */
+    private void observarClases() {
+
+        viewModel.obtenerTodasLasClases()
+                .observe(this, clases -> {
+
+                    listaClases = clases;
+
+                    actualizarUIAdaptador();
+                });
+    }
+
+    /**
+     * Actualiza los datos del adaptador cuando
+     * cambia alguna de las listas observadas.
      */
     private void actualizarUIAdaptador() {
+
         if (adapter != null) {
-            // Usamos el método 'actualizarTodo' que creamos en el ClaseAdapter
-            adapter.actualizarTodo(listaClases, listaProfesores, listaPistas);
+
+            adapter.actualizarTodo(
+                    listaClases,
+                    listaProfesores,
+                    listaPistas
+            );
         }
     }
 }

@@ -13,11 +13,42 @@ import com.example.myhipicapptfg.datos.local.entidades.RutaPersonal;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+/**
+ * Actividad encargada de mostrar el listado de rutas
+ * personales almacenadas por un propietario.
+ *
+ * Funcionalidades principales:
+ *
+ * - Mostrar las rutas guardadas mediante un RecyclerView.
+ * - Mostrar una vista alternativa cuando no existen rutas.
+ * - Permitir consultar información de una ruta.
+ * - Iniciar el seguimiento de una ruta seleccionada.
+ * - Eliminar rutas almacenadas.
+ */
 public class ListaRutasActivity extends AppCompatActivity implements RutasAdapter.OnRutaClickListener {
 
+    /**
+     * ViewModel encargado de proporcionar las rutas
+     * almacenadas y gestionar operaciones sobre ellas.
+     */
     private ListaRutasViewModel viewModel;
+
+    /**
+     * ViewModel encargado de proporcionar las rutas
+     * almacenadas y gestionar operaciones sobre ellas.
+     */
     private RecyclerView recyclerView;
+
+    /**
+     * Contenedor mostrado cuando no existen rutas
+     * almacenadas para el propietario.
+     */
     private LinearLayout layoutSinRutas;
+
+    /**
+     * Contenedor mostrado cuando no existen rutas
+     * almacenadas para el propietario.
+     */
     private RutasAdapter adapter;
 
     @Override
@@ -25,7 +56,7 @@ public class ListaRutasActivity extends AppCompatActivity implements RutasAdapte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_rutas);
 
-        // Toolbar global hípica
+        // Toolbar
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
@@ -33,7 +64,7 @@ public class ListaRutasActivity extends AppCompatActivity implements RutasAdapte
         }
         toolbar.setNavigationOnClickListener(v -> finish());
 
-        // Inicializar vistas de Material 3
+        // Inicializar vistas
         recyclerView = findViewById(R.id.recyclerViewRutas);
         layoutSinRutas = findViewById(R.id.layoutSinRutas);
 
@@ -65,7 +96,6 @@ public class ListaRutasActivity extends AppCompatActivity implements RutasAdapte
     }
 
     private void mostrarOpciones(RutaPersonal ruta) {
-        // Le pasamos el estilo personalizado de rutas al constructor
         new MaterialAlertDialogBuilder(this, R.style.Theme_MyHipicApp_Dialog_Rutas)
                 .setTitle(ruta.nombre)
                 .setMessage("Fecha: " + ruta.fecha + "\nDistancia: " +

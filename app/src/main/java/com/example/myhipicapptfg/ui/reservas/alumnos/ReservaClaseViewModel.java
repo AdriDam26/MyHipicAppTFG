@@ -13,116 +13,104 @@ import androidx.lifecycle.Transformations;
 import com.example.myhipicapptfg.datos.local.entidades.Alumno;
 import com.example.myhipicapptfg.datos.local.entidades.ReservaClase;
 import com.example.myhipicapptfg.datos.repositorios.ReservaClaseRepository;
-import com.example.myhipicapptfg.model.ClaseUIModel;
+import com.example.myhipicapptfg.model.ClaseModel;
 
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * ViewModel encargado de gestionar la lógica de negocio relacionada
+ * con la reserva de clases por parte de los alumnos.
+ *
+ * Su función principal es:
+ * - Mantener el estado del alumno seleccionado
+ * - Gestionar la fecha de filtrado
+ * - Obtener clases disponibles
+ * - Realizar reservas
+ */
 public class ReservaClaseViewModel extends AndroidViewModel {
 
+    /**
+     * Repositorio que gestiona el acceso a datos de reservas de clases.
+     */
     private final ReservaClaseRepository repository;
 
-    // ── Disparadores ───────────────────────────────────────────────
-    private final MutableLiveData<Integer> idAlumnoTrigger   = new MutableLiveData<>();
-    private final MutableLiveData<Long>    fechaSeleccionada =
+    /**
+     * Fecha seleccionada para filtrar las clases disponibles.
+     * Inicializada con la fecha actual del sistema.
+     */
+    private final MutableLiveData<Long> fechaSeleccionada =
             new MutableLiveData<>(System.currentTimeMillis());
 
-    // ── Perfil reactivo ────────────────────────────────────────────
-    private final LiveData<Alumno> perfilAlumno;
+    /**
+     * ID del alumno actualmente activo.
+     * Se inicializa mediante el método init().
+     */
+    private int idAlumno;
 
-    // ── Trigger combinado (Alumno + Fecha) ─────────────────────────
-    private final MediatorLiveData<Pair<Alumno, Long>> triggerCombinado =
-            new MediatorLiveData<>();
 
+    /**
+     * Constructor del ViewModel.
+     * Inicializa el repositorio.
+     */
     public ReservaClaseViewModel(@NonNull Application application) {
         super(application);
         repository = new ReservaClaseRepository(application);
-
-        // 1️⃣ Perfil del alumno reactivo al ID
-        perfilAlumno = Transformations.switchMap(
-                idAlumnoTrigger,
-                repository::getAlumnoById
-        );
-
-        // 2️⃣ Trigger combinado seguro (evita duplicados)
-        triggerCombinado.addSource(perfilAlumno, alumno -> {
-            Long fecha = fechaSeleccionada.getValue();
-            if (alumno != null && fecha != null) {
-                triggerCombinado.setValue(new Pair<>(alumno, fecha));
-            }
-        });
-
-        triggerCombinado.addSource(fechaSeleccionada, fecha -> {
-            Alumno alumno = perfilAlumno.getValue();
-            if (alumno != null && fecha != null) {
-                triggerCombinado.setValue(new Pair<>(alumno, fecha));
-            }
-        });
     }
 
-    // ───────────────────────────────────────────────────────────────
-    // MÉTODOS DE ENTRADA
-    // ───────────────────────────────────────────────────────────────
-
-    public void cargarDatosAlumno(int idAlumno) {
-        if (Objects.equals(idAlumnoTrigger.getValue(), idAlumno)) return;
-        idAlumnoTrigger.setValue(idAlumno);
+    /**
+     * Inicializa el ViewModel con el ID del alumno.
+     * Debe llamarse antes de realizar cualquier consulta.
+     */
+    public void init(int idAlumno) {
+        this.idAlumno = idAlumno;
     }
 
+    /**
+     * Establece la fecha para filtrar las clases disponibles.
+     * Evita actualizaciones innecesarias si la fecha no cambia.
+     */
     public void setFechaFiltro(long nuevaFecha) {
         if (Objects.equals(fechaSeleccionada.getValue(), nuevaFecha)) return;
         fechaSeleccionada.setValue(nuevaFecha);
     }
 
-    public void resetearEstado() {
-        repository.resetearEstado();
+
+    /**
+     * Obtiene la lista de clases disponibles para el alumno
+     * en la fecha seleccionada.
+     *
+     * La consulta se actualiza automáticamente cuando cambia la fecha.
+     */
+    public LiveData<List<ClaseModel>> getClases() {
+        return Transformations.switchMap(fechaSeleccionada, fecha ->
+                repository.obtenerClasesPorAlumnoYFecha(idAlumno, fecha)
+        );
     }
 
-    // ───────────────────────────────────────────────────────────────
-    // GETTERS
-    // ───────────────────────────────────────────────────────────────
-
+    /**
+     * Devuelve el estado de la última operación realizada en el repositorio
+     * (éxito, error, en progreso, etc.).
+     */
     public LiveData<String> getEstadoOperacion() {
         return repository.getEstadoOperacion();
     }
 
     /**
-     * Clases disponibles según:
-     * - Nivel del alumno
-     * - Ficha
-     * - Disciplina
-     * - Fecha seleccionada
+     * Reinicia el estado de las operaciones del repositorio.
      */
-    public LiveData<List<ClaseUIModel>> getClasesUI() {
-        return Transformations.switchMap(triggerCombinado, par ->
-                repository.obtenerClasesUI(par.first, par.second)
-        );
+    public void resetearEstado() {
+        repository.resetearEstado();
     }
 
     /**
-     * Clases reservadas por el alumno
+     * Realiza una reserva de clase para el alumno actual.
+     *
+     * @param idClase identificador de la clase a reservar
      */
-    public LiveData<List<ClaseUIModel>> getClasesReservadasUI() {
-        return Transformations.switchMap(
-                idAlumnoTrigger,
-                repository::obtenerClasesReservadasUI
+    public void reservarClase(int idClase) {
+        repository.insertarReserva(
+                new ReservaClase(idAlumno, idClase, System.currentTimeMillis())
         );
-    }
-
-    // ───────────────────────────────────────────────────────────────
-    // OPERACIONES DE NEGOCIO
-    // ───────────────────────────────────────────────────────────────
-
-    public void reservarClase(int idAlumno, int idClase) {
-        ReservaClase reserva = new ReservaClase();
-        reserva.idAlumno     = idAlumno;
-        reserva.idClase      = idClase;
-        reserva.fechaReserva = System.currentTimeMillis();
-
-        repository.insertarReserva(reserva);
-    }
-
-    public void cancelarReserva(int idAlumno, int idClase) {
-        repository.cancelarReserva(idAlumno, idClase);
     }
 }

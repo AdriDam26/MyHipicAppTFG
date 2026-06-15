@@ -5,6 +5,12 @@ import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+
+/**
+ * Entidad Competicion para la base de datos Room.
+ *
+ * Representa un evento o competición hípica dentro del sistema.
+ */
 @Entity(
         tableName = "Competicion",
         indices = {
@@ -13,20 +19,29 @@ import androidx.room.PrimaryKey;
 )
 public class Competicion {
 
+    /**
+     * Identificador único de la competición (clave primaria autogenerada).
+     */
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "ID_Competicion")
     public int idCompeticion;
 
+    // Atributos
     @ColumnInfo(name = "Nombre")
     public String nombre;
 
     @ColumnInfo(name = "Fecha")
     public long fecha;
 
-    // 🔹 Constructor vacío (Room)
+    /**
+     * Constructor vacío requerido por Room.
+     */
     public Competicion() {}
 
-    // 🔹 Constructor recomendado
+
+    /**
+     * Constructor recomendado para crear una competición.
+     */
     public Competicion(String nombre, long fecha) {
         this.nombre = nombre;
         this.fecha = fecha;

@@ -15,6 +15,14 @@ import com.example.myhipicapptfg.ui.competiciones.juez.pruebas.PruebasJuezActivi
 import com.example.myhipicapptfg.ui.gps.RutasMenuActivity;
 import com.google.android.material.card.MaterialCardView;
 
+/**
+ * MenuFuncionalidadesActivity
+ *
+ * Pantalla principal de menú donde el usuario accede a las distintas funcionalidades
+ * de la aplicación según su rol (admin, alumno, profesor, juez, etc.).
+ *
+ * Cada tarjeta (MaterialCardView) actúa como acceso directo a una sección concreta.
+ */
 public class MenuFuncionalidadesActivity extends AppCompatActivity {
 
     @Override
@@ -22,6 +30,10 @@ public class MenuFuncionalidadesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_funcionalidades);
 
+        /**
+         * Referencias a las tarjetas del menú
+         * Cada una representa una funcionalidad distinta
+         */
         MaterialCardView cardAdmin       = findViewById(R.id.cardGestionAdmin);
         MaterialCardView cardAR          = findViewById(R.id.cardRealidadAumentada);
         MaterialCardView cardGPS         = findViewById(R.id.cardGPS);
@@ -31,51 +43,53 @@ public class MenuFuncionalidadesActivity extends AppCompatActivity {
         MaterialCardView cardJuez        = findViewById(R.id.cardMisPruebas); // ← nueva
         MaterialCardView cardCompeticiones = findViewById(R.id.cardMisCompeticiones);
 
+        // Acceso al módulo administración
         cardAdmin.setOnClickListener(v ->
                 startActivity(new Intent(this, AdminMenuActivity.class)));
 
+        // Realidad Aumentada
         cardAR.setOnClickListener(v ->
                 startActivity(new Intent(this, ARMenuActivity.class)));
 
-        // Busca la sección del GPS dentro de tu onCreate y cámbiala por esto:
+        // GPS / Rutas
         cardGPS.setOnClickListener(v -> {
             Intent intent = new Intent(this, RutasMenuActivity.class);
-            intent.putExtra("ID_PROPIETARIO", 12); // ← Forzamos el ID 12 aquí
+            intent.putExtra("ID_PROPIETARIO", 12);
             startActivity(intent);
         });
 
+        // Reserva de clases
         cardReservar.setOnClickListener(v -> {
             Intent intent = new Intent(this, ReservaClaseActivity.class);
             intent.putExtra("ID_ALUMNO", 10);
             startActivity(intent);
         });
 
+        // Mis Reservas
         cardMisReservas.setOnClickListener(v -> {
             Intent intent = new Intent(this, MisReservasActivity.class);
             intent.putExtra("ID_ALUMNO", 10);
             startActivity(intent);
         });
 
+        // Clases asignadas
         cardProfesor.setOnClickListener(v -> {
             Intent intent = new Intent(this, MisClasesProfesorActivity.class);
             intent.putExtra(MisClasesProfesorActivity.EXTRA_ID_PROFESOR, 9);
             startActivity(intent);
         });
 
-        // ── Juez ─────────────────────────────────────────────────────────────
+        // Pruebas asignadas
         cardJuez.setOnClickListener(v -> {
             Intent intent = new Intent(this, PruebasJuezActivity.class);
-            // Sustituye el valor hardcodeado por el ID real del juez logueado
             intent.putExtra(PruebasJuezActivity.EXTRA_ID_JUEZ, 11);
             startActivity(intent);
         });
 
+        // Competiciones
         cardCompeticiones.setOnClickListener(v -> {
             Intent intent = new Intent(this, MisPruebasActivity.class);
-
-            // ID fijo = 2 como pediste
             intent.putExtra(MisPruebasActivity.EXTRA_ID_ALUMNO, 10);
-
             startActivity(intent);
         });
     }
